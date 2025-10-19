@@ -50,11 +50,49 @@ export default function Dashboard() {
   const [split, setSplit] = useState<ChartPoint[]>([])
 
   useEffect(() => {
-    api.get('/reports/overview').then((response) => setMetrics(response.data))
-    api.get('/reports/sales_by_month').then((response) => setSales(response.data))
-    api.get('/reports/top_products').then((response) => setTop(response.data))
-    api.get('/reports/invoice_status_split').then((response) => setSplit(response.data))
-    navigator.serviceWorker?.register('/public/service-worker.js')
+    let canceled = false
+
+    const ensureArray = (value: unknown): ChartPoint[] => (Array.isArray(value) ? value : [])
+
+    const fetchData = async () => {
+      try {
+        const response = await api.get('/reports/overview')
+        if (!canceled) {
+          const payload = response.data
+          setMetrics((payload && typeof payload === 'object' ? payload : {}) as Metrics)
+        }
+      } catch {
+        if (!canceled) setMetrics({})
+      }
+
+      try {
+        const response = await api.get('/reports/sales_by_month')
+        if (!canceled) setSales(ensureArray(response.data))
+      } catch {
+        if (!canceled) setSales([])
+      }
+
+      try {
+        const response = await api.get('/reports/top_products')
+        if (!canceled) setTop(ensureArray(response.data))
+      } catch {
+        if (!canceled) setTop([])
+      }
+
+      try {
+        const response = await api.get('/reports/invoice_status_split')
+        if (!canceled) setSplit(ensureArray(response.data))
+      } catch {
+        if (!canceled) setSplit([])
+      }
+    }
+
+    fetchData()
+    navigator.serviceWorker?.register('/service-worker.js')
+
+    return () => {
+      canceled = true
+    }
   }, [])
 
   return (
