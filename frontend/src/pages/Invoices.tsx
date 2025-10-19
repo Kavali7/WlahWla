@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
+import { Modal } from '../components/Modal'
 import {
   Table,
   TableBody,
@@ -110,12 +111,33 @@ type InvoiceSummary = {
   grandTotal: number
 }
 
+type Payment = {
+  id: number
+  invoice: number
+  amount: string | number
+  method: string
+  paid_at: string
+}
+
+type PaymentFormState = {
+  amount: string
+  method: string
+  paid_at: string
+}
+
 const invoiceStatuses = [
   { value: 'DRAFT', label: 'Brouillon' },
   { value: 'SENT', label: 'Envoyee' },
   { value: 'PARTIALLY_PAID', label: 'Partiellement payee' },
   { value: 'PAID', label: 'Payee' },
   { value: 'CANCELLED', label: 'Annulee' },
+]
+
+const paymentMethods = [
+  { value: 'CASH', label: 'Especes' },
+  { value: 'CARD', label: 'Carte' },
+  { value: 'TRANSFER', label: 'Virement' },
+  { value: 'MOBILE', label: 'Mobile money' },
 ]
 
 const todayISO = () => new Date().toISOString().slice(0, 10)
@@ -144,6 +166,12 @@ const createEmptyLine = (): LineForm => ({
   unit_price: '',
   tax: '',
 })
+
+const defaultPaymentForm: PaymentFormState = {
+  amount: '',
+  method: 'CASH',
+  paid_at: todayISO(),
+}
 
 const asArray = <T,>(payload: any): T[] => {
   if (Array.isArray(payload)) return payload as T[]
@@ -195,6 +223,13 @@ export default function Invoices() {
   const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(null)
   const [emailOverride, setEmailOverride] = useState('')
   const [quoteLoading, setQuoteLoading] = useState(false)
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [paymentsStatus, setPaymentsStatus] = useState<FetchStatus>('idle')
+  const [paymentsError, setPaymentsError] = useState<string | null>(null)
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [paymentForm, setPaymentForm] = useState<PaymentFormState>(defaultPaymentForm)
+  const [paymentFormError, setPaymentFormError] = useState<string | null>(null)
+  const [isSavingPayment, setIsSavingPayment] = useState(false)
 
   const customerMap = useMemo(() => {
     const map: Record<number, Customer> = {}
@@ -294,6 +329,32 @@ export default function Invoices() {
     }
   }, [lines, taxMap])
 
+  const sortedPayments = useMemo(
+    () =>
+      [...payments].sort((a, b) => {
+        const aTime = new Date(a.paid_at).getTime()
+        const bTime = new Date(b.paid_at).getTime()
+        if (Number.isNaN(aTime) || Number.isNaN(bTime)) return 0
+        return bTime - aTime
+      }),
+    [payments],
+  )
+
+  const totalPaid = useMemo(
+    () =>
+      payments.reduce((acc, payment) => {
+        const amount =
+          typeof payment.amount === 'number' ? payment.amount : Number(payment.amount || '0')
+        return Number.isFinite(amount) ? acc + amount : acc
+      }, 0),
+    [payments],
+  )
+
+  const outstandingAmount = useMemo(() => {
+    const remaining = computeEditorTotals.grandTotal - totalPaid
+    return Number.isFinite(remaining) ? Math.max(0, Number(remaining.toFixed(2))) : 0
+  }, [computeEditorTotals.grandTotal, totalPaid])
+
   const resetEditor = useCallback(() => {
     setForm(defaultFormState)
     setLines([createEmptyLine()])
@@ -306,7 +367,35 @@ export default function Invoices() {
     setPdfLoading(false)
     setSelectedInvoiceId(null)
     setEmailOverride('')
+    setPayments([])
+    setPaymentsStatus('idle')
+    setPaymentsError(null)
+    setIsPaymentModalOpen(false)
+    setPaymentForm(defaultPaymentForm)
+    setPaymentFormError(null)
+    setIsSavingPayment(false)
   }, [])
+
+  const loadPayments = useCallback(
+    async (invoiceId: number) => {
+      setPaymentsStatus('loading')
+      setPaymentsError(null)
+      try {
+        const response = await api.get('/payments/', {
+          params: { invoice: invoiceId, ordering: '-paid_at', page_size: 200 },
+        })
+        const fetched = asArray<Payment>(response.data).filter(
+          (payment) => payment.invoice === invoiceId,
+        )
+        setPayments(fetched)
+        setPaymentsStatus('success')
+      } catch (error) {
+        setPaymentsError(getErrorMessage(error))
+        setPaymentsStatus('error')
+      }
+    },
+    [],
+  )
 
   const applyInvoiceToEditor = useCallback(
     (invoice: Invoice) => {
@@ -346,8 +435,11 @@ export default function Invoices() {
       setFormError(null)
       setFeedback(null)
       setActionError(null)
+      setPaymentForm(defaultPaymentForm)
+      setPaymentFormError(null)
+      void loadPayments(invoice.id)
     },
-    [customerMap],
+    [customerMap, loadPayments],
   )
 
   const loadInvoices = useCallback(async () => {
@@ -679,6 +771,117 @@ export default function Invoices() {
     }
   }
 
+  const openPaymentModal = () => {
+    if (!form.id) {
+      setPaymentFormError("Enregistrez la facture avant d'ajouter un paiement.")
+      setIsPaymentModalOpen(true)
+      return
+    }
+    setPaymentForm({
+      amount: outstandingAmount > 0 ? String(outstandingAmount) : '',
+      method: 'CASH',
+      paid_at: todayISO(),
+    })
+    setPaymentFormError(null)
+    setIsPaymentModalOpen(true)
+  }
+
+  const closePaymentModal = () => {
+    setIsPaymentModalOpen(false)
+    setPaymentForm(defaultPaymentForm)
+    setPaymentFormError(null)
+  }
+
+  const handlePaymentInputChange =
+    <Key extends keyof PaymentFormState>(key: Key) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value = event.target.value
+      setPaymentForm((prev) => ({
+        ...prev,
+        [key]: value,
+      }))
+    }
+
+  const recordPayment = async () => {
+    if (!form.id) {
+      setPaymentFormError("Enregistrez la facture avant d'ajouter un paiement.")
+      return
+    }
+    const amount = Number(paymentForm.amount || '0')
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setPaymentFormError('Renseignez un montant positif.')
+      return
+    }
+    const tolerance = 0.01
+    if (outstandingAmount > 0 && amount - outstandingAmount > tolerance) {
+      setPaymentFormError(
+        `Le montant depasse le solde restant (${formatCurrency(outstandingAmount, form.currency)}).`,
+      )
+      return
+    }
+    const payload: Record<string, any> = {
+      invoice: form.id,
+      amount,
+      method: paymentForm.method || 'CASH',
+    }
+    if (paymentForm.paid_at) {
+      const date = new Date(`${paymentForm.paid_at}T00:00:00`)
+      if (!Number.isNaN(date.getTime())) {
+        payload.paid_at = date.toISOString()
+      }
+    }
+    setIsSavingPayment(true)
+    setPaymentFormError(null)
+    try {
+      const response = await api.post('/payments/', payload)
+      if (response?.data?.offlineQueued) {
+        setFeedback('Paiement enregistre (mode hors ligne).')
+      } else {
+        setFeedback('Paiement enregistre.')
+      }
+      await loadPayments(form.id)
+      await loadInvoiceDetail(form.id)
+      closePaymentModal()
+    } catch (error) {
+      setPaymentFormError(getErrorMessage(error))
+    } finally {
+      setIsSavingPayment(false)
+    }
+  }
+
+  const exportPaymentsCsv = () => {
+    if (payments.length === 0) {
+      return
+    }
+    const header = ['Facture', 'Montant', 'Mode', 'Date']
+    const rows = sortedPayments.map((payment) => [
+      form.number || `#${payment.invoice}`,
+      typeof payment.amount === 'number' ? payment.amount.toString() : payment.amount,
+      paymentMethods.find((method) => method.value === payment.method)?.label ?? payment.method,
+      payment.paid_at ? formatDate(payment.paid_at) : '',
+    ])
+    const csvContent = [header, ...rows]
+      .map((row) =>
+        row
+          .map((value) => {
+            const cell = value ?? ''
+            const stringValue = String(cell).replace(/"/g, '""')
+            return `"${stringValue}"`
+          })
+          .join(';'),
+      )
+      .join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `paiements-${form.number || form.id || 'facture'}.csv`
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  }
+
   const sendInvoiceEmail = async () => {
     if (!form.id) {
       setActionError("Enregistrez la facture avant d'envoyer un email.")
@@ -735,7 +938,8 @@ export default function Invoices() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
+    <>
+      <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
       <Card
         title="Factures"
         description="Consultez et ouvrez vos factures. Utilisez la recherche pour retrouver un numero ou un client."
@@ -1030,6 +1234,97 @@ export default function Invoices() {
           </div>
         </div>
 
+        <div className="grid gap-3 rounded-2xl border border-slate-200 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-sm font-semibold text-slate-700">Suivi des paiements</span>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportPaymentsCsv}
+                disabled={payments.length === 0}
+              >
+                Export CSV
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={openPaymentModal}
+                disabled={!form.id || editorMode !== 'edit'}
+              >
+                Enregistrer un paiement
+              </Button>
+            </div>
+          </div>
+
+          {outstandingAmount === 0 && form.status !== 'PAID' && (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs text-emerald-700">
+              Facture soldee : mettez a jour le statut sur <strong>Payee</strong> pour garder vos tableaux a
+              jour.
+            </div>
+          )}
+          {outstandingAmount > 0 && form.status === 'PAID' && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">
+              Solde restant detecte alors que la facture est marquee payee.
+            </div>
+          )}
+
+          <div className="grid gap-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <span>Montant facture : {formatCurrency(computeEditorTotals.grandTotal, form.currency)}</span>
+            <span>Encaisse : {formatCurrency(totalPaid, form.currency)}</span>
+            <span
+              className={
+                outstandingAmount === 0
+                  ? 'font-semibold text-emerald-600'
+                  : 'font-semibold text-rose-600'
+              }
+            >
+              Solde : {formatCurrency(outstandingAmount, form.currency)}
+            </span>
+          </div>
+
+          {paymentsStatus === 'loading' && (
+            <div className="h-20 animate-pulse rounded-xl bg-slate-200/60" aria-hidden />
+          )}
+          {paymentsStatus === 'error' && paymentsError && (
+            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              {paymentsError}
+            </div>
+          )}
+          {paymentsStatus === 'success' && sortedPayments.length === 0 && (
+            <div className="rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-500">
+              Aucun paiement enregistre pour cette facture.
+            </div>
+          )}
+          {paymentsStatus === 'success' && sortedPayments.length > 0 && (
+            <TableContainer className="border border-slate-200">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHeadCell>Date</TableHeadCell>
+                    <TableHeadCell>Mode</TableHeadCell>
+                    <TableHeadCell>Montant</TableHeadCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedPayments.map((payment) => (
+                    <TableRow key={payment.id}>
+                      <TableCell>{formatDate(payment.paid_at)}</TableCell>
+                      <TableCell>
+                        {paymentMethods.find((method) => method.value === payment.method)?.label ??
+                          payment.method}
+                      </TableCell>
+                      <TableCell className="text-right font-semibold text-slate-900">
+                        {formatCurrency(payment.amount, form.currency)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </div>
+
         <div className="grid gap-3 rounded-2xl border border-slate-200 p-4 text-sm text-slate-600">
           <span className="text-sm font-semibold text-slate-700">Actions statut</span>
           <div className="flex flex-wrap gap-2">
@@ -1118,5 +1413,67 @@ export default function Invoices() {
         </div>
       </Card>
     </div>
+
+    <Modal
+      open={isPaymentModalOpen}
+      onClose={closePaymentModal}
+      title="Enregistrer un paiement"
+      description="Ajoutez un encaissement pour mettre a jour le solde de la facture."
+      footer={
+        <>
+          <Button variant="ghost" size="sm" onClick={closePaymentModal} disabled={isSavingPayment}>
+            Annuler
+          </Button>
+          <Button variant="primary" size="sm" onClick={recordPayment} disabled={isSavingPayment}>
+            {isSavingPayment ? 'Enregistrement...' : 'Enregistrer'}
+          </Button>
+        </>
+      }
+    >
+      {paymentFormError && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {paymentFormError}
+        </div>
+      )}
+      <label className="grid gap-1 text-sm">
+        <span className="font-medium text-slate-700">Montant</span>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          value={paymentForm.amount}
+          onChange={handlePaymentInputChange('amount')}
+          placeholder="Ex. 50000"
+        />
+      </label>
+      <label className="grid gap-1 text-sm">
+        <span className="font-medium text-slate-700">Mode de paiement</span>
+        <select
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          value={paymentForm.method}
+          onChange={handlePaymentInputChange('method')}
+        >
+          {paymentMethods.map((method) => (
+            <option key={method.value} value={method.value}>
+              {method.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="grid gap-1 text-sm">
+        <span className="font-medium text-slate-700">Date</span>
+        <input
+          type="date"
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          value={paymentForm.paid_at}
+          onChange={handlePaymentInputChange('paid_at')}
+        />
+      </label>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        Reste a payer : {formatCurrency(outstandingAmount, form.currency)}
+      </div>
+    </Modal>
+  </>
   )
 }
