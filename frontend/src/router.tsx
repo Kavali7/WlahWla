@@ -11,6 +11,8 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const Storefront = React.lazy(() => import('./pages/Storefront'))
 const AdminPanel = React.lazy(() => import('./pages/AdminPanel'))
 const Products = React.lazy(() => import('./pages/Products'))
+const Suppliers = React.lazy(() => import('./pages/Suppliers'))
+const Inventory = React.lazy(() => import('./pages/Inventory'))
 const Customers = React.lazy(() => import('./pages/Customers'))
 const Invoices = React.lazy(() => import('./pages/Invoices'))
 const Settings = React.lazy(() => import('./pages/Settings'))
@@ -68,6 +70,8 @@ const AdminSidebar = () => (
     <nav className="mt-4 grid gap-2 text-sm">
       <AdminNavLink to="/admin">Equipe</AdminNavLink>
       <AdminNavLink to="/admin/products">Catalogue</AdminNavLink>
+      <AdminNavLink to="/admin/inventory">Inventaire</AdminNavLink>
+      <AdminNavLink to="/admin/suppliers">Fournisseurs</AdminNavLink>
       <AdminNavLink to="/admin/customers">Clients</AdminNavLink>
       <AdminNavLink to="/admin/invoices">Factures</AdminNavLink>
       <AdminNavLink to="/admin/settings">Parametres</AdminNavLink>
@@ -184,6 +188,28 @@ export const router = createBrowserRouter(
                     layout: {
                       title: 'Catalogue produits',
                       description: 'Centralisez les fiches produits pour la vente et la facturation.',
+                      sidebar: <AdminSidebar />,
+                    },
+                  },
+                },
+                {
+                  path: 'inventory',
+                  element: withSuspense(Inventory),
+                  handle: {
+                    layout: {
+                      title: 'Suivi des stocks',
+                      description: 'Analysez vos mouvements pour garantir la disponibilite des produits.',
+                      sidebar: <AdminSidebar />,
+                    },
+                  },
+                },
+                {
+                  path: 'suppliers',
+                  element: withSuspense(Suppliers),
+                  handle: {
+                    layout: {
+                      title: 'Fournisseurs',
+                      description: 'Gerez vos partenaires d approvisionnement et leurs coordonnees.',
                       sidebar: <AdminSidebar />,
                     },
                   },
