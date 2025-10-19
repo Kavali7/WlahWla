@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { getAuthToken } from '../lib/auth'
+import LoadingScreen from './LoadingScreen'
+import { useAuth } from '../contexts/AuthContext'
 
 type ProtectedRouteProps = {
   redirectTo?: string
@@ -9,8 +10,11 @@ type ProtectedRouteProps = {
 
 export function ProtectedRoute({ redirectTo = '/login', children }: ProtectedRouteProps) {
   const location = useLocation()
-  const token = getAuthToken()
-  const isAuthenticated = Boolean(token)
+  const { isAuthenticated, initializing } = useAuth()
+
+  if (initializing) {
+    return <LoadingScreen />
+  }
 
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} state={{ from: location }} replace />

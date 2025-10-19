@@ -15,6 +15,8 @@ const Customers = React.lazy(() => import('./pages/Customers'))
 const Invoices = React.lazy(() => import('./pages/Invoices'))
 const Settings = React.lazy(() => import('./pages/Settings'))
 const Login = React.lazy(() => import('./pages/Login'))
+const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = React.lazy(() => import('./pages/ResetPassword'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
@@ -101,6 +103,16 @@ export const router = createBrowserRouter(
     {
       path: '/login',
       element: withSuspense(Login),
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: '/forgot-password',
+      element: withSuspense(ForgotPassword),
+      errorElement: <RouteErrorBoundary />,
+    },
+    {
+      path: '/reset-password',
+      element: withSuspense(ResetPassword),
       errorElement: <RouteErrorBoundary />,
     },
     {
