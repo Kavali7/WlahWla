@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react'
-import { NavLink, Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom'
+import React, { useEffect, useMemo } from 'react'
+import { NavLink, Outlet, useLocation, useMatches, useNavigate, useSearchParams } from 'react-router-dom'
 import { Badge } from './Badge'
 import { Button } from './Button'
 import { useAuth } from '../contexts/AuthContext'
+import OrganizationOnboardingCard from './OrganizationOnboarding'
 
 export type NavigationItem = {
   label: string
@@ -37,6 +38,7 @@ export function AppLayout({ navigation }: AppLayoutProps) {
   const matches = useMatches()
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user, organization, organizations, setOrganization, logout } = useAuth()
 
   const layout =
@@ -58,6 +60,33 @@ export function AppLayout({ navigation }: AppLayoutProps) {
   const handleLogout = () => {
     logout().catch(() => undefined)
   }
+
+  useEffect(() => {
+    if (!organizations.length) return
+    const requested = searchParams.get('org')
+    if (!requested) return
+    const match =
+      organizations.find((org) => org.code === requested || String(org.id) === requested) ?? null
+    if (match && String(match.id) !== String(organization?.id ?? '')) {
+      setOrganization(String(match.id))
+    }
+  }, [organization?.id, organizations, searchParams, setOrganization])
+
+  useEffect(() => {
+    const currentCode = organization?.code ?? (organization?.id ? String(organization.id) : null)
+    const existing = searchParams.get('org')
+    if (currentCode) {
+      if (existing !== currentCode) {
+        const params = new URLSearchParams(searchParams)
+        params.set('org', currentCode)
+        setSearchParams(params, { replace: true })
+      }
+    } else if (existing) {
+      const params = new URLSearchParams(searchParams)
+      params.delete('org')
+      setSearchParams(params, { replace: true })
+    }
+  }, [organization, searchParams, setSearchParams])
 
   const renderUserMenu = (variant: 'desktop' | 'mobile') => (
     <div
@@ -166,6 +195,8 @@ export function AppLayout({ navigation }: AppLayoutProps) {
           </div>
           {layout.actions && <div className="flex items-center gap-2">{layout.actions}</div>}
         </div>
+
+        <OrganizationOnboardingCard />
 
         <div
           className={classNames(

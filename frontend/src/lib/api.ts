@@ -4,19 +4,28 @@ import { queueRequest, flushQueue } from './offline'
 export const api = axios.create({ baseURL: '/api' })
 
 let currentToken: string | null = null
+let currentOrganizationCode: string | null = null
 
 export function setAuthToken(token: string | null) {
   currentToken = token
 }
 
+export function setOrganizationHeader(code: string | null) {
+  currentOrganizationCode = code
+}
+
 api.interceptors.request.use((config) => {
+  const headers = { ...config.headers }
   if (currentToken) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${currentToken}`,
-    }
+    headers.Authorization = `Bearer ${currentToken}`
   }
-  return config
+  if (currentOrganizationCode) {
+    headers['X-Org'] = currentOrganizationCode
+  }
+  return {
+    ...config,
+    headers,
+  }
 })
 
 api.interceptors.response.use(

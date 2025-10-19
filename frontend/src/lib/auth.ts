@@ -1,12 +1,19 @@
 const TOKEN_KEY = 'authToken'
 const USER_KEY = 'authUser'
-const ORG_KEY = 'authOrganizationId'
+const ORG_ID_KEY = 'authOrganizationId'
+const ORG_CODE_KEY = 'authOrganizationCode'
 
 export type AuthToken = string
 
 export type StoredOrganization = {
   id: string
+  code?: string
   name?: string
+  address?: string | null
+  tax_id?: string | null
+  trade_register?: string | null
+  is_onboarded?: boolean
+  missing_fields?: string[]
 }
 
 export type StoredUser = {
@@ -67,9 +74,9 @@ export function getStoredUser(): StoredUser | null {
 export function persistSelectedOrganizationId(organizationId: string | null) {
   try {
     if (organizationId) {
-      localStorage.setItem(ORG_KEY, organizationId)
+      localStorage.setItem(ORG_ID_KEY, organizationId)
     } else {
-      localStorage.removeItem(ORG_KEY)
+      localStorage.removeItem(ORG_ID_KEY)
     }
   } catch {
     // ignore storage errors in graceful mode
@@ -78,7 +85,27 @@ export function persistSelectedOrganizationId(organizationId: string | null) {
 
 export function getStoredOrganizationId(): string | null {
   try {
-    return localStorage.getItem(ORG_KEY)
+    return localStorage.getItem(ORG_ID_KEY)
+  } catch {
+    return null
+  }
+}
+
+export function persistSelectedOrganizationCode(code: string | null) {
+  try {
+    if (code) {
+      localStorage.setItem(ORG_CODE_KEY, code)
+    } else {
+      localStorage.removeItem(ORG_CODE_KEY)
+    }
+  } catch {
+    // ignore storage errors in graceful mode
+  }
+}
+
+export function getStoredOrganizationCode(): string | null {
+  try {
+    return localStorage.getItem(ORG_CODE_KEY)
   } catch {
     return null
   }
@@ -88,4 +115,5 @@ export function clearAuthSession() {
   clearAuthToken()
   persistAuthUser(null)
   persistSelectedOrganizationId(null)
+  persistSelectedOrganizationCode(null)
 }

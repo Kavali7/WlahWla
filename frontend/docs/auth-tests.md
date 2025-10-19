@@ -26,3 +26,8 @@ Use these quick scenarios to validate the authentication flow after backend inte
    - Depuis une page protegee, utiliser "Se deconnecter".  
    - Confirmer la suppression du token (localStorage) et la redirection vers `/login`.  
    - Verifier qu un appel protege renvoie bien vers la connexion apres un 401.
+
+6. **Switcher d organisation**  
+   - Depuis l en-tete, changer d organisation via le selecteur.  
+   - Verifier que l URL contient `?org=<code>` et que les requetes portent l en-tete `X-Org`.  
+   - Recharger la page et confirmer que la selection reste active.

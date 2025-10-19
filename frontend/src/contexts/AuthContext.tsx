@@ -7,16 +7,18 @@ import React, {
   useState,
 } from 'react'
 import { AxiosError } from 'axios'
-import { api, setAuthToken } from '../lib/api'
+import { api, setAuthToken, setOrganizationHeader } from '../lib/api'
 import {
   StoredOrganization,
   StoredUser,
   clearAuthSession,
   getAuthToken,
+  getStoredOrganizationCode,
   getStoredOrganizationId,
   getStoredUser,
   persistAuthToken,
   persistAuthUser,
+  persistSelectedOrganizationCode,
   persistSelectedOrganizationId,
 } from '../lib/auth'
 
@@ -35,9 +37,11 @@ type ResetPasswordPayload = {
 
 type AuthContextValue = {
   user: StoredUser | null
+  organizations: StoredOrganization[]
   organization: StoredOrganization | null
   organizationId: string | null
-  organizations: StoredOrganization[]
+  organizationChecklist: string[]
+  requiresOrganizationSetup: boolean
   status: AuthStatus
   initializing: boolean
   isAuthenticated: boolean
@@ -47,62 +51,136 @@ type AuthContextValue = {
   requestPasswordReset: (email: string) => Promise<void>
   resetPassword: (payload: ResetPasswordPayload) => Promise<void>
   setOrganization: (organizationId: string | null) => void
+  updateOrganizationProfile: (data: Partial<StoredOrganization>) => Promise<StoredOrganization>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-const resolveOrganizationId = (user: StoredUser | null, preferred: string | null) => {
-  const organizations = user?.organizations ?? []
-  if (!organizations.length) return null
-
-  if (preferred && organizations.some((org) => org.id === preferred)) {
-    return preferred
+const normalizeOrganization = (organization: any): StoredOrganization => {
+  const idCandidate = organization?.id ?? organization?.uuid ?? organization?.code
+  return {
+    ...organization,
+    id: idCandidate ? String(idCandidate) : '',
+    code: organization?.code ?? organization?.org_code ?? undefined,
+    name: organization?.name,
+    address:
+      organization?.address ??
+      organization?.address_line ??
+      organization?.address_line1 ??
+      organization?.address1 ??
+      organization?.registered_address ??
+      null,
+    tax_id: organization?.tax_id ?? organization?.taxNumber ?? organization?.taxId ?? null,
+    trade_register:
+      organization?.trade_register ?? organization?.tradeRegister ?? organization?.trade_register_number ?? null,
+    is_onboarded: organization?.is_onboarded ?? organization?.isOnboarded ?? undefined,
+    missing_fields: organization?.missing_fields ?? organization?.missingFields ?? undefined,
   }
+}
 
-  const candidate =
-    user?.default_organization_id ??
-    user?.defaultOrganizationId ??
-    organizations[0]?.id ??
-    null
-
-  if (candidate && organizations.some((org) => org.id === candidate)) {
-    return candidate
-  }
-
-  return organizations[0]?.id ?? null
+const ensureString = (value: unknown): string | null => {
+  if (value === undefined || value === null) return null
+  const text = String(value)
+  return text.length ? text : null
 }
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<StoredUser | null>(() => getStoredUser())
-  const [organizationId, setOrganizationIdState] = useState<string | null>(() =>
-    getStoredOrganizationId(),
-  )
+  const [organizations, setOrganizations] = useState<StoredOrganization[]>(() => getStoredUser()?.organizations ?? [])
+  const [organizationId, setOrganizationIdState] = useState<string | null>(() => getStoredOrganizationId())
+  const [organizationCode, setOrganizationCodeState] = useState<string | null>(() => getStoredOrganizationCode())
   const [status, setStatus] = useState<AuthStatus>('loading')
   const [initializing, setInitializing] = useState(true)
+
+  const determinePreferredOrganization = useCallback(
+    (list: StoredOrganization[]): StoredOrganization | null => {
+      const storedId = getStoredOrganizationId()
+      if (storedId) {
+        const match = list.find((org) => ensureString(org.id) === storedId)
+        if (match) return match
+      }
+      const storedCode = getStoredOrganizationCode()
+      if (storedCode) {
+        const match = list.find((org) => org.code === storedCode)
+        if (match) return match
+      }
+      if (organizationId) {
+        const match = list.find((org) => ensureString(org.id) === organizationId)
+        if (match) return match
+      }
+      return list[0] ?? null
+    },
+    [organizationId],
+  )
+
+  const applyOrganizationSelection = useCallback((organization: StoredOrganization | null) => {
+    const nextId = ensureString(organization?.id)
+    const nextCode = ensureString(organization?.code) ?? nextId
+    setOrganizationIdState(nextId)
+    persistSelectedOrganizationId(nextId)
+    setOrganizationCodeState(nextCode)
+    persistSelectedOrganizationCode(nextCode)
+    setOrganizationHeader(nextCode)
+  }, [])
+
+  useEffect(() => {
+    setOrganizationHeader(organizationCode)
+  }, [organizationCode])
 
   const handleUnauthorized = useCallback(() => {
     clearAuthSession()
     setAuthToken(null)
+    setOrganizationHeader(null)
     setUser(null)
-    setOrganizationIdState(null)
+    setOrganizations([])
+    applyOrganizationSelection(null)
     setStatus('unauthenticated')
     setInitializing(false)
-  }, [])
+  }, [applyOrganizationSelection])
 
   const applyUserState = useCallback(
     (nextUser: StoredUser | null) => {
-      setUser(nextUser)
-      persistAuthUser(nextUser)
-      const nextOrgId = resolveOrganizationId(nextUser, organizationId)
-      setOrganizationIdState(nextOrgId)
-      persistSelectedOrganizationId(nextOrgId)
+      let processedUser = nextUser
 
-      setStatus(nextUser ? 'authenticated' : 'unauthenticated')
+      if (nextUser?.organizations?.length) {
+        const normalized = nextUser.organizations.map(normalizeOrganization)
+        setOrganizations(normalized)
+        const preferred = determinePreferredOrganization(normalized)
+        applyOrganizationSelection(preferred)
+        processedUser = { ...nextUser, organizations: normalized }
+      } else if (!nextUser) {
+        setOrganizations([])
+        applyOrganizationSelection(null)
+      }
+
+      setUser(processedUser)
+      persistAuthUser(processedUser)
+      setStatus(processedUser ? 'authenticated' : 'unauthenticated')
       setInitializing(false)
-      return nextUser
+      return processedUser
     },
-    [organizationId],
+    [applyOrganizationSelection, determinePreferredOrganization],
   )
+
+  const loadOrganizations = useCallback(async () => {
+    const response = await api.get('/organizations/')
+    const payload = Array.isArray(response.data)
+      ? response.data
+      : Array.isArray(response.data?.results)
+      ? response.data.results
+      : []
+    const normalized = (payload as any[]).map(normalizeOrganization)
+    setOrganizations(normalized)
+    setUser((prev) => {
+      if (!prev) return prev
+      const nextUser = { ...prev, organizations: normalized }
+      persistAuthUser(nextUser)
+      return nextUser
+    })
+    const preferred = determinePreferredOrganization(normalized)
+    applyOrganizationSelection(preferred)
+    return normalized
+  }, [applyOrganizationSelection, determinePreferredOrganization])
 
   const refreshProfile = useCallback(async () => {
     const token = getAuthToken()
@@ -117,6 +195,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       const response = await api.get('/auth/me')
       const nextUser = (response.data ?? null) as StoredUser | null
       applyUserState(nextUser)
+      await loadOrganizations()
       return nextUser
     } catch (error) {
       const axiosError = error as AxiosError
@@ -125,11 +204,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       }
       throw error
     }
-  }, [applyUserState, handleUnauthorized])
+  }, [applyUserState, handleUnauthorized, loadOrganizations])
 
   const login = useCallback(
     async ({ email, password }: LoginPayload) => {
       try {
+        setStatus('loading')
         const response = await api.post('/auth/login', { email, password })
         const token = response.data?.token as string | undefined
         const userPayload = (response.data?.user ?? null) as StoredUser | null
@@ -141,18 +221,19 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         persistAuthToken(token)
         setAuthToken(token)
         applyUserState(userPayload)
+        await loadOrganizations()
       } catch (error) {
         throw error
       }
     },
-    [applyUserState],
+    [applyUserState, loadOrganizations],
   )
 
   const logout = useCallback(async () => {
     try {
       await api.post('/auth/logout')
     } catch {
-      // ignore logout api failures
+      // best effort
     } finally {
       handleUnauthorized()
     }
@@ -173,30 +254,51 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     [],
   )
 
-  const setOrganization = useCallback((nextOrganizationId: string | null) => {
-    setOrganizationIdState(nextOrganizationId)
-    persistSelectedOrganizationId(nextOrganizationId)
-  }, [])
+  const setOrganization = useCallback(
+    (nextOrganizationId: string | null) => {
+      if (!nextOrganizationId) {
+        applyOrganizationSelection(null)
+        return
+      }
+      const match =
+        organizations.find((org) => ensureString(org.id) === ensureString(nextOrganizationId)) ?? null
+      applyOrganizationSelection(match)
+    },
+    [applyOrganizationSelection, organizations],
+  )
 
-  useEffect(() => {
-    const token = getAuthToken()
+  const updateOrganizationProfile = useCallback(
+    async (data: Partial<StoredOrganization>) => {
+      const currentOrganization = organizations.find((org) => ensureString(org.id) === organizationId)
+      if (!currentOrganization) {
+        throw new Error('No organization selected.')
+      }
+      const response = await api.patch(`/organizations/${currentOrganization.id}/`, data)
+      const updated = normalizeOrganization(response.data)
 
-    if (!token) {
-      handleUnauthorized()
-      setInitializing(false)
-      return
-    }
+      setOrganizations((prev) =>
+        prev.map((org) => (ensureString(org.id) === ensureString(updated.id) ? { ...org, ...updated } : org)),
+      )
 
-    setAuthToken(token)
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              organizations: prev.organizations?.map((org) =>
+                ensureString(org.id) === ensureString(updated.id) ? { ...org, ...updated } : org,
+              ),
+            }
+          : prev,
+      )
 
-    refreshProfile()
-      .catch(() => {
-        handleUnauthorized()
-      })
-      .finally(() => {
-        setInitializing(false)
-      })
-  }, [handleUnauthorized, refreshProfile])
+      if (ensureString(currentOrganization.id) === ensureString(updated.id)) {
+        applyOrganizationSelection({ ...currentOrganization, ...updated })
+      }
+
+      return updated
+    },
+    [applyOrganizationSelection, organizationId, organizations],
+  )
 
   useEffect(() => {
     const interceptorId = api.interceptors.response.use(
@@ -215,18 +317,40 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     }
   }, [handleUnauthorized])
 
-  const organizations = user?.organizations ?? []
+  useEffect(() => {
+    refreshProfile().catch(() => {
+      // errors handled in refreshProfile
+    })
+  }, [refreshProfile])
+
   const organization = useMemo(
-    () => organizations.find((item) => item.id === organizationId) ?? null,
+    () => organizations.find((item) => ensureString(item.id) === organizationId) ?? null,
     [organizationId, organizations],
   )
+
+  const organizationChecklist = useMemo(() => {
+    if (!organization) return []
+    if (Array.isArray(organization.missing_fields) && organization.missing_fields.length) {
+      return organization.missing_fields
+    }
+    const missing: string[] = []
+    if (!organization.address) missing.push('address')
+    if (!organization.tax_id) missing.push('tax_id')
+    if (!organization.trade_register) missing.push('trade_register')
+    if (organization.is_onboarded === false && missing.length === 0) {
+      missing.push('organization_profile')
+    }
+    return missing
+  }, [organization])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      organizations,
       organization,
       organizationId,
-      organizations,
+      organizationChecklist,
+      requiresOrganizationSetup: organizationChecklist.length > 0,
       status,
       initializing,
       isAuthenticated: status === 'authenticated',
@@ -236,12 +360,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       requestPasswordReset,
       resetPassword,
       setOrganization,
+      updateOrganizationProfile,
     }),
     [
       initializing,
       login,
       logout,
       organization,
+      organizationChecklist,
       organizationId,
       organizations,
       refreshProfile,
@@ -249,6 +375,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       resetPassword,
       setOrganization,
       status,
+      updateOrganizationProfile,
       user,
     ],
   )
