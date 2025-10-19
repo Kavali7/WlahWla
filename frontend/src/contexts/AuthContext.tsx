@@ -40,6 +40,8 @@ type AuthContextValue = {
   organizations: StoredOrganization[]
   organization: StoredOrganization | null
   organizationId: string | null
+  organizationsLoading: boolean
+  organizationError: string | null
   organizationChecklist: string[]
   requiresOrganizationSetup: boolean
   status: AuthStatus
@@ -51,6 +53,7 @@ type AuthContextValue = {
   requestPasswordReset: (email: string) => Promise<void>
   resetPassword: (payload: ResetPasswordPayload) => Promise<void>
   setOrganization: (organizationId: string | null) => void
+  refreshOrganizations: () => Promise<StoredOrganization[]>
   updateOrganizationProfile: (data: Partial<StoredOrganization>) => Promise<StoredOrganization>
 }
 
@@ -91,6 +94,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   const [organizationCode, setOrganizationCodeState] = useState<string | null>(() => getStoredOrganizationCode())
   const [status, setStatus] = useState<AuthStatus>('loading')
   const [initializing, setInitializing] = useState(true)
+  const [organizationsLoading, setOrganizationsLoading] = useState(false)
+  const [organizationError, setOrganizationError] = useState<string | null>(null)
 
   const determinePreferredOrganization = useCallback(
     (list: StoredOrganization[]): StoredOrganization | null => {
@@ -163,24 +168,58 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   )
 
   const loadOrganizations = useCallback(async () => {
-    const response = await api.get('/organizations/')
-    const payload = Array.isArray(response.data)
-      ? response.data
-      : Array.isArray(response.data?.results)
-      ? response.data.results
-      : []
-    const normalized = (payload as any[]).map(normalizeOrganization)
-    setOrganizations(normalized)
-    setUser((prev) => {
-      if (!prev) return prev
-      const nextUser = { ...prev, organizations: normalized }
-      persistAuthUser(nextUser)
-      return nextUser
-    })
-    const preferred = determinePreferredOrganization(normalized)
-    applyOrganizationSelection(preferred)
-    return normalized
-  }, [applyOrganizationSelection, determinePreferredOrganization])
+    setOrganizationsLoading(true)
+    setOrganizationError(null)
+    try {
+      const response = await api.get('/organizations/')
+      const payload = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.results)
+        ? response.data.results
+        : []
+      const normalized = (payload as any[]).map(normalizeOrganization)
+      setOrganizations(normalized)
+      setUser((prev) => {
+        if (!prev) return prev
+        const nextUser = { ...prev, organizations: normalized }
+        persistAuthUser(nextUser)
+        return nextUser
+      })
+      const preferred = determinePreferredOrganization(normalized)
+      applyOrganizationSelection(preferred)
+      setOrganizationError(null)
+      return normalized
+    } catch (error) {
+      const axiosError = error as AxiosError
+      if (axiosError.response?.status === 404) {
+        setOrganizations([])
+        applyOrganizationSelection(null)
+        setOrganizationError("Aucune organisation n'est encore disponible pour votre compte.")
+        return []
+      }
+      if (axiosError.response?.status === 401) {
+        handleUnauthorized()
+        return []
+      }
+      const message =
+        axiosError.response?.status !== undefined
+          ? `Erreur ${axiosError.response.status} lors du chargement des organisations.`
+          : "Impossible de contacter le serveur. Vérifiez votre connexion."
+      setOrganizationError(message)
+      if (!organizations.length) {
+        setOrganizations([])
+        applyOrganizationSelection(null)
+      }
+      throw error
+    } finally {
+      setOrganizationsLoading(false)
+    }
+  }, [
+    applyOrganizationSelection,
+    determinePreferredOrganization,
+    handleUnauthorized,
+    organizations.length,
+  ])
 
   const refreshProfile = useCallback(async () => {
     const token = getAuthToken()
@@ -195,7 +234,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       const response = await api.get('/auth/me')
       const nextUser = (response.data ?? null) as StoredUser | null
       applyUserState(nextUser)
-      await loadOrganizations()
+      try {
+        await loadOrganizations()
+      } catch {
+        // handled by loadOrganizations state
+      }
       return nextUser
     } catch (error) {
       const axiosError = error as AxiosError
@@ -221,7 +264,11 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         persistAuthToken(token)
         setAuthToken(token)
         applyUserState(userPayload)
-        await loadOrganizations()
+        try {
+          await loadOrganizations()
+        } catch {
+          // handled by loadOrganizations state
+        }
       } catch (error) {
         throw error
       }
@@ -349,6 +396,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       organizations,
       organization,
       organizationId,
+      organizationsLoading,
+      organizationError,
       organizationChecklist,
       requiresOrganizationSetup: organizationChecklist.length > 0,
       status,
@@ -360,16 +409,20 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       requestPasswordReset,
       resetPassword,
       setOrganization,
+      refreshOrganizations: loadOrganizations,
       updateOrganizationProfile,
     }),
     [
       initializing,
+      loadOrganizations,
       login,
       logout,
       organization,
       organizationChecklist,
       organizationId,
       organizations,
+      organizationError,
+      organizationsLoading,
       refreshProfile,
       requestPasswordReset,
       resetPassword,

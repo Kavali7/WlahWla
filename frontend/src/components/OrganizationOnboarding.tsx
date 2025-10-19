@@ -24,20 +24,26 @@ const initialForm: FormState = {
 export default function OrganizationOnboardingCard() {
   const {
     organization,
+    organizations,
+    organizationsLoading,
+    organizationError,
     organizationChecklist,
     requiresOrganizationSetup,
     updateOrganizationProfile,
+    refreshOrganizations,
   } = useAuth()
   const [form, setForm] = useState<FormState>(initialForm)
   const [saving, setSaving] = useState(false)
+  const [retrying, setRetrying] = useState(false)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!organization) return
     setForm({
-      address: organization?.address ?? '',
-      tax_id: organization?.tax_id ?? '',
-      trade_register: organization?.trade_register ?? '',
+      address: organization.address ?? '',
+      tax_id: organization.tax_id ?? '',
+      trade_register: organization.trade_register ?? '',
     })
   }, [organization?.id, organization?.address, organization?.tax_id, organization?.trade_register])
 
@@ -48,8 +54,71 @@ export default function OrganizationOnboardingCard() {
     return mapped
   }, [organizationChecklist])
 
-  if (!requiresOrganizationSetup || !organization) {
+  const handleRetry = async () => {
+    setRetrying(true)
+    try {
+      await refreshOrganizations()
+    } catch {
+      // handled by context
+    } finally {
+      setRetrying(false)
+    }
+  }
+
+  if (organizationsLoading) {
+    return (
+      <section className="rounded-3xl border border-slate-200 bg-white px-6 py-6 text-sm text-slate-700 shadow-soft">
+        Chargement des organisations...
+      </section>
+    )
+  }
+
+  if (!organization || organizations.length === 0) {
+    return (
+      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-soft">
+        <header className="mb-4 flex flex-col gap-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">
+            Organisation requise
+          </p>
+          <h2 className="text-lg font-semibold text-amber-900">
+            Aucune organisation n'est encore associee a votre compte
+          </h2>
+          <p className="text-xs text-amber-700">
+            Demandez a un administrateur de vous rattacher ou reessayez lorsque l'organisation aura ete creee.
+          </p>
+          {organizationError && (
+            <p className="text-xs text-amber-700">{organizationError}</p>
+          )}
+        </header>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button size="sm" onClick={handleRetry} disabled={retrying}>
+            {retrying ? 'Nouvelle tentative...' : 'Reessayer'}
+          </Button>
+        </div>
+      </section>
+    )
+  }
+
+  if (!requiresOrganizationSetup && !organizationError) {
     return null
+  }
+
+  if (!requiresOrganizationSetup && organizationError) {
+    return (
+      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-soft">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">
+              Information organisation
+            </p>
+            <p className="text-sm text-amber-700">{organizationError}</p>
+          </div>
+          <Button size="sm" onClick={handleRetry} disabled={retrying}>
+            {retrying ? 'Nouvelle tentative...' : 'Actualiser'}
+          </Button>
+        </div>
+      </section>
+    )
   }
 
   const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,9 +136,7 @@ export default function OrganizationOnboardingCard() {
       await updateOrganizationProfile(form)
       setStatusMessage('Profil mis a jour avec succes.')
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Impossible d'enregistrer les informations requises.",
-      )
+      setErrorMessage(error instanceof Error ? error.message : "Impossible d'enregistrer les informations requises.")
     } finally {
       setSaving(false)
     }
@@ -83,8 +150,11 @@ export default function OrganizationOnboardingCard() {
           Completez le profil de {organization.name ?? 'votre organisation'}
         </h2>
         {requiredFields.length > 0 && (
+          <p className="text-xs text-amber-700">Champs a renseigner : {requiredFields.join(', ')}.</p>
+        )}
+        {organizationError && (
           <p className="text-xs text-amber-700">
-            Champs a renseigner : {requiredFields.join(', ')}.
+            {organizationError} Vous pouvez reessayer apres l'enregistrement.
           </p>
         )}
       </header>
