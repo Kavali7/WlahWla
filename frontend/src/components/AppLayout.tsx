@@ -1,41 +1,49 @@
 import React from 'react'
-import { Button } from './Button'
+import { NavLink, Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom'
 import { Badge } from './Badge'
-
-const cx = (...classes: Array<string | false | null | undefined>) =>
-  classes.filter(Boolean).join(' ')
 
 export type NavigationItem = {
   label: string
   path: string
-  description?: string
   badge?: string
 }
 
-export type AppLayoutProps = {
-  navigation: NavigationItem[]
-  currentPath: string
+type LayoutMetadata = {
   title: string
   description?: string
   sidebar?: React.ReactNode
   actions?: React.ReactNode
-  children: React.ReactNode
 }
 
-export function AppLayout({
-  navigation,
-  currentPath,
-  title,
-  description,
-  sidebar,
-  actions,
-  children,
-}: AppLayoutProps) {
-  const activeNav = navigation.find((item) => currentPath.startsWith(item.path)) ?? navigation[0]
+type LayoutHandle = {
+  layout?: LayoutMetadata
+}
 
-  const handleSelect = (value: string) => {
-    window.location.hash = value
-  }
+export type AppLayoutProps = {
+  navigation: NavigationItem[]
+}
+
+const classNames = (...classes: Array<string | false | null | undefined>) =>
+  classes.filter(Boolean).join(' ')
+
+const fallbackLayout: LayoutMetadata = {
+  title: 'Tableau de bord',
+  description: 'Visualisez la sante de votre activite.',
+}
+
+export function AppLayout({ navigation }: AppLayoutProps) {
+  const matches = useMatches()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const layout =
+    [...matches]
+      .reverse()
+      .map((match) => (match.handle as LayoutHandle | undefined)?.layout)
+      .find(Boolean) ?? fallbackLayout
+
+  const activePath =
+    navigation.find((item) => location.pathname.startsWith(item.path))?.path ?? navigation[0]?.path ?? '/'
 
   return (
     <div className="min-h-screen bg-surface-muted">
@@ -51,26 +59,23 @@ export function AppLayout({
             </div>
           </div>
           <nav className="hidden items-center gap-2 md:flex">
-            {navigation.map((item) => {
-              const isActive = currentPath.startsWith(item.path)
-              return (
-                <Button
-                  key={item.path}
-                  as="a"
-                  href={item.path}
-                  variant={isActive ? 'primary' : 'ghost'}
-                  size="sm"
-                  className={cx(
-                    'px-4',
-                    isActive && 'shadow-ring',
-                    !isActive && 'text-slate-600 hover:text-slate-900',
-                  )}
-                >
-                  <span>{item.label}</span>
-                  {item.badge && <Badge variant="info" className="hidden md:inline-flex">{item.badge}</Badge>}
-                </Button>
-              )
-            })}
+            {navigation.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  classNames(
+                    'inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200',
+                    isActive
+                      ? 'border-transparent bg-brand-500 text-white shadow-soft'
+                      : 'border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50',
+                  )
+                }
+              >
+                <span>{item.label}</span>
+                {item.badge && <Badge variant="info" className="hidden md:inline-flex">{item.badge}</Badge>}
+              </NavLink>
+            ))}
           </nav>
           <div className="md:hidden">
             <label className="sr-only" htmlFor="app-layout-nav">
@@ -80,8 +85,10 @@ export function AppLayout({
               <select
                 id="app-layout-nav"
                 className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
-                value={activeNav?.path}
-                onChange={(event) => handleSelect(event.target.value)}
+                value={activePath}
+                onChange={(event) => {
+                  navigate(event.target.value)
+                }}
               >
                 {navigation.map((item) => (
                   <option key={item.path} value={item.path}>
@@ -100,19 +107,22 @@ export function AppLayout({
       <div className="container flex flex-col gap-6 py-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-2">
-            <h1>{title}</h1>
-            {description && <p className="max-w-2xl text-sm text-slate-500">{description}</p>}
+            <h1>{layout.title}</h1>
+            {layout.description && <p className="max-w-2xl text-sm text-slate-500">{layout.description}</p>}
           </div>
-          {actions && <div className="flex items-center gap-2">{actions}</div>}
+          {layout.actions && <div className="flex items-center gap-2">{layout.actions}</div>}
         </div>
 
-        <div className={cx('grid gap-6', sidebar ? 'lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]' : '')}>
-          {sidebar && (
-            <aside className="order-2 space-y-4 lg:order-1">
-              {sidebar}
-            </aside>
+        <div
+          className={classNames(
+            'grid gap-6',
+            layout.sidebar ? 'lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]' : '',
           )}
-          <main className={cx('order-1 flex flex-col gap-6', sidebar ? 'lg:order-2' : '')}>{children}</main>
+        >
+          {layout.sidebar && <aside className="order-2 space-y-4 lg:order-1">{layout.sidebar}</aside>}
+          <main className={classNames('order-1 flex flex-col gap-6', layout.sidebar ? 'lg:order-2' : '')}>
+            <Outlet />
+          </main>
         </div>
       </div>
     </div>
