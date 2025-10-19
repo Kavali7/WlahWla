@@ -43,3 +43,16 @@ export function formatCurrencyWithFallback(
   const formatted = formatCurrency(value, currency)
   return formatted === '-' ? fallback : formatted
 }
+
+export function formatDate(value: string | Date | null | undefined, options: Intl.DateTimeFormatOptions = {}) {
+  if (!value) return '-'
+  const date = typeof value === 'string' ? new Date(value) : value
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return '-'
+  }
+  const formatter = new Intl.DateTimeFormat('fr-FR', {
+    dateStyle: 'medium',
+    ...options,
+  })
+  return formatter.format(date)
+}
