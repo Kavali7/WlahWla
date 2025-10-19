@@ -1,0 +1,23 @@
+# Backend
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+
+# Frontend
+npm install
+npm run dev
+
+
+
+
+
+Passe à l'exécution de la tache 3.
+N'oublie pas de faires les tests pour t'assurer de l'abasense de problèmes de compilation,d'avertissement et autres.
+Déplace cette tâche une fois terminée dans le sous dossier done et 
+cré un commite en lui donnant le nom "Tache 3".
+
+
+https://github.com/Kavali7/WlahWla.git

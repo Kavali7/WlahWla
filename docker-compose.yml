@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+  redis:
+    image: redis:7
+  backend:
+    build: ./backend
+    command: bash -lc "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    working_dir: /app
+    volumes: ["./backend:/app"]
+    environment:
+      DEBUG: "1"
+      REDIS_URL: redis://redis:6379/0
+    ports: ["8000:8000"]
+    depends_on: [db, redis]
+  worker:
+    build: ./backend
+    command: bash -lc "celery -A config worker -l info"
+    working_dir: /app
+    volumes: ["./backend:/app"]
+    depends_on: [backend, redis]
+  beat:
+    build: ./backend
+    command: bash -lc "celery -A config beat -l info"
+    working_dir: /app
+    volumes: ["./backend:/app"]
+    depends_on: [backend, redis]
+  frontend:
+    image: node:20
+    working_dir: /app
+    volumes: ["./frontend:/app"]
+    command: bash -lc "npm i && npm run dev -- --host 0.0.0.0"
+    ports: ["3000:3000"]
+    depends_on: [backend]
+volumes:
+  pgdata:

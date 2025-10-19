@@ -1,0 +1,9 @@
+{
+  "name": "UEMOA Invoicer",
+  "short_name": "Invoicer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "icons": []
+}
