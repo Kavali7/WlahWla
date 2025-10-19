@@ -1,163 +1,202 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { api } from '../lib/api'
 
-type Product = {
-  id: string
-  name: string
-  unit_price: number
-  currency: string
-}
+type FetchStatus = 'idle' | 'loading' | 'success' | 'error'
 
-type CartItem = Product & {
-  qty: number
-}
-
-type Organization = {
-  whatsapp_number?: string
-  currency?: string
-  display_name?: string
-}
-
-const formatMoney = (value: number, currency = 'XOF') =>
-  new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency,
-    maximumFractionDigits: 0,
-  }).format(value || 0)
+const asArray = (payload: any): any[] =>
+  Array.isArray(payload) ? payload : Array.isArray(payload?.results) ? payload.results : []
 
 export default function Storefront() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [organization, setOrganization] = useState<Organization | null>(null)
-  const [cart, setCart] = useState<CartItem[]>([])
+  const [products, setProducts] = useState<any[]>([])
+  const [org, setOrg] = useState<any>(null)
+  const [cart, setCart] = useState<any[]>([])
+  const [customer, setCustomer] = useState({ name: '', phone: '', email: '' })
+  const [message, setMessage] = useState<string>('')
+  const [status, setStatus] = useState<FetchStatus>('idle')
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    api
-      .get('/products/?is_active=true')
-      .then((response) => setProducts((response.data.results ?? response.data) as Product[]))
-
-    api.get('/organizations/').then((response) => setOrganization(response.data[0]))
+  const load = useCallback(async () => {
+    setStatus('loading')
+    setError(null)
+    try {
+      const [productsResponse, organizationsResponse] = await Promise.all([
+        api.get('/products/', { params: { is_active: true } }),
+        api.get('/organizations/'),
+      ])
+      setProducts(asArray(productsResponse.data))
+      const organizations = asArray(organizationsResponse.data)
+      setOrg(organizations[0] ?? null)
+      setStatus('success')
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Impossible de charger la boutique. Verifiez votre connexion."
+      setError(message)
+      setStatus('error')
+    }
   }, [])
 
-  const addToCart = (product: Product) => {
-    setCart((previous) => {
-      const existing = previous.find((item) => item.id === product.id)
-      if (existing) {
-        return previous.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item,
-        )
+  useEffect(() => {
+    load()
+  }, [load])
+
+  const add = (product: any) => {
+    setCart((prev) => {
+      const next = [...prev]
+      const index = next.findIndex((item) => item.id === product.id)
+      if (index >= 0) {
+        next[index] = { ...next[index], qty: next[index].qty + 1 }
+      } else {
+        next.push({ ...product, qty: 1 })
       }
-      return [...previous, { ...product, qty: 1 }]
+      return next
     })
   }
 
-  const total = useMemo(
-    () => cart.reduce((sum, item) => sum + Number(item.unit_price || 0) * item.qty, 0),
-    [cart],
-  )
+  const totalAmount = useMemo(() => {
+    return cart.reduce((acc, item) => acc + Number(item.unit_price) * Number(item.qty), 0)
+  }, [cart])
 
-  const whatsappLink = useMemo(() => {
-    if (cart.length === 0) return '#'
-    const phone = (organization?.whatsapp_number ?? '').replace(/\+/g, '')
-    const lines = cart
-      .map(
-        (item) =>
-          `- ${item.name} x${item.qty} (${formatMoney(
-            Number(item.unit_price) * item.qty,
-            item.currency,
-          )})`,
-      )
-      .join('\n')
-    const totalLine = `Total: ${formatMoney(
-      total,
-      cart[0]?.currency ?? organization?.currency ?? 'XOF',
-    )}`
-    const text = `Commande boutique ${organization?.display_name ?? ''}:\n${lines}\n${totalLine}`
+  const whatsappLink = () => {
+    const phone = (org?.whatsapp_number ?? '').replace('+', '')
+    const lines = cart.map((c) => `- ${c.name} x${c.qty}`).join('\n')
+    const text = `Commande boutique:\n${lines}\nTotal: ${totalAmount.toFixed(2)} ${org?.currency ?? 'XOF'}`
     return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-  }, [cart, organization, total])
+  }
+
+  const orderOnSite = async () => {
+    if (cart.length === 0) return
+    const items = cart.map((c) => ({
+      product: c.id,
+      quantity: c.qty,
+      unit_price: c.unit_price,
+    }))
+    setIsSubmitting(true)
+    setMessage('')
+    try {
+      await api.post('/orders/', {
+        customer_name: customer.name || 'Client',
+        customer_phone: customer.phone,
+        customer_email: customer.email,
+        items,
+      })
+      setMessage('Commande envoyee !')
+      setCart([])
+    } catch (err) {
+      setMessage(
+        err instanceof Error
+          ? err.message
+          : 'Hors ligne : la commande sera synchronisee a la prochaine connexion.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleCustomerChange =
+    (field: 'name' | 'phone' | 'email') => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value
+      setCustomer((prev) => ({ ...prev, [field]: value }))
+    }
 
   return (
-    <div className="grid gap-6">
-      <Card
-        title="Catalogue produits"
-        description="Ajoutez des articles au panier avant de generer un lien de commande WhatsApp."
-        contentClassName="gap-6"
-      >
-        {products.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-muted px-5 py-6 text-sm text-slate-500">
-            Aucun produit actif pour le moment. Activez vos articles dans le module inventaire.
+    <div className="grid gap-4 p-4">
+      {status === 'error' && (
+        <div className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-6 text-sm text-rose-700 shadow-sm">
+          {error}
+          <div className="mt-3">
+            <Button size="sm" variant="ghost" onClick={load}>
+              Reessayer
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <Card title="Boutique">
+        {status === 'loading' ? (
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="h-32 rounded-2xl bg-slate-200/60 animate-pulse" />
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-200 bg-surface-muted px-4 py-4 text-sm text-slate-500">
+            Aucun produit disponible pour le moment.
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-surface p-4 shadow-sm"
-              >
-                <div className="flex flex-col gap-1">
-                  <span className="text-base font-semibold text-slate-900">{product.name}</span>
-                  <span className="text-sm text-slate-500">
-                    {formatMoney(Number(product.unit_price), product.currency)}
-                  </span>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {products.map((product: any) => (
+              <div key={product.id} className="card flex flex-col gap-2 p-3">
+                <div className="font-medium">{product.name}</div>
+                <div className="text-sm text-slate-600">
+                  {product.unit_price} {product.currency}
                 </div>
-                <Button variant="secondary" size="sm" onClick={() => addToCart(product)}>
-                  Ajouter au panier
-                </Button>
+                <Button onClick={() => add(product)}>Ajouter</Button>
               </div>
             ))}
           </div>
         )}
       </Card>
 
-      <Card
-        title="Panier"
-        description="Generez un recapitulatif et partagez-le instantanement a vos clients."
-        contentClassName="gap-4"
-      >
+      <Card title="Panier">
         {cart.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-surface-muted px-5 py-6 text-sm text-slate-500">
-            Votre panier est vide. Selectionnez des produits dans la liste ci-dessus pour demarrer une
-            commande.
-          </div>
+          <div>Votre panier est vide.</div>
         ) : (
-          <>
-            <div className="grid gap-3">
-              {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between rounded-2xl border border-slate-100 bg-surface px-4 py-3 shadow-sm"
-                >
-                  <div>
-                    <p className="font-medium text-slate-900">{item.name}</p>
-                    <p className="text-xs text-slate-500">Quantite {item.qty}</p>
-                  </div>
-                  <p className="text-sm font-semibold text-slate-900">
-                    {formatMoney(Number(item.unit_price) * item.qty, item.currency)}
-                  </p>
-                </div>
-              ))}
+          <div className="grid gap-2">
+            {cart.map((item) => (
+              <div key={item.id} className="flex justify-between">
+                <span>{item.name} x{item.qty}</span>
+                <span>{(Number(item.unit_price) * Number(item.qty)).toFixed(2)} {item.currency}</span>
+              </div>
+            ))}
+            <div className="mt-2 grid gap-2 md:grid-cols-3">
+              <input
+                className="border rounded px-2 py-1"
+                placeholder="Nom"
+                value={customer.name}
+                onChange={handleCustomerChange('name')}
+              />
+              <input
+                className="border rounded px-2 py-1"
+                placeholder="Telephone"
+                value={customer.phone}
+                onChange={handleCustomerChange('phone')}
+              />
+              <input
+                className="border rounded px-2 py-1"
+                placeholder="E-mail"
+                value={customer.email}
+                onChange={handleCustomerChange('email')}
+              />
             </div>
-            <div className="flex items-center justify-between rounded-2xl bg-surface-muted px-4 py-3 text-sm font-semibold text-slate-700">
-              <span>Total estime</span>
+            <div className="flex flex-wrap gap-2">
+              <a className="btn" href={whatsappLink()} target="_blank" rel="noreferrer">
+                Commander via WhatsApp
+              </a>
+              <Button onClick={orderOnSite} disabled={isSubmitting}>
+                {isSubmitting ? 'Envoi...' : 'Commander sur le site'}
+              </Button>
+            </div>
+            <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-sm font-semibold text-slate-700">
+              <span>Total</span>
               <span>
-                {formatMoney(total, cart[0]?.currency ?? organization?.currency ?? 'XOF')}
+                {totalAmount.toFixed(2)} {org?.currency ?? 'XOF'}
               </span>
             </div>
-            <Button
-              as="a"
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="primary"
-              size="md"
-              className="justify-center"
-            >
-              Commander via WhatsApp
-            </Button>
-          </>
+            {message && <div className="text-sm text-slate-600">{message}</div>}
+          </div>
         )}
       </Card>
+
+      {status === 'success' && !org && (
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-900 shadow-soft">
+          Aucune organisation n'est encore configuree. Les prix sont affiches sans contexte.
+        </div>
+      )}
     </div>
   )
 }
