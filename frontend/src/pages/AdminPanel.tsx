@@ -1,315 +1,556 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { api } from '../lib/api'
+import { useAuth } from '../contexts/AuthContext'
 
 type FetchStatus = 'idle' | 'loading' | 'success' | 'error'
 
-const asArray = (payload: any): any[] =>
-  Array.isArray(payload) ? payload : Array.isArray(payload?.results) ? payload.results : []
+type MembershipRole = 'ADMIN' | 'ACCOUNTANT' | 'SALES' | 'WAREHOUSE' | 'VIEWER'
 
-export default function AdminPanel() {
-  const [users, setUsers] = useState<any[]>([])
-  const [org, setOrg] = useState<any>(null)
-  const [members, setMembers] = useState<any[]>([])
-  const [form, setForm] = useState({ username: '', email: '' })
+const ROLE_OPTIONS: Array<{ value: MembershipRole; label: string }> = [
+  { value: 'ADMIN', label: 'Administrateur' },
+  { value: 'ACCOUNTANT', label: 'Comptable' },
+  { value: 'SALES', label: 'Commercial' },
+  { value: 'WAREHOUSE', label: 'Logistique' },
+  { value: 'VIEWER', label: 'Lecture seule' },
+]
+
+const MANAGEMENT_ROLES: MembershipRole[] = ['ADMIN']
+
+type User = {
+  id: number
+  username: string
+  email: string
+  first_name?: string
+  last_name?: string
+  is_active: boolean
+}
+
+type Membership = {
+  id: number
+  organization: number
+  user: number
+  role: MembershipRole
+  is_active: boolean
+}
+
+type MemberRow = {
+  membership: Membership
+  user: User | null
+}
+
+type InvitationFormState = {
+  email: string
+  name: string
+  role: MembershipRole
+}
+
+type InvitationMessageInput = {
+  email: string
+  name?: string
+  organizationName?: string
+  roleLabel: string
+}
+
+const asArray = <T,>(payload: any): T[] => {
+  if (Array.isArray(payload)) return payload as T[]
+  if (Array.isArray(payload?.results)) return payload.results as T[]
+  return []
+}
+
+const getErrorMessage = (error: any): string => {
+  if (error?.response?.data) {
+    const data = error.response.data
+    if (typeof data === 'string') return data
+    if (typeof data?.detail === 'string') return data.detail
+    if (typeof data === 'object') {
+      return Object.entries(data)
+        .map(([key, value]) =>
+          `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`,
+        )
+        .join(' | ')
+    }
+  }
+  if (error?.message) return error.message
+  return "Une erreur inattendue s'est produite."
+}
+
+const normalizeEmail = (email: string) => email.trim().toLowerCase()
+
+const generateUsernameFromEmail = (email: string) => {
+  const base = normalizeEmail(email).split('@')[0] ?? 'user'
+  const sanitized = base.replace(/[^a-zA-Z0-9._-]/g, '')
+  const suffix = Math.random().toString(36).slice(2, 6)
+  return sanitized ? `${sanitized}-${suffix}` : `user-${suffix}`
+}
+
+const buildInvitationMessage = ({
+  email,
+  name,
+  organizationName,
+  roleLabel,
+}: InvitationMessageInput) => {
+  const greeting = name ? `Bonjour ${name},` : 'Bonjour,'
+  const orgSegment = organizationName ? ` au sein de ${organizationName}` : ''
+  const link = `${window.location.origin}/login`
+  return [
+    greeting,
+    '',
+    `Vous etes invite(e) a rejoindre l'espace ${roleLabel}${orgSegment}.`,
+    `Connectez-vous en utilisant votre adresse ${email} en visitant le lien suivant :`,
+    link,
+    '',
+    'Si vous n attendiez pas cette invitation, ignorez ce message.',
+  ].join('\n')
+}
+
+const defaultInvitationForm: InvitationFormState = {
+  email: '',
+  name: '',
+  role: 'VIEWER',
+}
+
+const AdminPanel: React.FC = () => {
+  const { user: authUser, organization } = useAuth()
+  const organizationId = organization?.id ? String(organization.id) : null
+  const organizationDetails = organization as Record<string, any> | null
+  const organizationName = (organizationDetails?.name as string) ?? undefined
+  const organizationCurrency = (organizationDetails?.currency as string) ?? 'XOF'
+  const organizationCode =
+    (organizationDetails?.code as string) ??
+    (organizationDetails?.org_code as string) ??
+    undefined
+  const organizationWhatsapp =
+    (organizationDetails?.whatsapp_number as string) ?? undefined
 
   const [status, setStatus] = useState<FetchStatus>('idle')
+  const [users, setUsers] = useState<User[]>([])
+  const [memberships, setMemberships] = useState<Membership[]>([])
   const [error, setError] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
-  const [savingOrg, setSavingOrg] = useState(false)
-  const [creatingUser, setCreatingUser] = useState(false)
-  const [updatingRoleId, setUpdatingRoleId] = useState<number | null>(null)
+
+  const [inviteForm, setInviteForm] = useState<InvitationFormState>(defaultInvitationForm)
+  const [inviteLoading, setInviteLoading] = useState(false)
+  const [invitePreview, setInvitePreview] = useState<string | null>(null)
+
+  const [updatingMemberId, setUpdatingMemberId] = useState<number | null>(null)
+  const [togglingMemberId, setTogglingMemberId] = useState<number | null>(null)
 
   const load = useCallback(async () => {
+    if (!organizationId) return
     setStatus('loading')
     setError(null)
     try {
-      const [usersResponse, orgsResponse, membershipsResponse] = await Promise.all([
+      const [usersResponse, membershipsResponse] = await Promise.all([
         api.get('/users/'),
-        api.get('/organizations/'),
-        api.get('/memberships/'),
+        api.get('/memberships/', { params: { organization: organizationId } }),
       ])
-      setUsers(asArray(usersResponse.data))
-      const organizations = asArray(orgsResponse.data)
-      setOrg(organizations[0] ?? null)
-      setMembers(asArray(membershipsResponse.data))
+      const allUsers = asArray<User>(usersResponse.data)
+      const allMemberships = asArray<Membership>(membershipsResponse.data).filter(
+        (membership) => String(membership.organization) === organizationId,
+      )
+
+      setUsers(allUsers)
+      setMemberships(allMemberships)
       setStatus('success')
     } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Impossible de charger les donnees administrateur. Verifiez votre connexion."
-      setError(message)
+      setError(getErrorMessage(err))
       setStatus('error')
     }
-  }, [])
+  }, [organizationId])
 
   useEffect(() => {
-    load()
-  }, [load])
+    if (organizationId) {
+      load()
+    }
+  }, [load, organizationId])
 
-  const handleCreateUser = async () => {
-    if (!form.username.trim() || !form.email.trim()) return
-    setCreatingUser(true)
+  const currentUserId = authUser?.id ? Number(authUser.id) : null
+
+  const currentMembership = useMemo(
+    () =>
+      currentUserId
+        ? memberships.find(
+            (membership) => Number(membership.user) === currentUserId,
+          )
+        : undefined,
+    [currentUserId, memberships],
+  )
+
+  const canManageMembers =
+    !!currentMembership && MANAGEMENT_ROLES.includes(currentMembership.role)
+
+  const memberRows: MemberRow[] = useMemo(() => {
+    const sorted = [...memberships].sort((a, b) => {
+      if (a.is_active !== b.is_active) return a.is_active ? -1 : 1
+      return a.role.localeCompare(b.role)
+    })
+    return sorted.map((membership) => {
+      const user = users.find((candidate) => Number(candidate.id) === Number(membership.user)) ?? null
+      return { membership, user }
+    })
+  }, [memberships, users])
+
+  const handleInviteFieldChange =
+    (field: keyof InvitationFormState) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value = event.target.value
+      setInviteForm((prev) => ({ ...prev, [field]: value }))
+    }
+
+  const handleSendInvitation = async () => {
+    if (!organizationId) {
+      setActionError("Aucune organisation selectionnee.")
+      return
+    }
+    const email = normalizeEmail(inviteForm.email)
+    if (!email) {
+      setActionError('Veuillez renseigner une adresse email valide.')
+      return
+    }
+
+    setInviteLoading(true)
     setFeedback(null)
     setActionError(null)
+    setInvitePreview(null)
+
     try {
-      await api.post('/users/', form)
-      setForm({ username: '', email: '' })
-      setFeedback('Utilisateur cree avec succes.')
+      const existingUser =
+        users.find((candidate) => normalizeEmail(candidate.email) === email) ?? null
+
+      let userId: number
+      let createdUser = false
+
+      if (existingUser) {
+        userId = existingUser.id
+      } else {
+        const username = generateUsernameFromEmail(email)
+        const response = await api.post('/users/', {
+          username,
+          email,
+          first_name: inviteForm.name || undefined,
+          is_active: false,
+        })
+        const newUser = response.data as User
+        userId = newUser.id
+        createdUser = true
+      }
+
+      const existingMembership =
+        memberships.find((membership) => Number(membership.user) === Number(userId)) ?? null
+
+      if (existingMembership) {
+        await api.patch(`/memberships/${existingMembership.id}/`, {
+          role: inviteForm.role,
+          is_active: false,
+        })
+      } else {
+        await api.post('/memberships/', {
+          organization: organizationId,
+          user: userId,
+          role: inviteForm.role,
+          is_active: false,
+        })
+      }
+
       await load()
-    } catch (err) {
-      setActionError(
-        err instanceof Error
-          ? err.message
-          : "Impossible de creer l'utilisateur. Reessayez ou verifiez votre connexion.",
+
+      const roleLabel =
+        ROLE_OPTIONS.find((item) => item.value === inviteForm.role)?.label ?? inviteForm.role
+
+      const message = buildInvitationMessage({
+        email,
+        name: inviteForm.name,
+        organizationName,
+        roleLabel,
+      })
+
+      setInvitePreview(message)
+      setFeedback(
+        createdUser
+          ? 'Invitation creee. Copiez le message ci-dessous pour l envoyer au collaborateur.'
+          : 'Invitation mise a jour. Copiez le message ci-dessous pour l envoyer au collaborateur.',
       )
+      setInviteForm((prev) => ({ ...defaultInvitationForm, role: prev.role }))
+    } catch (err) {
+      setActionError(getErrorMessage(err))
     } finally {
-      setCreatingUser(false)
+      setInviteLoading(false)
     }
   }
 
-  const handleSaveOrganization = async () => {
-    if (!org) return
-    setSavingOrg(true)
-    setFeedback(null)
-    setActionError(null)
-    try {
-      await api.patch(`/organizations/${org.id}/`, org)
-      setFeedback('Organisation mise a jour.')
-      await load()
-    } catch (err) {
-      setActionError(
-        err instanceof Error ? err.message : "Impossible d'enregistrer l'organisation.",
-      )
-    } finally {
-      setSavingOrg(false)
-    }
-  }
-
-  const handleUpdateMember = async (membership: any, role: string) => {
-    setUpdatingRoleId(membership.id)
+  const handleRoleChange = async (membership: Membership, role: MembershipRole) => {
+    setUpdatingMemberId(membership.id)
     setFeedback(null)
     setActionError(null)
     try {
       await api.patch(`/memberships/${membership.id}/`, { role })
-      setFeedback('Role mis a jour.')
       await load()
+      setFeedback('Role mis a jour.')
     } catch (err) {
-      setActionError(
-        err instanceof Error ? err.message : "Impossible de mettre a jour le role du membre.",
-      )
+      setActionError(getErrorMessage(err))
     } finally {
-      setUpdatingRoleId(null)
+      setUpdatingMemberId(null)
     }
   }
 
-  const handleOrgChange =
-    (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = event.target.type === 'checkbox'
-        ? (event.target as HTMLInputElement).checked
-        : event.target.value
-      setOrg((prev: any) => ({ ...prev, [field]: value }))
+  const handleToggleActive = async (membership: Membership, nextActive: boolean) => {
+    setTogglingMemberId(membership.id)
+    setFeedback(null)
+    setActionError(null)
+    try {
+      await api.patch(`/memberships/${membership.id}/`, { is_active: nextActive })
+      await load()
+      setFeedback(nextActive ? 'Membre reactiver.' : 'Membre suspendu.')
+    } catch (err) {
+      setActionError(getErrorMessage(err))
+    } finally {
+      setTogglingMemberId(null)
     }
+  }
 
-  const disableCreateUser =
-    creatingUser || !form.username.trim().length || !form.email.trim().length
+  const handleCopyInvitation = async (row: MemberRow) => {
+    if (!row.user?.email) {
+      setActionError('Adresse email introuvable pour ce membre.')
+      return
+    }
+    const roleLabel =
+      ROLE_OPTIONS.find((item) => item.value === row.membership.role)?.label ??
+      row.membership.role
+    const message = buildInvitationMessage({
+      email: row.user.email,
+      name: row.user.first_name || row.user.username,
+      organizationName,
+      roleLabel,
+    })
+    try {
+      await navigator.clipboard.writeText(message)
+      setFeedback(`Invitation copiee dans le presse-papier pour ${row.user.email}.`)
+    } catch {
+      setInvitePreview(message)
+      setActionError(
+        "Impossible de copier automatiquement. Copiez le message ci-dessous manuellement.",
+      )
+    }
+  }
+
+  const disableInvite =
+    inviteLoading || !normalizeEmail(inviteForm.email)
+
+  const showGuardMessage =
+    status === 'success' && !canManageMembers
 
   return (
     <div className="grid gap-4 p-4">
       {status === 'loading' && (
         <div className="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-6 text-sm text-slate-600 shadow-sm">
-          Chargement des donnees administrateur...
+          Chargement des informations administration…
         </div>
       )}
+
       {status === 'error' && (
         <div className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-6 text-sm text-rose-700 shadow-sm">
           {error}
-          <div className="mt-3">
-            <Button size="sm" variant="ghost" onClick={load}>
-              Reessayer
+        </div>
+      )}
+
+      {showGuardMessage && (
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-700 shadow-soft">
+          Vous n avez pas les permissions necessaires pour gerer les collaborateurs. Contactez un
+          administrateur.
+        </div>
+      )}
+
+      {organization && (
+        <Card
+          title="Informations organisation"
+          description="Ces informations sont visibles des collaborateurs invites."
+          contentClassName="gap-3 md:grid-cols-2"
+        >
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <span className="font-semibold text-slate-900">Nom</span>
+            <div>{organizationName ?? 'Non renseigne'}</div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <span className="font-semibold text-slate-900">Devise</span>
+            <div>{organizationCurrency}</div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <span className="font-semibold text-slate-900">Code organisation</span>
+            <div>{organizationCode ?? '-'}</div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <span className="font-semibold text-slate-900">WhatsApp</span>
+            <div>{organizationWhatsapp ?? 'Non renseigne'}</div>
+          </div>
+        </Card>
+      )}
+
+      {canManageMembers && (
+        <Card
+          title="Inviter un collaborateur"
+          description="Creez une invitation en renseignant le role attendu. Copiez ensuite le message genere."
+          contentClassName="gap-3"
+        >
+          <div className="grid gap-3 md:grid-cols-[2fr_1.2fr_1fr]">
+            <input
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              placeholder="Email"
+              value={inviteForm.email}
+              onChange={handleInviteFieldChange('email')}
+              type="email"
+            />
+            <input
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              placeholder="Nom (facultatif)"
+              value={inviteForm.name}
+              onChange={handleInviteFieldChange('name')}
+            />
+            <select
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              value={inviteForm.role}
+              onChange={handleInviteFieldChange('role')}
+            >
+              {ROLE_OPTIONS.map((role) => (
+                <option key={role.value} value={role.value}>
+                  {role.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={handleSendInvitation} disabled={disableInvite}>
+              {inviteLoading ? 'Preparation...' : 'Generer linvitation'}
+            </Button>
+            <Button variant="ghost" onClick={() => setInviteForm(defaultInvitationForm)} disabled={inviteLoading}>
+              Reinitialiser
             </Button>
           </div>
-        </div>
+
+          {invitePreview && (
+            <div className="grid gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Message a envoyer
+              </span>
+              <textarea
+                className="min-h-[160px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                readOnly
+                value={invitePreview}
+              />
+            </div>
+          )}
+        </Card>
+      )}
+
+      {canManageMembers && (
+        <Card
+          title="Membres de l'organisation"
+          description="Modifiez les roles, suspendez ou renvoyez une invitation."
+          contentClassName="gap-3"
+        >
+          {status === 'success' && memberRows.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-200 bg-surface-muted px-4 py-4 text-sm text-slate-500">
+              Aucun collaborateur pour le moment.
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-2xl border border-slate-200">
+              <table className="min-w-full divide-y divide-slate-200 text-sm">
+                <thead className="bg-surface-muted text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Collaborateur</th>
+                    <th className="px-4 py-3 text-left">Role</th>
+                    <th className="px-4 py-3 text-left">Statut</th>
+                    <th className="px-4 py-3 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {memberRows.map((row) => {
+                    const { membership, user } = row
+                    const displayName =
+                      user?.first_name || user?.username || user?.email || `Utilisateur #${membership.user}`
+                    const inviteeEmail = user?.email ?? ''
+                    const isActive = membership.is_active
+                    return (
+                      <tr key={membership.id} className="hover:bg-slate-50">
+                        <td className="px-4 py-3">
+                          <div className="text-sm font-semibold text-slate-900">{displayName}</div>
+                          {inviteeEmail && (
+                            <div className="text-xs text-slate-500">{inviteeEmail}</div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <select
+                            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            value={membership.role}
+                            onChange={(event) =>
+                              handleRoleChange(membership, event.target.value as MembershipRole)
+                            }
+                            disabled={updatingMemberId === membership.id}
+                          >
+                            {ROLE_OPTIONS.map((role) => (
+                              <option key={role.value} value={role.value}>
+                                {role.label}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={
+                              isActive
+                                ? 'rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-600'
+                                : 'rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-600'
+                            }
+                          >
+                            {isActive ? 'Actif' : 'Invitation en attente'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => handleToggleActive(membership, !isActive)}
+                              disabled={togglingMemberId === membership.id}
+                            >
+                              {isActive ? 'Suspendre' : 'Reactiver'}
+                            </Button>
+                            {!isActive && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopyInvitation(row)}
+                              >
+                                Copier linvitation
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
       )}
 
       {feedback && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+        <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-sm text-emerald-700 shadow-soft">
           {feedback}
         </div>
       )}
+
       {actionError && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-6 text-sm text-rose-700 shadow-soft">
           {actionError}
         </div>
       )}
-
-      <Card title="Param��tres de l'organisation">
-        {status === 'loading' && (
-          <div className="h-40 rounded-2xl bg-slate-200/60 animate-pulse" />
-        )}
-        {status === 'success' && org && (
-          <div className="grid gap-3 md:grid-cols-2">
-            <label className="grid gap-1">
-              <span>Nom</span>
-              <input className="border rounded px-2 py-1" value={org.name ?? ''} onChange={handleOrgChange('name')} />
-            </label>
-            <label className="grid gap-1">
-              <span>Code org</span>
-              <input className="border rounded px-2 py-1" value={org.org_code ?? ''} onChange={handleOrgChange('org_code')} />
-            </label>
-            <label className="grid gap-1">
-              <span>Pays</span>
-              <select className="border rounded px-2 py-1" value={org.country_code ?? 'BJ'} onChange={handleOrgChange('country_code')}>
-                {['BJ','BF','CI','GW','ML','NE','SN','TG'].map((code) => (
-                  <option key={code} value={code}>{code}</option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-1">
-              <span>Devise</span>
-              <input className="border rounded px-2 py-1" value={org.currency ?? 'XOF'} onChange={handleOrgChange('currency')} />
-            </label>
-            <label className="grid gap-1">
-              <span>Adresse</span>
-              <input className="border rounded px-2 py-1" value={org.address ?? ''} onChange={handleOrgChange('address')} />
-            </label>
-            <label className="grid gap-1">
-              <span>RCCM</span>
-              <input className="border rounded px-2 py-1" value={org.trade_register ?? ''} onChange={handleOrgChange('trade_register')} />
-            </label>
-            <label className="grid gap-1">
-              <span>IFU</span>
-              <input className="border rounded px-2 py-1" value={org.tax_id ?? ''} onChange={handleOrgChange('tax_id')} />
-            </label>
-            <label className="grid gap-1 flex items-center gap-2">
-              <span>Taxe activee</span>
-              <input type="checkbox" checked={Boolean(org.tax_enabled)} onChange={handleOrgChange('tax_enabled')} />
-            </label>
-            <label className="grid gap-1">
-              <span>Taux taxe (%)</span>
-              <input
-                className="border rounded px-2 py-1"
-                type="number"
-                step="0.01"
-                value={org.default_tax_rate ?? 18}
-                onChange={(event) =>
-                  setOrg((prev: any) => ({
-                    ...prev,
-                    default_tax_rate: parseFloat(event.target.value || '0'),
-                  }))
-                }
-              />
-            </label>
-            <label className="grid gap-1">
-              <span>Couleur (hex)</span>
-              <input className="border rounded px-2 py-1" value={org.brand_color ?? '#111827'} onChange={handleOrgChange('brand_color')} />
-            </label>
-            <label className="grid gap-1">
-              <span>Logo URL</span>
-              <input className="border rounded px-2 py-1" value={org.logo_url ?? ''} onChange={handleOrgChange('logo_url')} />
-            </label>
-            <label className="grid gap-1">
-              <span>WhatsApp</span>
-              <input className="border rounded px-2 py-1" value={org.whatsapp_number ?? ''} onChange={handleOrgChange('whatsapp_number')} />
-            </label>
-            <div className="col-span-full">
-              <Button onClick={handleSaveOrganization} disabled={savingOrg}>
-                {savingOrg ? 'Enregistrement...' : 'Enregistrer'}
-              </Button>
-            </div>
-          </div>
-        )}
-        {status === 'success' && !org && (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-surface-muted px-5 py-6 text-sm text-slate-500">
-            Aucune organisation n'a encore ete configuree.
-          </div>
-        )}
-      </Card>
-
-  <Card title="Utilisateurs">
-        <div className="mb-3 flex flex-wrap gap-2">
-          <input
-            className="border rounded px-2 py-1"
-            placeholder="username"
-            value={form.username}
-            onChange={(event) => setForm((prev) => ({ ...prev, username: event.target.value }))}
-          />
-          <input
-            className="border rounded px-2 py-1"
-            placeholder="email"
-            value={form.email}
-            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-          />
-          <Button onClick={handleCreateUser} disabled={disableCreateUser}>
-            {creatingUser ? 'Creation...' : 'Creer'}
-          </Button>
-        </div>
-        {status === 'loading' ? (
-          <div className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-500">
-            Chargement des utilisateurs...
-          </div>
-        ) : users.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-surface-muted px-4 py-4 text-sm text-slate-500">
-            Aucun utilisateur a afficher.
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr><th>Username</th><th>Email</th></tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Card>
-
-      <Card title="R��les & permissions">
-        {status === 'loading' ? (
-          <div className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-500">
-            Chargement des membres...
-          </div>
-        ) : members.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-surface-muted px-4 py-4 text-sm text-slate-500">
-            Aucun membre a afficher.
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr><th>ID</th><th>Org</th><th>R��le</th><th>Actions</th></tr>
-            </thead>
-            <tbody>
-              {members.map((membership: any) => (
-                <tr key={membership.id}>
-                  <td>{membership.user}</td>
-                  <td>{membership.organization}</td>
-                  <td>{membership.role}</td>
-                  <td className="flex flex-wrap gap-2 py-1">
-                    {['ADMIN','ACCOUNTANT','SALES','WAREHOUSE','VIEWER'].map((role) => (
-                      <button
-                        key={role}
-                        className="btn text-xs"
-                        onClick={() => handleUpdateMember(membership, role)}
-                        disabled={updatingRoleId === membership.id}
-                      >
-                        {role}
-                      </button>
-                    ))}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Card>
     </div>
   )
 }
+
+export default AdminPanel
