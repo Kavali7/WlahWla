@@ -11,6 +11,7 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const Storefront = React.lazy(() => import('./pages/Storefront'))
 const AdminPanel = React.lazy(() => import('./pages/AdminPanel'))
 const Products = React.lazy(() => import('./pages/Products'))
+const QuoteBuilder = React.lazy(() => import('./pages/QuoteBuilder'))
 const Suppliers = React.lazy(() => import('./pages/Suppliers'))
 const Inventory = React.lazy(() => import('./pages/Inventory'))
 const Customers = React.lazy(() => import('./pages/Customers'))
@@ -70,6 +71,7 @@ const AdminSidebar = () => (
     <nav className="mt-4 grid gap-2 text-sm">
       <AdminNavLink to="/admin">Equipe</AdminNavLink>
       <AdminNavLink to="/admin/products">Catalogue</AdminNavLink>
+      <AdminNavLink to="/admin/quotes">Devis</AdminNavLink>
       <AdminNavLink to="/admin/inventory">Inventaire</AdminNavLink>
       <AdminNavLink to="/admin/suppliers">Fournisseurs</AdminNavLink>
       <AdminNavLink to="/admin/customers">Clients</AdminNavLink>
@@ -188,6 +190,17 @@ export const router = createBrowserRouter(
                     layout: {
                       title: 'Catalogue produits',
                       description: 'Centralisez les fiches produits pour la vente et la facturation.',
+                      sidebar: <AdminSidebar />,
+                    },
+                  },
+                },
+                {
+                  path: 'quotes',
+                  element: withSuspense(QuoteBuilder),
+                  handle: {
+                    layout: {
+                      title: 'Wizard devis',
+                      description: 'Creez des devis multi lignes et changez rapidement de statut.',
                       sidebar: <AdminSidebar />,
                     },
                   },
