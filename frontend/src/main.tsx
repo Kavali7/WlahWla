@@ -9,3 +9,18 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </AuthProvider>,
 )
+
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  const registerServiceWorker = () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .catch((error) => {
+        console.warn('Service worker registration failed', error)
+      })
+  }
+  if (document.readyState === 'complete') {
+    registerServiceWorker()
+  } else {
+    window.addEventListener('load', registerServiceWorker, { once: true })
+  }
+}
