@@ -1,36 +1,46 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"/>
-<style>
-body { font-family: Inter, system-ui, -apple-system; }
-.brand { color: #111827; }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 8px; border-bottom: 1px solid #eee; font-size: 12px; }
-.totals td { font-weight: 600; }
-footer { margin-top: 24px; font-size: 11px; color: #666; }
-</style></head>
-<body>
-<h1 class="brand">FACTURE {{ invoice.number }}</h1>
-<p><strong>{{ org.name }}</strong> – {{ org.address }} · RCCM: {{ org.trade_register }} · IFU: {{ org.tax_id }}</p>
-<p><strong>Client:</strong> {{ customer.name }} – {{ customer.address }}</p>
-<p>Date: {{ invoice.issue_date }} · Échéance: {{ invoice.due_date }}</p>
-<table>
-  <thead><tr><th>Désignation</th><th>Qté</th><th>PU</th><th>Taxe</th><th>Total</th></tr></thead>
-  <tbody>
-  {% for line in lines %}
-    <tr>
-      <td>{{ line.description }}</td>
-      <td>{{ line.quantity }}</td>
-      <td>{{ line.unit_price }} {{ invoice.currency }}</td>
-      <td>{% if line.tax %}{{ line.tax.rate }}%{% else %}-{% endif %}</td>
-      <td>{{ line.total }} {{ invoice.currency }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-  <tfoot>
-    <tr class="totals"><td colspan="4" align="right">Sous-total</td><td>{{ subtotal }} {{ invoice.currency }}</td></tr>
-    <tr class="totals"><td colspan="4" align="right">{{ vat_label|default:"TVA" }}</td><td>{{ tax_total }} {{ invoice.currency }}</td></tr>
-    <tr class="totals"><td colspan="4" align="right">Total TTC</td><td>{{ grand_total }} {{ invoice.currency }}</td></tr>
-  </tfoot>
-</table>
-<footer>Merci pour votre confiance.</footer>
-</body></html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body { font-family: Inter, system-ui, -apple-system; }
+      .brand { color: {{ brand_color }}; display: flex; align-items: center; gap: 12px; }
+      .brand img { height: 38px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 8px; border-bottom: 1px solid #eee; font-size: 12px; }
+      .totals td { font-weight: 600; }
+      footer { margin-top: 24px; font-size: 11px; color: #666; }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      {% if logo_url %}<img src="{{ logo_url }}" alt="logo" />{% endif %}
+      <h1>FACTURE {{ invoice.number }}</h1>
+    </div>
+    <p><strong>{{ org.name }}</strong> – {{ org.address }} · RCCM: {{ org.trade_register }} · IFU: {{ org.tax_id }}</p>
+    <p><strong>Client :</strong> {{ customer.name }} – {{ customer.address }}</p>
+    <p>Date : {{ invoice.issue_date }} · Échéance : {{ invoice.due_date }}</p>
+    <table>
+      <thead>
+        <tr><th>Désignation</th><th>Qté</th><th>PU</th><th>{{ vat_label }}</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        {% for line in lines %}
+          <tr>
+            <td>{{ line.description }}</td>
+            <td>{{ line.quantity }}</td>
+            <td>{{ line.unit_price }} {{ invoice.currency }}</td>
+            <td>{% if line.tax %}{{ line.tax }}%{% else %}-{% endif %}</td>
+            <td>{{ line.total }} {{ invoice.currency }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr class="totals"><td colspan="4" align="right">Sous-total</td><td>{{ subtotal }} {{ invoice.currency }}</td></tr>
+        <tr class="totals"><td colspan="4" align="right">{{ vat_label }}</td><td>{{ tax_total }} {{ invoice.currency }}</td></tr>
+        <tr class="totals"><td colspan="4" align="right">Total TTC</td><td>{{ grand_total }} {{ invoice.currency }}</td></tr>
+      </tfoot>
+    </table>
+    <footer>Merci pour votre confiance.</footer>
+  </body>
+</html>

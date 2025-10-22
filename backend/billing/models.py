@@ -63,3 +63,25 @@ class DocumentTemplate(OrgScopedModel):
     html = models.TextField()
     css = models.TextField(blank=True)
     is_default = models.BooleanField(default=False)
+
+
+class Order(OrgScopedModel):
+    PENDING, CONFIRMED, CANCELLED = "PENDING", "CONFIRMED", "CANCELLED"
+    STATUSES = [
+        (PENDING, "PENDING"),
+        (CONFIRMED, "CONFIRMED"),
+        (CANCELLED, "CANCELLED"),
+    ]
+    customer_name = models.CharField(max_length=200)
+    customer_phone = models.CharField(max_length=32, blank=True)
+    customer_email = models.EmailField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUSES, default=PENDING)
+    note = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.DecimalField(max_digits=12, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)

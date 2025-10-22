@@ -14,10 +14,40 @@ npm run dev
 
 
 
-Passe à l'exécution de la tache 3.
-N'oublie pas de faires les tests pour t'assurer de l'abasense de problèmes de compilation,d'avertissement et autres.
-Déplace cette tâche une fois terminée dans le sous dossier done et 
-cré un commite en lui donnant le nom "Tache 3".
+Passe à l'exécution de la tache 13.N'oublie pas de faires les tests pour t'assurer de l'abasense de problèmes de compilation,d'avertissement et autres.
+Déplace cette tâche une fois terminée dans le sous dossier done et cré un commite en lui donnant le nom "Tache 13".
 
 
 https://github.com/Kavali7/WlahWla.git
+
+
+ Vérifications recommandées :
+
+  1. Inviter un collaborateur inexistant, puis copier l’invitation et vérifier que l’entrée apparaît en        
+     “Invitation en attente”.
+  2. Modifier le rôle d’un membre actif et confirmer l’enregistrement sans recharger la page.
+  3. Suspendre puis réactiver un membre pour valider les transitions de statut.
+  4. Connecter un utilisateur sans rôle autorisé et confirmer l’affichage du message de restriction.
+
+
+
+from core.models import Organization, Membership
+from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
+
+User = get_user_model()
+user = User.objects.get(email="georgesbusiness54@gmail.com")  # <-- remplace ici
+org, _ = Organization.objects.get_or_create(
+    org_code="dev",
+    defaults={"name": "Organisation Demo"},
+)
+Membership.objects.get_or_create(
+    user=user,
+    organization=org,
+    defaults={"role": "ADMIN"},
+)
+token, _ = Token.objects.get_or_create(user=user)
+print("Token API:", token.key)
+
+
+Token API: 0101b27f88db56c2e93e1d52439cf0f9e0747ece

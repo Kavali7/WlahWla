@@ -22,6 +22,26 @@ import {
   persistSelectedOrganizationId,
 } from '../lib/auth'
 
+const DEV_ORGANIZATION: StoredOrganization = {
+  id: 'dev-org',
+  code: 'dev',
+  name: 'Organisation Demo',
+  address: null,
+  tax_id: null,
+  trade_register: null,
+  is_onboarded: true,
+  missing_fields: [],
+}
+
+const DEV_USER: StoredUser = {
+  id: 'dev-user',
+  email: 'dev@local.dev',
+  name: 'Developpeur Demo',
+  organizations: [DEV_ORGANIZATION],
+  default_organization_id: DEV_ORGANIZATION.id,
+  defaultOrganizationId: DEV_ORGANIZATION.id,
+}
+
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated'
 
 type LoginPayload = {
@@ -88,12 +108,22 @@ const ensureString = (value: unknown): string | null => {
 }
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<StoredUser | null>(() => getStoredUser())
-  const [organizations, setOrganizations] = useState<StoredOrganization[]>(() => getStoredUser()?.organizations ?? [])
-  const [organizationId, setOrganizationIdState] = useState<string | null>(() => getStoredOrganizationId())
-  const [organizationCode, setOrganizationCodeState] = useState<string | null>(() => getStoredOrganizationCode())
-  const [status, setStatus] = useState<AuthStatus>('loading')
-  const [initializing, setInitializing] = useState(true)
+  const bypassAuth = import.meta.env.VITE_BYPASS_AUTH === '1'
+
+  const [user, setUser] = useState<StoredUser | null>(() =>
+    bypassAuth ? DEV_USER : getStoredUser(),
+  )
+  const [organizations, setOrganizations] = useState<StoredOrganization[]>(() =>
+    bypassAuth ? [DEV_ORGANIZATION] : getStoredUser()?.organizations ?? [],
+  )
+  const [organizationId, setOrganizationIdState] = useState<string | null>(() =>
+    bypassAuth ? DEV_ORGANIZATION.id : getStoredOrganizationId(),
+  )
+  const [organizationCode, setOrganizationCodeState] = useState<string | null>(() =>
+    bypassAuth ? DEV_ORGANIZATION.code ?? DEV_ORGANIZATION.id : getStoredOrganizationCode(),
+  )
+  const [status, setStatus] = useState<AuthStatus>(bypassAuth ? 'authenticated' : 'loading')
+  const [initializing, setInitializing] = useState(!bypassAuth)
   const [organizationsLoading, setOrganizationsLoading] = useState(false)
   const [organizationError, setOrganizationError] = useState<string | null>(null)
 
@@ -133,6 +163,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   }, [organizationCode])
 
   const handleUnauthorized = useCallback(() => {
+    if (bypassAuth) {
+      return
+    }
     clearAuthSession()
     setAuthToken(null)
     setOrganizationHeader(null)
@@ -141,7 +174,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     applyOrganizationSelection(null)
     setStatus('unauthenticated')
     setInitializing(false)
-  }, [applyOrganizationSelection])
+  }, [applyOrganizationSelection, bypassAuth])
 
   const applyUserState = useCallback(
     (nextUser: StoredUser | null) => {
@@ -167,7 +200,21 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     [applyOrganizationSelection, determinePreferredOrganization],
   )
 
-  const loadOrganizations = useCallback(async () => {
+const loadOrganizations = useCallback(async () => {
+    if (bypassAuth) {
+      const list = [DEV_ORGANIZATION]
+      setOrganizations(list)
+      setOrganizationError(null)
+      applyOrganizationSelection(DEV_ORGANIZATION)
+      setUser((prev) => {
+        const base = prev ?? DEV_USER
+        const nextUser = { ...base, organizations: list }
+        persistAuthUser(nextUser)
+        return nextUser
+      })
+      setOrganizationsLoading(false)
+      return list
+    }
     setOrganizationsLoading(true)
     setOrganizationError(null)
     try {
@@ -204,7 +251,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       const message =
         axiosError.response?.status !== undefined
           ? `Erreur ${axiosError.response.status} lors du chargement des organisations.`
-          : "Impossible de contacter le serveur. Vérifiez votre connexion."
+          : 'Impossible de contacter le serveur. Verifiez votre connexion.'
       setOrganizationError(message)
       if (!organizations.length) {
         setOrganizations([])
@@ -216,12 +263,16 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     }
   }, [
     applyOrganizationSelection,
+    bypassAuth,
     determinePreferredOrganization,
     handleUnauthorized,
     organizations.length,
   ])
 
-  const refreshProfile = useCallback(async () => {
+const refreshProfile = useCallback(async () => {
+    if (bypassAuth) {
+      return applyUserState(DEV_USER)
+    }
     const token = getAuthToken()
     if (!token) {
       handleUnauthorized()
@@ -247,10 +298,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       }
       throw error
     }
-  }, [applyUserState, handleUnauthorized, loadOrganizations])
+  }, [applyUserState, bypassAuth, handleUnauthorized, loadOrganizations])
 
   const login = useCallback(
     async ({ email, password }: LoginPayload) => {
+      if (bypassAuth) {
+        applyUserState(DEV_USER)
+        return
+      }
       try {
         setStatus('loading')
         const response = await api.post('/auth/login', { email, password })
@@ -273,7 +328,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         throw error
       }
     },
-    [applyUserState, loadOrganizations],
+    [applyUserState, bypassAuth, loadOrganizations],
   )
 
   const logout = useCallback(async () => {
@@ -286,19 +341,28 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     }
   }, [handleUnauthorized])
 
-  const requestPasswordReset = useCallback(async (email: string) => {
-    await api.post('/auth/password/forgot', { email })
-  }, [])
+  const requestPasswordReset = useCallback(
+    async (email: string) => {
+      if (bypassAuth) {
+        return
+      }
+      await api.post('/auth/password/forgot', { email })
+    },
+    [bypassAuth],
+  )
 
   const resetPassword = useCallback(
     async ({ token, password, passwordConfirmation }: ResetPasswordPayload) => {
+      if (bypassAuth) {
+        return
+      }
       await api.post('/auth/password/reset', {
         token,
         password,
         password_confirmation: passwordConfirmation ?? password,
       })
     },
-    [],
+    [bypassAuth],
   )
 
   const setOrganization = useCallback(
@@ -365,10 +429,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   }, [handleUnauthorized])
 
   useEffect(() => {
+    if (bypassAuth) {
+      applyUserState(DEV_USER)
+      return
+    }
     refreshProfile().catch(() => {
       // errors handled in refreshProfile
     })
-  }, [refreshProfile])
+  }, [applyUserState, bypassAuth, refreshProfile])
 
   const organization = useMemo(
     () => organizations.find((item) => ensureString(item.id) === organizationId) ?? null,

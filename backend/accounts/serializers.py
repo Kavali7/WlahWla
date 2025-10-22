@@ -12,7 +12,21 @@ class UserSerializer(serializers.ModelSerializer):
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ["id","name","org_code","country_code","currency","address","trade_register","tax_id","tax_enabled","default_tax_rate","whatsapp_number"]
+        fields = [
+            "id",
+            "name",
+            "org_code",
+            "country_code",
+            "currency",
+            "address",
+            "trade_register",
+            "tax_id",
+            "tax_enabled",
+            "default_tax_rate",
+            "whatsapp_number",
+            "brand_color",
+            "logo_url",
+        ]
 
 class MembershipSerializer(serializers.ModelSerializer):
     class Meta:

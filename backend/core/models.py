@@ -12,6 +12,8 @@ class Organization(models.Model):
     tax_enabled = models.BooleanField(default=True)
     default_tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=18)  # %
     whatsapp_number = models.CharField(max_length=32, blank=True)  # pour Click-to-Chat
+    brand_color = models.CharField(max_length=9, default="#111827")
+    logo_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.name
