@@ -1,0 +1,10 @@
+{
+  "id": "uemoa-oct-2025",
+  "badge": "UEMOA",
+  "message": "Contrat UEMOA reconduit : beneficiaires premium et reporting cross-filiales inclus dans l'offre.",
+  "action": {
+    "label": "Lire la note officielle",
+    "href": "/ressources/uemoa-2025"
+  },
+  "dismissible": true
+}

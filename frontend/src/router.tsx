@@ -21,6 +21,11 @@ const Login = React.lazy(() => import('./pages/Login'))
 const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
+const MarketingHome = React.lazy(() => import('./pages/MarketingHome'))
+const Resources = React.lazy(() => import('./pages/Resources'))
+const Support = React.lazy(() => import('./pages/Support'))
+const About = React.lazy(() => import('./pages/About'))
+const Trial = React.lazy(() => import('./pages/Trial'))
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
   <Suspense fallback={<LoadingScreen />}>
@@ -29,9 +34,142 @@ const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<a
 )
 
 const primaryNavigation: NavigationItem[] = [
-  { label: 'Dashboard', path: '/dashboard' },
-  { label: 'Boutique', path: '/storefront', badge: 'Beta' },
-  { label: 'Administration', path: '/admin' },
+  {
+    id: 'solutions',
+    label: 'Solutions',
+    path: '/dashboard',
+    sections: [
+      {
+        title: 'Pilotage temps reel',
+        description: 'Visualisez vos indicateurs et monitorez vos equipes.',
+        links: [
+          { label: 'Tableau de bord', path: '/dashboard', description: 'Vue synthese des ventes et de la tresorerie.' },
+          { label: 'Boutique omnicanal', path: '/storefront', description: 'Animez votre vitrine WhatsApp et Web.', badge: 'Beta' },
+          { label: 'Administration equipe', path: '/admin', description: 'Controle des droits et workflows par profil.' },
+        ],
+      },
+      {
+        title: 'Operations et finances',
+        description: 'Automatisez vos stocks, devis et factures.',
+        links: [
+          { label: 'Stocks intelligents', path: '/admin/inventory', description: 'Alertes et reapprovisionnements.' },
+          { label: 'Wizard devis', path: '/admin/quotes', description: 'Transformez un devis en commande en un clic.' },
+          { label: 'Facturation UEMOA', path: '/admin/invoices', description: 'Numerotation, taxes et relances.' },
+        ],
+      },
+      {
+        title: 'Onboarding express',
+        description: 'Activez votre organisation en 72 heures.',
+        links: [
+          { label: 'Guide onboarding', path: '/ressources#onboarding', description: 'Checklist et roles a mobiliser.' },
+          { label: 'Calendrier demo', path: '/essai-gratuit', description: 'Planifiez une session live avec un expert.' },
+          { label: 'Support prioritaire', path: '/support', description: 'Canaux WhatsApp et email dedies.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'industries',
+    label: 'Industries',
+    path: '/home',
+    sections: [
+      {
+        title: 'Segments prioritaires',
+        description: 'Parcours preconfigures par metier.',
+        links: [
+          { label: 'Commerce de detail', path: '/home#retail', description: 'Bundles encaissement + logistique.' },
+          { label: 'Services B2B', path: '/home#services', description: 'Pipeline devis > contrats > factures.' },
+          { label: 'Distributeurs multi sites', path: '/home#distribution', description: 'Reporting par filiale UEMOA.' },
+        ],
+      },
+      {
+        title: 'Cas regionaux',
+        description: 'Adaptes aux exigences locales.',
+        links: [
+          { label: 'TPE Senegal', path: '/home#temoignages', description: 'Success stories sur WhatsApp Commerce.' },
+          { label: 'Retail Cote d Ivoire', path: '/home#retail', description: 'Click and collect Abidjan et Bouake.' },
+          { label: 'Partenaires fintech', path: '/home#partenaires', description: 'Ecosysteme waohdigital.' },
+        ],
+      },
+      {
+        title: 'Portail clients',
+        description: 'Ressources cle en main pour vos clients finaux.',
+        links: [
+          { label: 'Kit adoption', path: '/ressources#kit', description: 'Emailings, scripts et checklists.' },
+          { label: 'Ateliers industries', path: '/ressources#webinaires', description: 'Sessions live par metier.' },
+          { label: 'Roadmap sectorielle', path: '/a-propos#roadmap', description: 'Feuille de route verticale.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ressources',
+    label: 'Ressources',
+    path: '/ressources',
+    sections: [
+      {
+        title: 'Guides et assets',
+        description: 'Materiels pour vos equipes commerciales.',
+        links: [
+          { label: 'Bibliotheque', path: '/ressources', description: 'Checklists, matrices et gabarits.' },
+          { label: 'Webinaires mensuels', path: '/ressources#webinaires', description: 'Replays et sessions live.' },
+          { label: 'Notes conformite', path: '/ressources#compliance', description: 'Synthese des normes UEMOA.' },
+        ],
+      },
+      {
+        title: 'Communautes',
+        description: 'Echangez avec les pairs WLAHWLA.',
+        links: [
+          { label: 'Canal WhatsApp VIP', path: 'https://wa.me/221778889900', description: 'Acces support prioritaire.', external: true },
+          { label: 'Forum produit', path: '/ressources#forum', description: 'Retours beta et idees roadmap.' },
+          { label: 'Centre de statut', path: '/support#status', description: 'Incidents et maintenance planifiee.' },
+        ],
+      },
+      {
+        title: 'Formation',
+        description: 'Montez en competence rapidement.',
+        links: [
+          { label: 'Academie WLAHWLA', path: '/ressources#academy', description: 'Parcours certifiant self service.' },
+          { label: 'Coaching equipes', path: '/essai-gratuit', description: 'Sessions personnalisees.' },
+          { label: 'Newsletter produit', path: '/ressources#newsletter', description: 'Updates et betas exclusives.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'about',
+    label: 'A propos',
+    path: '/a-propos',
+    sections: [
+      {
+        title: 'Vision et impact',
+        description: 'Pourquoi WLAHWLA accelere le commerce UEMOA.',
+        links: [
+          { label: 'Notre manifeste', path: '/a-propos', description: 'Mission, valeurs et equipe.' },
+          { label: 'Cas clients', path: '/home#temoignages', description: 'Resultats tangibles par secteur.' },
+          { label: 'Agenda terrain', path: '/ressources#agenda', description: 'Salons et evenements a venir.' },
+        ],
+      },
+      {
+        title: 'Gouvernance',
+        description: 'Transparence et securite de la plateforme.',
+        links: [
+          { label: 'Contrat UEMOA', path: '/support#securite', description: 'Normes, SLA et engagements.' },
+          { label: 'Partenaires strategiques', path: '/home#partenaires', description: 'Fintech, telcos et banques.' },
+          { label: 'Conformite RGPD', path: '/support#rgpd', description: 'Localisation et retention des donnees.' },
+        ],
+      },
+      {
+        title: 'Rejoindre l aventure',
+        description: 'Partenaires, talents et ambassadeurs.',
+        links: [
+          { label: 'Programme partenaires', path: '/a-propos#partenaires', description: 'Monetisez vos reseaux.' },
+          { label: 'Talents', path: '/a-propos#talents', description: 'Postes ouverts et stages.' },
+          { label: 'Presse & media', path: '/a-propos#media', description: 'Dossier presse et ressources.' },
+        ],
+      },
+    ],
+  },
 ]
 
 const DashboardSidebar = () => (
@@ -131,6 +269,61 @@ export const router = createBrowserRouter(
           errorElement: <RouteErrorBoundary />,
           children: [
             { index: true, element: <Navigate to="dashboard" replace /> },
+            {
+              path: 'home',
+              element: withSuspense(MarketingHome),
+              handle: {
+                layout: {
+                  title: 'Panorama WLAHWLA',
+                  description:
+                    'Explorez les offres marketing, les industries cibles et les retours clients directement depuis la plateforme.',
+                },
+              },
+            },
+            {
+              path: 'ressources',
+              element: withSuspense(Resources),
+              handle: {
+                layout: {
+                  title: 'Centre de ressources',
+                  description:
+                    'Guides, checklists et replays pour accompagner vos equipes commerciales et operations.',
+                },
+              },
+            },
+            {
+              path: 'support',
+              element: withSuspense(Support),
+              handle: {
+                layout: {
+                  title: 'Support et statut plateforme',
+                  description:
+                    'Retrouvez les canaux d assistance, l etat de service et les engagements de securite WLAHWLA.',
+                },
+              },
+            },
+            {
+              path: 'a-propos',
+              element: withSuspense(About),
+              handle: {
+                layout: {
+                  title: 'A propos de WLAHWLA',
+                  description:
+                    'Vision, gouvernance et partenaires qui accelerent le commerce dans l espace UEMOA.',
+                },
+              },
+            },
+            {
+              path: 'essai-gratuit',
+              element: withSuspense(Trial),
+              handle: {
+                layout: {
+                  title: 'Demander un essai gratuit',
+                  description:
+                    'Planifiez une session personnalisee avec un expert pour configurer votre environnement pilote.',
+                },
+              },
+            },
             {
               path: 'dashboard',
               element: withSuspense(Dashboard),
