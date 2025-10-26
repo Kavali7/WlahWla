@@ -1,0 +1,44 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2E38FF"/>
+      <stop offset="100%" stop-color="#7B2BFF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.7">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#gradient-bg)"/>
+  <circle cx="1280" cy="200" r="260" fill="url(#glow)"/>
+  <circle cx="240" cy="680" r="320" fill="url(#glow)"/>
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="1">
+    <path d="M80 240C220 340 420 340 600 240C780 140 980 140 1160 240C1340 340 1540 340 1600 304" />
+    <path d="M0 480C180 600 420 600 600 480C780 360 1020 360 1200 480C1380 600 1540 600 1600 560" />
+    <path d="M0 720C200 820 420 820 620 720C820 620 1060 620 1260 720C1460 820 1600 820 1600 820" />
+  </g>
+  <g stroke="rgba(255,255,255,0.35)" stroke-width="3" stroke-linecap="round">
+    <path d="M360 320L480 440"/>
+    <path d="M480 440L640 320"/>
+    <path d="M640 320L860 540"/>
+    <path d="M860 540L1120 360"/>
+    <path d="M1120 360L1280 520"/>
+  </g>
+  <g fill="rgba(255,255,255,0.9)">
+    <rect x="360" y="280" width="80" height="80" rx="16"/>
+    <rect x="480" y="400" width="80" height="80" rx="16"/>
+    <rect x="640" y="280" width="80" height="80" rx="16"/>
+    <rect x="860" y="500" width="80" height="80" rx="16"/>
+    <rect x="1120" y="320" width="80" height="80" rx="16"/>
+    <rect x="1280" y="480" width="80" height="80" rx="16"/>
+  </g>
+  <text x="160" y="196" fill="#FCA311" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="600" letter-spacing="0.12em" text-transform="uppercase">
+    COMMERCE OMNICANAL UEMOA
+  </text>
+  <text x="160" y="250" fill="#FFFFFF" font-family="Figtree, Arial, sans-serif" font-size="56" font-weight="700">
+    Vendez, facturez, livrez sans friction
+  </text>
+  <text x="160" y="310" fill="rgba(255,255,255,0.8)" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="400">
+    Unified commerce, paiements locaux et suivi temps reel.
+  </text>
+</svg>

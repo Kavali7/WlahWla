@@ -1,0 +1,41 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient-ads" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7B2BFF"/>
+      <stop offset="70%" stop-color="#2E38FF"/>
+      <stop offset="100%" stop-color="#FF6B35"/>
+    </linearGradient>
+    <radialGradient id="ads-glow" cx="0.5" cy="0.5" r="0.65">
+      <stop offset="0%" stop-color="rgba(255, 245, 224, 0.8)"/>
+      <stop offset="100%" stop-color="rgba(124, 43, 255, 0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#gradient-ads)"/>
+  <circle cx="400" cy="260" r="280" fill="url(#ads-glow)"/>
+  <circle cx="1220" cy="620" r="340" fill="url(#ads-glow)" opacity="0.8"/>
+  <g fill="rgba(10,17,40,0.82)" stroke="#FCA311" stroke-width="4">
+    <rect x="320" y="320" width="280" height="190" rx="24"/>
+    <rect x="660" y="260" width="340" height="220" rx="26"/>
+    <rect x="1060" y="360" width="220" height="160" rx="22"/>
+  </g>
+  <g fill="#F5F7FD">
+    <rect x="340" y="340" width="60" height="60" rx="12"/>
+    <rect x="720" y="280" width="80" height="80" rx="16"/>
+    <rect x="820" y="340" width="120" height="16" rx="8" fill="#FCA311"/>
+    <rect x="1080" y="380" width="60" height="60" rx="14"/>
+  </g>
+  <g stroke="rgba(10,17,40,0.6)" stroke-width="12" stroke-linecap="round">
+    <path d="M460 540V600"/>
+    <path d="M820 500V580"/>
+    <path d="M1180 520V600"/>
+  </g>
+  <text x="220" y="210" fill="#FFF4EF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0.16em" text-transform="uppercase">
+    CAMPAGNES PUBLICITAIRES
+  </text>
+  <text x="220" y="266" fill="#FFFFFF" font-family="Figtree, Arial, sans-serif" font-size="56" font-weight="700">
+    Boostez vos panneaux en mode data driven
+  </text>
+  <text x="220" y="322" fill="rgba(255,255,255,0.82)" font-family="Inter, Arial, sans-serif" font-size="22">
+    Mesurez vos impressions, conversions et ROI par quartier.
+  </text>
+</svg>

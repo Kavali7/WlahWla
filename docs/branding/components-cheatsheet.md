@@ -89,5 +89,34 @@ export const DashboardTabs = () => (
 - Onglet actif : `bg-surface`, `shadow-floating`, texte `secondary-700`.
 - Contenu : `border-surface-outline`, `shadow-floating`, rayon `rounded-3xl`.
 
+## HeroCarousel
+```tsx
+import { HeroCarousel } from '@/components/media/HeroCarousel'
+import { heroSlides } from '@/content/hero-slides'
+
+export const HeroSection = () => <HeroCarousel slides={heroSlides} autoPlayInterval={7000} />
+```
+- Utilise les assets `public/assets/brand/hero-*.svg` et tokens `rounded-hero`, `bg-gradient-card-glow`.
+- Les slides combinent metrics + CTA; definir dans `src/content/hero-slides.ts`.
+- `loading` bascule en `eager` sur la diapo active pour eviter le flash.
+
+## AdvertisingCard
+```tsx
+import { AdvertisingCard } from '@/components/marketing/AdvertisingCard'
+import { advertisingSpots } from '@/content/advertising-spots'
+
+export const CampaignGrid = () => (
+  <div className="grid gap-6 md:grid-cols-2">
+    {advertisingSpots.map((spot) => (
+      <AdvertisingCard key={spot.id} {...spot} />
+    ))}
+  </div>
+)
+```
+- Propose une mise en page 2 colonnes avec image responsive (lazy) + stats.
+- Le badge et les stats sont optionnels; conserver au moins `badge`, `title`, `description`, `image`.
+- Ideal pour pages marketing, modules cross sell et landing ads.
+
 ## Captures
 - Ajouter captures ou exports Figma dans `docs/branding/assets/` une fois les maquettes stabilisees.
+- Executer `npm run optimize:images` apres ajout d images pour minifier les ressources web.

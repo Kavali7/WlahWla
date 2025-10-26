@@ -1,0 +1,10 @@
+node_modules/
+.venv/
+frontend/node_modules/
+backend/.venv/
+dist/
+build/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

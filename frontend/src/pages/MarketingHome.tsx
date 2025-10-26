@@ -1,21 +1,27 @@
-﻿import React from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/Button'
+import { HeroCarousel } from '../components/media/HeroCarousel'
+import { AdvertisingCard } from '../components/marketing/AdvertisingCard'
+import { heroSlides } from '../content/hero-slides'
+import { advertisingSpots } from '../content/advertising-spots'
 
 const MarketingHome: React.FC = () => (
   <div className="space-y-12">
-    <section className="rounded-3xl border border-surface-outline bg-white p-8 shadow-sm">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <HeroCarousel slides={heroSlides} className="mt-2" />
+
+    <section className="rounded-3xl border border-surface-outline bg-white px-8 py-10 shadow-elevated">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="max-w-2xl space-y-3">
-          <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
+          <span className="rounded-pill border border-surface-outlineStrong bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-600">
             Panorama
           </span>
-          <h2 className="text-2xl font-semibold text-secondary-800">
-            Concevez une experience client fluide du premier contact a la facture
+          <h2 className="text-3xl font-semibold text-secondary-800">
+            Concevez des experiences connectees du premier contact a la facture
           </h2>
           <p className="text-sm text-neutral-600">
-            WLAHWLA s appuie sur le reseau waohdigital pour proposer des parcours omnicanaux adaptes aux
-            marches UEMOA. Naviguez dans les segments ci-dessous et epinglez les modules qui vous interessent.
+            WLAHWLA s appuie sur le reseau waohdigital pour proposer des parcours omnicanaux adaptes aux marches
+            UEMOA. Naviguez dans les segments ci-dessous et epinglez les modules qui vous interessent.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -29,6 +35,29 @@ const MarketingHome: React.FC = () => (
       </div>
     </section>
 
+    <section id="campagnes" className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-semibold text-secondary-800">Campagnes publicitaires</h3>
+        <Link className="text-sm font-semibold text-primary-600 hover:text-primary-500" to="/ressources#campagnes">
+          Guide campagne {'->'}
+        </Link>
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        {advertisingSpots.map((spot) => (
+          <AdvertisingCard
+            key={spot.id}
+            badge={spot.badge}
+            title={spot.title}
+            description={spot.description}
+            image={spot.image}
+            imageAlt={spot.imageAlt}
+            stats={spot.stats}
+            cta={spot.cta}
+          />
+        ))}
+      </div>
+    </section>
+
     <section id="services" className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold text-secondary-800">Parcours services</h3>
@@ -37,7 +66,7 @@ const MarketingHome: React.FC = () => (
         </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating">
           <h4 className="text-lg font-semibold text-secondary-800">Consultants B2B</h4>
           <p className="mt-2 text-sm text-neutral-600">
             Pipeline devis {'>'} contrats {'>'} factures avec signatures et collecte multicanale.
@@ -48,7 +77,7 @@ const MarketingHome: React.FC = () => (
             <li>- Relances WhatsApp automatisees</li>
           </ul>
         </article>
-        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-sm" id="distribution">
+        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating" id="distribution">
           <h4 className="text-lg font-semibold text-secondary-800">Distribution multimarques</h4>
           <p className="mt-2 text-sm text-neutral-600">
             Synchronisez les catalogues, l inventaire temps reel et le recouvrement par filiale.
@@ -59,7 +88,7 @@ const MarketingHome: React.FC = () => (
             <li>- Reporting UEMOA consolide</li>
           </ul>
         </article>
-        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-sm" id="retail">
+        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating" id="retail">
           <h4 className="text-lg font-semibold text-secondary-800">Retail et experience boutique</h4>
           <p className="mt-2 text-sm text-neutral-600">
             Unified commerce: encaissement, click and collect, suivi fidelite sur WhatsApp et USSD.
@@ -81,7 +110,7 @@ const MarketingHome: React.FC = () => (
         </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating">
           <header className="flex items-center justify-between">
             <p className="text-sm font-semibold text-secondary-700">Sana Boutique - Dakar</p>
             <span className="text-xs font-semibold uppercase text-success-600">+42 % CA</span>
@@ -90,7 +119,7 @@ const MarketingHome: React.FC = () => (
             Passage en boutique phygitale: configuration en 3 semaines avec integrateurs waohdigital.
           </p>
         </article>
-        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating">
           <header className="flex items-center justify-between">
             <p className="text-sm font-semibold text-secondary-700">Joli Service - Abidjan</p>
             <span className="text-xs font-semibold uppercase text-success-600">Temps devise divise par 2</span>
@@ -112,19 +141,15 @@ const MarketingHome: React.FC = () => (
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-dashed border-surface-outline p-6 text-sm text-neutral-600">
           <p className="font-semibold text-secondary-700">Telcos & paiement</p>
-          <p className="mt-2">
-            Passerelles mobile money, validations KYC et Paiement a distance.
-          </p>
+          <p className="mt-2">Passerelles mobile money, validations KYC et paiement a distance.</p>
         </div>
         <div className="rounded-2xl border border-dashed border-surface-outline p-6 text-sm text-neutral-600">
           <p className="font-semibold text-secondary-700">Fintech et credit</p>
-          <p className="mt-2">
-            Evaluation credit, financement court terme et assurance.</p>
+          <p className="mt-2">Evaluation credit, financement court terme et assurance.</p>
         </div>
         <div className="rounded-2xl border border-dashed border-surface-outline p-6 text-sm text-neutral-600">
           <p className="font-semibold text-secondary-700">Integrateurs locaux</p>
-          <p className="mt-2">
-            Experts terrain pour parametrage, support et success plan.</p>
+          <p className="mt-2">Experts terrain pour parametrage, support et success plan.</p>
         </div>
       </div>
     </section>

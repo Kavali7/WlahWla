@@ -1,0 +1,41 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" rx="32" fill="#F5F7FD"/>
+  <rect x="40" y="56" width="120" height="32" rx="16" fill="rgba(75,86,255,0.12)"/>
+  <text x="60" y="78" fill="#4F56FF" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0.08em">
+    CROSS SELL
+  </text>
+  <text x="40" y="138" fill="#0A1320" font-family="Figtree, Arial, sans-serif" font-size="36" font-weight="700">
+    Activez vos panneaux publicitaires
+  </text>
+  <text x="40" y="182" fill="#343F58" font-family="Inter, Arial, sans-serif" font-size="18">
+    Composez des campagnes combinees commerce + ads.
+  </text>
+  <g transform="translate(40 220)">
+    <rect x="0" y="0" width="240" height="160" rx="24" fill="white" stroke="rgba(16,22,48,0.12)" stroke-width="2"/>
+    <text x="24" y="40" fill="#0A1320" font-family="Figtree, Arial, sans-serif" font-size="24" font-weight="600">
+      Offre combo
+    </text>
+    <text x="24" y="72" fill="#343F58" font-family="Inter, Arial, sans-serif" font-size="16">
+      Carte de fidelite + panneaux WhatsApp
+    </text>
+    <text x="24" y="108" fill="#4F56FF" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600">
+      Conversion +23 %
+    </text>
+  </g>
+  <g transform="translate(320 220)">
+    <rect x="0" y="0" width="240" height="160" rx="24" fill="#0A1320"/>
+    <text x="24" y="48" fill="#FCA311" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600">
+      DIGITAL OOH
+    </text>
+    <text x="24" y="88" fill="#F5F7FD" font-family="Figtree, Arial, sans-serif" font-size="24" font-weight="600">
+      Slots premium
+    </text>
+    <text x="24" y="122" fill="#F5F7FD" font-family="Inter, Arial, sans-serif" font-size="16">
+      Plateau, Cocody, Dakar
+    </text>
+  </g>
+  <rect x="40" y="400" width="180" height="48" rx="24" fill="#4F56FF"/>
+  <text x="80" y="432" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600">
+    Planifier une campagne
+  </text>
+</svg>

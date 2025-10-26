@@ -1,0 +1,32 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="panel-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A1320"/>
+      <stop offset="100%" stop-color="#152338"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" rx="32" fill="url(#panel-bg)"/>
+  <rect x="48" y="64" width="112" height="32" rx="16" fill="rgba(250,158,17,0.16)"/>
+  <text x="64" y="86" fill="#FCA311" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0.08em">
+    ANALYTICS
+  </text>
+  <text x="48" y="150" fill="#F5F7FD" font-family="Figtree, Arial, sans-serif" font-size="36" font-weight="700">
+    Audience et conversions
+  </text>
+  <text x="48" y="190" fill="rgba(245,247,253,0.72)" font-family="Inter, Arial, sans-serif" font-size="18">
+    Visualisez les performances campagnes multi villes.
+  </text>
+  <g transform="translate(48 240)">
+    <rect x="16" y="60" width="40" height="120" rx="12" fill="#4F56FF"/>
+    <rect x="72" y="20" width="40" height="160" rx="12" fill="#7B2BFF"/>
+    <rect x="128" y="0" width="40" height="180" rx="12" fill="#FF6B35"/>
+    <rect x="184" y="40" width="40" height="140" rx="12" fill="#2DD4FC"/>
+  </g>
+  <path d="M320 336C360 280 420 248 476 248C516 248 552 260 584 280" stroke="rgba(77, 214, 122, 0.8)" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="320" cy="336" r="10" fill="rgba(77,214,122,0.8)"/>
+  <circle cx="476" cy="248" r="10" fill="rgba(77,214,122,0.8)"/>
+  <circle cx="584" cy="280" r="10" fill="rgba(77,214,122,0.8)"/>
+  <text x="320" y="250" fill="#F5F7FD" font-family="Inter, Arial, sans-serif" font-size="16">
+    +18% conversions
+  </text>
+</svg>
