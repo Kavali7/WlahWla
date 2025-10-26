@@ -97,7 +97,7 @@ const validateForm = (form: OrganizationFormState): FieldErrorMap => {
 }
 
 const deriveComplianceStatus = (form: OrganizationFormState): ComplianceStatus => {
-  const requiredFields: Array<keyof OrganizationFormState> = [
+  const requiredFields: Array<'name' | 'trade_register' | 'tax_id' | 'whatsapp_number'> = [
     'name',
     'trade_register',
     'tax_id',
@@ -146,13 +146,16 @@ const Settings: React.FC = () => {
   const handleChange =
     (field: keyof OrganizationFormState) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      const value =
-        event.target.type === 'checkbox'
-          ? (event.target as HTMLInputElement).checked
-          : event.target.value
+      const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      const isCheckbox = target instanceof HTMLInputElement && target.type === 'checkbox'
+      const rawValue = isCheckbox ? target.checked : target.value
+      const nextValue =
+        field === 'whatsapp_number' && typeof rawValue === 'string'
+          ? rawValue.replace(/[^\d+]/g, '')
+          : rawValue
       setForm((prev) => ({
         ...prev,
-        [field]: field === 'whatsapp_number' ? value.replace(/[^\d+]/g, '') : value,
+        [field]: nextValue as OrganizationFormState[keyof OrganizationFormState],
       }))
       setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
     }
@@ -219,7 +222,7 @@ const Settings: React.FC = () => {
   if (!organization) {
     return (
       <div className="grid gap-6 p-4">
-        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-700 shadow-soft">
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-700 shadow-floating">
           Aucune organisation sélectionnée. Connectez-vous avec un compte valide ou choisissez une
           organisation pour modifier ses paramètres.
         </div>
@@ -237,7 +240,7 @@ const Settings: React.FC = () => {
         {renderComplianceAlert()}
 
         <form className="grid gap-6" onSubmit={handleSubmit}>
-          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-soft">
+          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-floating">
             <header>
               <h2 className="text-sm font-semibold text-slate-900">Identité</h2>
               <p className="text-xs text-slate-500">
@@ -247,7 +250,7 @@ const Settings: React.FC = () => {
             <label className="grid gap-1 text-sm">
               <span className="font-semibold text-slate-700">Nom de l'organisation</span>
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={form.name}
                 onChange={handleChange('name')}
                 placeholder="Votre entreprise"
@@ -257,7 +260,7 @@ const Settings: React.FC = () => {
             <label className="grid gap-1 text-sm">
               <span className="font-semibold text-slate-700">Adresse</span>
               <textarea
-                className="min-h-[90px] rounded-xl border border-slate-200 px-3 py-2 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="min-h-[90px] rounded-xl border border-slate-200 px-3 py-2 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={form.address}
                 onChange={handleChange('address')}
                 placeholder="Adresse complète"
@@ -267,7 +270,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Pays</span>
                 <select
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.country_code}
                   onChange={handleChange('country_code')}
                 >
@@ -281,7 +284,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Devise</span>
                 <select
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.currency}
                   onChange={handleChange('currency')}
                 >
@@ -295,7 +298,7 @@ const Settings: React.FC = () => {
             </div>
           </section>
 
-          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-soft">
+          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-floating">
             <header>
               <h2 className="text-sm font-semibold text-slate-900">Informations fiscales</h2>
               <p className="text-xs text-slate-500">
@@ -306,7 +309,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Registre du commerce (RCCM)</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.trade_register}
                   onChange={handleChange('trade_register')}
                   placeholder="Ex: RCCM-COT-123456"
@@ -318,7 +321,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Numéro fiscal (IFU/NIF)</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.tax_id}
                   onChange={handleChange('tax_id')}
                   placeholder="Ex: IFU123456789"
@@ -330,7 +333,7 @@ const Settings: React.FC = () => {
             </div>
           </section>
 
-          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-soft">
+          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-floating">
             <header>
               <h2 className="text-sm font-semibold text-slate-900">TVA</h2>
               <p className="text-xs text-slate-500">
@@ -342,14 +345,14 @@ const Settings: React.FC = () => {
                 type="checkbox"
                 checked={form.tax_enabled}
                 onChange={handleChange('tax_enabled')}
-                className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600"
+                className="h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-600"
               />
               TVA activée
             </label>
             <label className="grid gap-1 text-sm md:w-48">
               <span className="font-semibold text-slate-700">Taux TVA (%)</span>
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={form.default_tax_rate}
                 onChange={handleChange('default_tax_rate')}
                 type="number"
@@ -364,7 +367,7 @@ const Settings: React.FC = () => {
             </label>
           </section>
 
-          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-soft">
+          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-floating">
             <header>
               <h2 className="text-sm font-semibold text-slate-900">Contact WhatsApp</h2>
               <p className="text-xs text-slate-500">
@@ -374,7 +377,7 @@ const Settings: React.FC = () => {
             <label className="grid gap-1 text-sm md:w-72">
               <span className="font-semibold text-slate-700">Numéro WhatsApp (international)</span>
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={form.whatsapp_number}
                 onChange={handleChange('whatsapp_number')}
                 placeholder="Ex: 22997000000"
@@ -385,7 +388,7 @@ const Settings: React.FC = () => {
             </label>
           </section>
 
-          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-soft">
+          <section className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-floating">
             <header>
               <h2 className="text-sm font-semibold text-slate-900">Personnalisation</h2>
               <p className="text-xs text-slate-500">
@@ -396,7 +399,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Couleur principale (hex)</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.brand_color}
                   onChange={handleChange('brand_color')}
                   placeholder="#111827"
@@ -405,7 +408,7 @@ const Settings: React.FC = () => {
               <label className="grid gap-1 text-sm">
                 <span className="font-semibold text-slate-700">Logo URL</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={form.logo_url}
                   onChange={handleChange('logo_url')}
                   placeholder="https://..."

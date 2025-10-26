@@ -177,6 +177,7 @@ export default function Inventory() {
     const totals = new Map<
       number,
       {
+        productId: number
         product: Product | undefined
         inTotal: number
         outTotal: number
@@ -362,7 +363,7 @@ export default function Inventory() {
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-surface px-4 py-4 shadow-sm">
           <div className="grid gap-3 md:grid-cols-4">
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={filters.product}
               onChange={(event) => setFilters((prev) => ({ ...prev, product: event.target.value }))}
             >
@@ -374,7 +375,7 @@ export default function Inventory() {
               ))}
             </select>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={filters.mov_type}
               onChange={(event) =>
                 setFilters((prev) => ({ ...prev, mov_type: event.target.value as typeof prev.mov_type }))
@@ -387,7 +388,7 @@ export default function Inventory() {
               ))}
             </select>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={filters.period}
               onChange={(event) => setFilters((prev) => ({ ...prev, period: event.target.value }))}
             >
@@ -510,7 +511,7 @@ export default function Inventory() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Produit</span>
           <select
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.product}
             onChange={handleFormChange('product')}
           >
@@ -525,7 +526,7 @@ export default function Inventory() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Type de mouvement</span>
           <select
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.mov_type}
             onChange={handleFormChange('mov_type')}
           >
@@ -537,7 +538,7 @@ export default function Inventory() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Quantite</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.quantity}
             onChange={handleFormChange('quantity')}
             type="number"
@@ -548,7 +549,7 @@ export default function Inventory() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Reference (optional)</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.ref}
             onChange={handleFormChange('ref')}
             placeholder="Bon de commande, numero de lot..."

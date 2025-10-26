@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosHeaders } from 'axios'
 import { queueRequest, flushQueue } from './offline'
 
 export const api = axios.create({ baseURL: '/api' })
@@ -15,17 +15,15 @@ export function setOrganizationHeader(code: string | null) {
 }
 
 api.interceptors.request.use((config) => {
-  const headers = { ...config.headers }
+  const headers = AxiosHeaders.from(config.headers ?? {})
   if (currentToken) {
-    headers.Authorization = `Bearer ${currentToken}`
+    headers.set('Authorization', `Bearer ${currentToken}`)
   }
   if (currentOrganizationCode) {
-    headers['X-Org'] = currentOrganizationCode
+    headers.set('X-Org', currentOrganizationCode)
   }
-  return {
-    ...config,
-    headers,
-  }
+  config.headers = headers
+  return config
 })
 
 api.interceptors.response.use(

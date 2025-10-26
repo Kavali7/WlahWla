@@ -2,12 +2,27 @@ import React from 'react'
 
 type Variant = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
 
-const variantStyles: Record<Variant, string> = {
-  neutral: 'border-slate-200 bg-slate-100 text-slate-700',
-  info: 'border-brand-200 bg-brand-50 text-brand-700',
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  warning: 'border-amber-200 bg-amber-50 text-amber-700',
-  danger: 'border-rose-200 bg-rose-50 text-rose-700',
+const variantStyles: Record<Variant, { soft: string; solid: string }> = {
+  neutral: {
+    soft: 'border-surface-outline bg-surface-badge text-secondary-600',
+    solid: 'border-secondary-500 bg-secondary-500 text-secondary-foreground',
+  },
+  info: {
+    soft: 'border-info/40 bg-info/10 text-info-700',
+    solid: 'border-info bg-info text-info-foreground',
+  },
+  success: {
+    soft: 'border-success/40 bg-success/10 text-success-700',
+    solid: 'border-success bg-success text-success-foreground',
+  },
+  warning: {
+    soft: 'border-warning/40 bg-warning/15 text-warning-700',
+    solid: 'border-warning bg-warning text-warning-foreground',
+  },
+  danger: {
+    soft: 'border-highlight/40 bg-highlight/10 text-highlight-700',
+    solid: 'border-highlight bg-highlight text-highlight-foreground',
+  },
 }
 
 const cx = (...classes: Array<string | false | null | undefined>) =>
@@ -21,9 +36,8 @@ export type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & {
 export const Badge: React.FC<BadgeProps> = ({ variant = 'neutral', soft = true, className, children, ...rest }) => (
   <span
     className={cx(
-      'inline-flex items-center justify-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide',
-      soft ? 'bg-opacity-90' : '',
-      variantStyles[variant],
+      'inline-flex items-center justify-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide shadow-badge',
+      soft ? variantStyles[variant].soft : variantStyles[variant].solid,
       className,
     )}
     {...rest}

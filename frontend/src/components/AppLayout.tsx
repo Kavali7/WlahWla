@@ -99,7 +99,7 @@ export function AppLayout({ navigation }: AppLayoutProps) {
         <span className="text-sm font-semibold text-slate-900">{displayName}</span>
         {organizations.length > 1 ? (
           <select
-            className="mt-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="mt-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
             value={organization?.id ?? ''}
             onChange={handleOrganizationChange}
           >
@@ -126,7 +126,7 @@ export function AppLayout({ navigation }: AppLayoutProps) {
         <div className="container flex flex-col gap-4 py-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-500 font-display text-xl text-white shadow-soft">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-500 font-display text-xl text-white shadow-floating">
                 WL
               </div>
               <div>
@@ -142,9 +142,9 @@ export function AppLayout({ navigation }: AppLayoutProps) {
                     to={item.path}
                     className={({ isActive }) =>
                       classNames(
-                        'inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200',
+                        'inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200',
                         isActive
-                          ? 'border-transparent bg-brand-500 text-white shadow-soft'
+                          ? 'border-transparent bg-primary-500 text-white shadow-floating'
                           : 'border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50',
                       )
                     }
@@ -165,7 +165,7 @@ export function AppLayout({ navigation }: AppLayoutProps) {
               <div className="relative">
                 <select
                   id="app-layout-nav"
-                  className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+                  className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
                   value={activePath}
                   onChange={(event) => {
                     navigate(event.target.value)

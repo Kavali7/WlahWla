@@ -25,13 +25,13 @@ export const Card: React.FC<CardProps> = ({
     {(title || description || actions) && (
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-1">
-          {title && <h3 className="text-lg font-semibold text-slate-900">{title}</h3>}
-          {description && <p className="text-sm text-slate-500">{description}</p>}
+          {title && <h3 className="text-lg font-semibold text-surface-cardForeground">{title}</h3>}
+          {description && <p className="text-sm text-neutral-300">{description}</p>}
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </header>
     )}
-    <div className={cx('grid gap-3', contentClassName)}>{children}</div>
+    <div className={cx('grid gap-3 text-neutral-100', contentClassName)}>{children}</div>
   </div>
 )
 

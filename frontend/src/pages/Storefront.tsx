@@ -408,13 +408,13 @@ export default function Storefront() {
       >
         <div className="grid gap-3 md:grid-cols-4">
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             placeholder="Recherche (nom ou description)"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
           <select
-            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={selectedCategory}
             onChange={(event) => setSelectedCategory(event.target.value)}
           >
@@ -428,7 +428,7 @@ export default function Storefront() {
               ))}
           </select>
           <select
-            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={availabilityFilter}
             onChange={(event) =>
               setAvailabilityFilter(event.target.value as 'all' | 'available' | 'archived')
@@ -441,7 +441,7 @@ export default function Storefront() {
           <div className="grid grid-cols-2 gap-2">
             <input
               type="number"
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               min={basePriceRange[0]}
               max={basePriceRange[1]}
               value={minPrice}
@@ -449,7 +449,7 @@ export default function Storefront() {
             />
             <input
               type="number"
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               min={basePriceRange[0]}
               max={basePriceRange[1]}
               value={maxPrice}
@@ -473,7 +473,7 @@ export default function Storefront() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-soft"
+                className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-floating"
               >
                 <div className="grid gap-1">
                   <div className="text-sm font-semibold text-slate-900">{product.name}</div>
@@ -481,7 +481,7 @@ export default function Storefront() {
                     <div className="line-clamp-3 text-xs text-slate-500">{product.description}</div>
                   ) : null}
                 </div>
-                <div className="text-sm font-semibold text-brand-600">
+                <div className="text-sm font-semibold text-primary-600">
                   {formatCurrency(product.unit_price, product.currency ?? currency)}
                 </div>
                 <div className="text-xs text-slate-500">{buildCategoryLabel(product)}</div>
@@ -565,19 +565,19 @@ export default function Storefront() {
 
             <div className="grid gap-2 md:grid-cols-3">
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 placeholder="Nom du client"
                 value={customer.name}
                 onChange={handleCustomerChange('name')}
               />
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 placeholder="Telephone"
                 value={customer.phone}
                 onChange={handleCustomerChange('phone')}
               />
               <input
-                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 placeholder="E-mail"
                 value={customer.email}
                 onChange={handleCustomerChange('email')}
@@ -628,7 +628,7 @@ export default function Storefront() {
             <div className="grid gap-1 text-xs text-slate-500">
               <span>Message WhatsApp previsualise :</span>
               <textarea
-                className="min-h-[160px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="min-h-[160px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 readOnly
                 value={whatsappMessage}
               />
@@ -644,7 +644,7 @@ export default function Storefront() {
       </Card>
 
       {status === 'success' && !org && (
-        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-900 shadow-soft">
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-900 shadow-floating">
           Aucune organisation n'est encore configuree. Les prix sont affiches sans contexte.
         </div>
       )}

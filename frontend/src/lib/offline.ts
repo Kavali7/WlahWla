@@ -38,7 +38,10 @@ export async function queueRequest(config: any) {
   await emitQueueEvent()
   try {
     const registration = await navigator.serviceWorker?.ready
-    await registration?.sync.register('sync-queue')
+    const syncManager = (registration as ServiceWorkerRegistration & {
+      sync?: { register: (tag: string) => Promise<void> }
+    }).sync
+    await syncManager?.register('sync-queue')
   } catch {
     // ignore sync registration errors when offline
   }

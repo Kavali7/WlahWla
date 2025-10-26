@@ -202,7 +202,7 @@ export default function Suppliers() {
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-surface px-4 py-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-3">
             <input
-              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               placeholder="Rechercher un fournisseur (nom, email, telephone)"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -292,7 +292,7 @@ export default function Suppliers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Nom</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.name}
             onChange={handleInputChange('name')}
             placeholder="Nom du fournisseur"
@@ -301,7 +301,7 @@ export default function Suppliers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Email</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.contact_email}
             onChange={handleInputChange('contact_email')}
             placeholder="contact@exemple.com"
@@ -311,7 +311,7 @@ export default function Suppliers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Telephone</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.phone}
             onChange={handleInputChange('phone')}
             placeholder="+221 00 00 00 00"

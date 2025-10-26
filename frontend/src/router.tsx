@@ -92,7 +92,7 @@ const NavButton: React.FC<{ to: string; children: React.ReactNode }> = ({ to, ch
       [
         'flex items-center justify-between rounded-xl border px-3 py-2 text-sm transition-colors',
         isActive
-          ? 'border-brand-200 bg-brand-50 text-brand-700'
+          ? 'border-primary-200 bg-primary-50 text-primary-700'
           : 'border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50',
       ].join(' ')
     }

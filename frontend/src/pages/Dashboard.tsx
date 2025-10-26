@@ -236,7 +236,7 @@ export default function Dashboard() {
           <label className="grid gap-2 text-sm font-medium text-slate-600">
             Periode
             <select
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
               value={filters.period}
               onChange={handleFilterChange('period')}
             >
@@ -250,7 +250,7 @@ export default function Dashboard() {
           <label className="grid gap-2 text-sm font-medium text-slate-600">
             Canal de vente
             <select
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
               value={filters.channel}
               onChange={handleFilterChange('channel')}
             >
@@ -264,7 +264,7 @@ export default function Dashboard() {
           <label className="grid gap-2 text-sm font-medium text-slate-600">
             Organisation
             <select
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
               value={organization?.id ? String(organization.id) : ''}
               onChange={handleOrganizationChange}
             >

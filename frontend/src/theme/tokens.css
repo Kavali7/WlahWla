@@ -1,0 +1,30 @@
+:root {
+  --wl-gradient-hero: linear-gradient(115deg, #2e38ff 0%, #7b2bff 100%);
+  --wl-gradient-hero-soft: linear-gradient(135deg, rgba(46, 56, 255, 0.85), rgba(123, 43, 255, 0.75));
+  --wl-gradient-card-glow: linear-gradient(135deg, rgba(46, 56, 255, 0.25), rgba(123, 43, 255, 0.22));
+  --wl-overlay-strong: linear-gradient(180deg, rgba(10, 17, 40, 0) 0%, rgba(10, 17, 40, 0.88) 100%);
+  --wl-overlay-soft: linear-gradient(180deg, rgba(16, 22, 48, 0) 0%, rgba(16, 22, 48, 0.55) 100%);
+  --wl-surface-card: #101630;
+  --wl-surface-card-border: rgba(16, 22, 48, 0.18);
+  --wl-surface-card-border-strong: rgba(16, 22, 48, 0.32);
+  --wl-surface-badge: rgba(246, 247, 253, 0.92);
+  --wl-surface-badge-strong: rgba(15, 23, 42, 0.18);
+  --wl-focus-ring: rgba(95, 102, 255, 0.28);
+  --wl-blur-backdrop: blur(18px);
+}
+
+.wl-hero-gradient {
+  background-image: var(--wl-gradient-hero);
+}
+
+.wl-card-glow {
+  background-image: var(--wl-gradient-card-glow);
+}
+
+.wl-overlay-strong {
+  background-image: var(--wl-overlay-strong);
+}
+
+.wl-overlay-soft {
+  background-image: var(--wl-overlay-soft);
+}

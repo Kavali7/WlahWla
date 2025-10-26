@@ -9,7 +9,7 @@ export const TableContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...rest
 }) => (
   <div
-    className={cx('overflow-x-auto rounded-2xl border border-slate-200 bg-surface shadow-soft', className)}
+    className={cx('overflow-x-auto rounded-2xl border border-slate-200 bg-surface shadow-floating', className)}
     {...rest}
   >
     {children}

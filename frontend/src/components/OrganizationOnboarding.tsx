@@ -67,7 +67,7 @@ export default function OrganizationOnboardingCard() {
 
   if (organizationsLoading) {
     return (
-      <section className="rounded-3xl border border-slate-200 bg-white px-6 py-6 text-sm text-slate-700 shadow-soft">
+      <section className="rounded-3xl border border-slate-200 bg-white px-6 py-6 text-sm text-slate-700 shadow-floating">
         Chargement des organisations...
       </section>
     )
@@ -75,7 +75,7 @@ export default function OrganizationOnboardingCard() {
 
   if (!organization || organizations.length === 0) {
     return (
-      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-soft">
+      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-floating">
         <header className="mb-4 flex flex-col gap-1">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">
             Organisation requise
@@ -105,7 +105,7 @@ export default function OrganizationOnboardingCard() {
 
   if (!requiresOrganizationSetup && organizationError) {
     return (
-      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-soft">
+      <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-floating">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">
@@ -143,7 +143,7 @@ export default function OrganizationOnboardingCard() {
   }
 
   return (
-    <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-soft">
+    <section className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-6 text-sm text-amber-900 shadow-floating">
       <header className="mb-4 flex flex-col gap-1">
         <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">Onboarding requis</p>
         <h2 className="text-lg font-semibold text-amber-900">

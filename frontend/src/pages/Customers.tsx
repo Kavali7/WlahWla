@@ -356,7 +356,7 @@ export default function Customers() {
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-surface px-4 py-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-3">
             <input
-              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               placeholder="Rechercher par nom, email ou NIF"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
@@ -399,7 +399,7 @@ export default function Customers() {
                     <TableRow key={customer.id}>
                       <TableCell>
                         <button
-                          className="text-left font-medium text-brand-600 hover:underline"
+                          className="text-left font-medium text-primary-600 hover:underline"
                           type="button"
                           onClick={() => openDetail(customer)}
                         >
@@ -463,7 +463,7 @@ export default function Customers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Nom / Raison sociale</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.name}
             onChange={handleInputChange('name')}
             placeholder="Ex. Entreprise ABC"
@@ -473,7 +473,7 @@ export default function Customers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Email</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.email}
             onChange={handleInputChange('email')}
             placeholder="contact@client.com"
@@ -483,7 +483,7 @@ export default function Customers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Telephone</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.phone}
             onChange={handleInputChange('phone')}
             placeholder="+221 77 000 00 00"
@@ -492,7 +492,7 @@ export default function Customers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Numero fiscal (NIF)</span>
           <input
-            className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.tax_id}
             onChange={handleInputChange('tax_id')}
             placeholder="123456789"
@@ -501,7 +501,7 @@ export default function Customers() {
         <label className="grid gap-1 text-sm">
           <span className="font-medium text-slate-700">Adresse</span>
           <textarea
-            className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
             value={form.address}
             onChange={handleInputChange('address')}
             placeholder="Rue, code postal, ville"

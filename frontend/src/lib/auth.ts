@@ -10,8 +10,15 @@ export type StoredOrganization = {
   code?: string
   name?: string
   address?: string | null
+  country_code?: string | null
+  currency?: string | null
   tax_id?: string | null
   trade_register?: string | null
+  tax_enabled?: boolean
+  default_tax_rate?: number | string | null
+  whatsapp_number?: string | null
+  brand_color?: string | null
+  logo_url?: string | null
   is_onboarded?: boolean
   missing_fields?: string[]
 }

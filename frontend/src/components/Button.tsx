@@ -4,15 +4,15 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'outline'
 type Size = 'sm' | 'md' | 'lg'
 
 const baseStyles =
-  'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60'
+  'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-60'
 
 const variantStyles: Record<Variant, string> = {
-  primary: 'bg-brand-500 text-white shadow-soft hover:bg-brand-600 active:bg-brand-700',
+  primary: 'bg-primary text-primary-foreground shadow-floating hover:bg-primary-600 active:bg-primary-700',
   secondary:
-    'bg-white text-slate-700 border border-slate-200 shadow-sm hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100',
-  ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 active:bg-slate-200',
+    'border border-surface-outline bg-surface text-secondary-600 shadow-sm hover:bg-surface-subtle hover:border-surface-outlineStrong active:bg-surface-subtle',
+  ghost: 'border border-transparent bg-transparent text-secondary-600 hover:bg-surface-subtle/80 active:bg-surface-subtle',
   outline:
-    'bg-transparent text-slate-800 border border-slate-300 hover:border-slate-400 hover:bg-slate-50 active:bg-slate-100',
+    'border border-surface-outline bg-transparent text-secondary-700 hover:border-primary/40 hover:bg-surface-subtle active:bg-surface-subtle/80',
 }
 
 const sizeStyles: Record<Size, string> = {

@@ -951,7 +951,7 @@ export default function Invoices() {
         contentClassName="gap-4"
       >
         <input
-          className="h-10 w-full rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="h-10 w-full rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
           placeholder="Rechercher un numero ou un client..."
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
@@ -987,7 +987,7 @@ export default function Invoices() {
                   <TableRow
                     key={invoice.id}
                     className={
-                      selectedInvoiceId === invoice.id ? 'bg-brand-50/60 hover:bg-brand-50/60' : undefined
+                      selectedInvoiceId === invoice.id ? 'bg-primary-50/60 hover:bg-primary-50/60' : undefined
                     }
                     onClick={() => openInvoiceEditor(invoice.id)}
                   >
@@ -1027,7 +1027,7 @@ export default function Invoices() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Numero</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.number}
               onChange={handleInputChange('number')}
               placeholder="FAC-2025-0001"
@@ -1036,7 +1036,7 @@ export default function Invoices() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Client</span>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.customer}
               onChange={handleInputChange('customer')}
             >
@@ -1052,7 +1052,7 @@ export default function Invoices() {
             <span className="font-medium text-slate-700">Date d emission</span>
             <input
               type="date"
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.issue_date}
               onChange={handleInputChange('issue_date')}
             />
@@ -1061,7 +1061,7 @@ export default function Invoices() {
             <span className="font-medium text-slate-700">Date d echeance</span>
             <input
               type="date"
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.due_date}
               onChange={handleInputChange('due_date')}
             />
@@ -1069,7 +1069,7 @@ export default function Invoices() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Devise</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.currency}
               onChange={handleInputChange('currency')}
               maxLength={3}
@@ -1078,7 +1078,7 @@ export default function Invoices() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Statut</span>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.status}
               onChange={handleInputChange('status')}
             >
@@ -1093,7 +1093,7 @@ export default function Invoices() {
             <span className="font-medium text-slate-700">Associer un devis accepte</span>
             <div className="flex gap-3">
               <select
-                className="h-10 w-full rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 w-full rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={form.quote}
                 onChange={(event) => void handleQuoteSelection(event.target.value)}
               >
@@ -1105,7 +1105,7 @@ export default function Invoices() {
                 ))}
               </select>
               {quoteLoading && (
-                <span className="self-center text-xs font-semibold uppercase tracking-wide text-brand-600">
+                <span className="self-center text-xs font-semibold uppercase tracking-wide text-primary-600">
                   Import...
                 </span>
               )}
@@ -1145,7 +1145,7 @@ export default function Invoices() {
                     <TableRow key={line.internalId}>
                       <TableCell>
                         <select
-                          className="h-9 w-full rounded-lg border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                          className="h-9 w-full rounded-lg border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                           value={line.product}
                           onChange={(event) => handleProductSelect(line.internalId, event.target.value)}
                         >
@@ -1159,7 +1159,7 @@ export default function Invoices() {
                       </TableCell>
                       <TableCell>
                         <input
-                          className="h-9 w-full rounded-lg border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                          className="h-9 w-full rounded-lg border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                           value={line.description}
                           onChange={handleLineChange(line.internalId, 'description')}
                           placeholder="Designation"
@@ -1170,7 +1170,7 @@ export default function Invoices() {
                           type="number"
                           min="0"
                           step="0.01"
-                          className="h-9 w-24 rounded-lg border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                          className="h-9 w-24 rounded-lg border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                           value={line.quantity}
                           onChange={handleLineChange(line.internalId, 'quantity')}
                         />
@@ -1180,14 +1180,14 @@ export default function Invoices() {
                           type="number"
                           min="0"
                           step="0.01"
-                          className="h-9 w-28 rounded-lg border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                          className="h-9 w-28 rounded-lg border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                           value={line.unit_price}
                           onChange={handleLineChange(line.internalId, 'unit_price')}
                         />
                       </TableCell>
                       <TableCell>
                         <select
-                          className="h-9 rounded-lg border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                          className="h-9 rounded-lg border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                           value={line.tax}
                           onChange={handleLineChange(line.internalId, 'tax')}
                         >
@@ -1370,7 +1370,7 @@ export default function Invoices() {
               <span className="font-medium text-slate-700">Email destinataire</span>
               <input
                 type="email"
-                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={emailOverride}
                 onChange={(event) => setEmailOverride(event.target.value)}
                 placeholder="client@example.com"
@@ -1441,7 +1441,7 @@ export default function Invoices() {
           type="number"
           min="0"
           step="0.01"
-          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
           value={paymentForm.amount}
           onChange={handlePaymentInputChange('amount')}
           placeholder="Ex. 50000"
@@ -1450,7 +1450,7 @@ export default function Invoices() {
       <label className="grid gap-1 text-sm">
         <span className="font-medium text-slate-700">Mode de paiement</span>
         <select
-          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
           value={paymentForm.method}
           onChange={handlePaymentInputChange('method')}
         >
@@ -1465,7 +1465,7 @@ export default function Invoices() {
         <span className="font-medium text-slate-700">Date</span>
         <input
           type="date"
-          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
           value={paymentForm.paid_at}
           onChange={handlePaymentInputChange('paid_at')}
         />

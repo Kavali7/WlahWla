@@ -374,13 +374,13 @@ export default function Products() {
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-surface px-4 py-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-3">
             <input
-              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               placeholder="Rechercher par nom, SKU ou description"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
             />
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
             >
@@ -588,7 +588,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Nom</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.name}
               onChange={handleInputChange('name')}
               placeholder="Nom du produit"
@@ -597,7 +597,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">SKU</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.sku}
               onChange={handleInputChange('sku')}
               placeholder="Code interne (ex: PROD-001)"
@@ -606,7 +606,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm md:col-span-2">
             <span className="font-medium text-slate-700">Description</span>
             <textarea
-              className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.description}
               onChange={handleInputChange('description')}
               placeholder="Details visibles pour l'equipe (optionnel)"
@@ -615,7 +615,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Prix unitaire</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.unit_price}
               onChange={handleInputChange('unit_price')}
               type="number"
@@ -626,7 +626,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Devise</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.currency}
               onChange={handleInputChange('currency')}
               maxLength={3}
@@ -635,7 +635,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Taxe</span>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.tax}
               onChange={handleInputChange('tax')}
             >
@@ -650,7 +650,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Unite de mesure</span>
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.uom}
               onChange={handleInputChange('uom')}
             >
@@ -665,7 +665,7 @@ export default function Products() {
           <label className="grid gap-1 text-sm">
             <span className="font-medium text-slate-700">Priorite</span>
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={form.priority}
               onChange={handleInputChange('priority')}
               type="number"
@@ -678,7 +678,7 @@ export default function Products() {
               type="checkbox"
               checked={form.is_active}
               onChange={handleInputChange('is_active')}
-              className="h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-brand-500"
+              className="h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500"
             />
             Produit actif (visible dans la boutique et les devis)
           </label>

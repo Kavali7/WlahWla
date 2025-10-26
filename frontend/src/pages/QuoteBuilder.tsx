@@ -387,13 +387,13 @@ export default function QuoteBuilder() {
               className={[
                 'flex items-center gap-2 rounded-full px-3 py-1 transition-colors',
                 index === step
-                  ? 'bg-brand-500 text-white shadow-soft'
+                  ? 'bg-primary-500 text-white shadow-floating'
                   : index < step
                     ? 'bg-emerald-100 text-emerald-700'
                     : 'bg-slate-200 text-slate-600',
               ].join(' ')}
             >
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-semibold text-brand-500">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-semibold text-primary-500">
                 {index + 1}
               </span>
               <span>{label}</span>
@@ -416,7 +416,7 @@ export default function QuoteBuilder() {
           <div className="grid gap-4 rounded-2xl border border-slate-200 bg-surface px-5 py-5 shadow-sm">
             <div className="flex flex-wrap items-center gap-3">
               <input
-                className="h-10 flex-1 min-w-[240px] rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="h-10 flex-1 min-w-[240px] rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 placeholder="Rechercher un client"
                 value={customerSearch}
                 onChange={(event) => setCustomerSearch(event.target.value)}
@@ -447,7 +447,7 @@ export default function QuoteBuilder() {
                           <input
                             type="radio"
                             name="customer"
-                            className="h-4 w-4 text-brand-500 focus:ring-brand-500"
+                            className="h-4 w-4 text-primary-500 focus:ring-primary-500"
                             checked={selectedCustomerId === customer.id}
                             onChange={() => setSelectedCustomerId(customer.id)}
                           />
@@ -493,7 +493,7 @@ export default function QuoteBuilder() {
                       <TableRow key={line.id}>
                         <TableCell className="min-w-[180px]">
                           <select
-                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={line.product}
                             onChange={(event) => updateLine(line.id, 'product', event.target.value)}
                           >
@@ -507,7 +507,7 @@ export default function QuoteBuilder() {
                         </TableCell>
                         <TableCell>
                           <textarea
-                            className="min-h-[64px] w-full rounded-xl border border-slate-200 px-2 py-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="min-h-[64px] w-full rounded-xl border border-slate-200 px-2 py-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={line.description}
                             onChange={(event) => updateLine(line.id, 'description', event.target.value)}
                             placeholder="Description de la ligne"
@@ -515,7 +515,7 @@ export default function QuoteBuilder() {
                         </TableCell>
                         <TableCell>
                           <input
-                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={line.quantity}
                             onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
                             type="number"
@@ -525,7 +525,7 @@ export default function QuoteBuilder() {
                         </TableCell>
                         <TableCell>
                           <input
-                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={line.unit_price}
                             onChange={(event) => updateLine(line.id, 'unit_price', event.target.value)}
                             type="number"
@@ -535,7 +535,7 @@ export default function QuoteBuilder() {
                         </TableCell>
                         <TableCell>
                           <select
-                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="h-10 w-full rounded-xl border border-slate-200 px-2 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={line.tax}
                             onChange={(event) => updateLine(line.id, 'tax', event.target.value)}
                           >
@@ -587,7 +587,7 @@ export default function QuoteBuilder() {
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-slate-700">Devise</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 uppercase focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={currency}
                   onChange={(event) => setCurrency(event.target.value.toUpperCase())}
                   maxLength={3}
@@ -596,7 +596,7 @@ export default function QuoteBuilder() {
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-slate-700">Date d emission</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={issueDate}
                   onChange={(event) => setIssueDate(event.target.value)}
                   type="date"
@@ -605,7 +605,7 @@ export default function QuoteBuilder() {
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-slate-700">Validite jusqu au</span>
                 <input
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={validUntil}
                   onChange={(event) => setValidUntil(event.target.value)}
                   type="date"
@@ -614,7 +614,7 @@ export default function QuoteBuilder() {
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-slate-700">Statut</span>
                 <select
-                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="h-10 rounded-xl border border-slate-200 px-3 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
                 >
@@ -629,7 +629,7 @@ export default function QuoteBuilder() {
             <label className="grid gap-1 text-sm">
               <span className="font-medium text-slate-700">Conditions / notes</span>
               <textarea
-                className="min-h-[100px] rounded-xl border border-slate-200 px-3 py-2 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="min-h-[100px] rounded-xl border border-slate-200 px-3 py-2 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
                 placeholder="Conditions de paiement, delais, mentions legales..."
@@ -640,13 +640,13 @@ export default function QuoteBuilder() {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-brand-500"
+                  className="h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500"
                   checked={sendEmail}
                   onChange={(event) => setSendEmail(event.target.checked)}
                 />
                 Envoyer par email
                 <input
-                  className="ml-auto h-9 w-72 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="ml-auto h-9 w-72 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   placeholder="Email destinataire"
                   value={customEmail}
                   onChange={(event) => setCustomEmail(event.target.value)}
@@ -656,13 +656,13 @@ export default function QuoteBuilder() {
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-brand-500"
+                  className="h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500"
                   checked={sendWhatsapp}
                   onChange={(event) => setSendWhatsapp(event.target.checked)}
                 />
                 Partager via WhatsApp
                 <input
-                  className="ml-auto h-9 w-64 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="ml-auto h-9 w-64 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   placeholder="Numero (ex: 221770000000)"
                   value={customPhone}
                   onChange={(event) => setCustomPhone(event.target.value)}
@@ -672,7 +672,7 @@ export default function QuoteBuilder() {
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-slate-700">Message personnalise</span>
                 <textarea
-                  className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                  className="min-h-[80px] rounded-xl border border-slate-200 px-3 py-2 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                   value={sendMessage}
                   onChange={(event) => setSendMessage(event.target.value)}
                   placeholder="Message a joindre a l envoi"
@@ -814,7 +814,7 @@ export default function QuoteBuilder() {
       >
         {sendEmail && mailtoLink ? (
           <a
-            className="rounded-xl border border-brand-200 px-4 py-3 text-sm text-brand-700 hover:bg-brand-50"
+            className="rounded-xl border border-primary-200 px-4 py-3 text-sm text-primary-700 hover:bg-primary-50"
             href={mailtoLink}
           >
             Ouvrir votre client mail ({customEmail})

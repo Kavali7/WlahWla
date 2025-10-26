@@ -18,9 +18,8 @@ Traduire la charte definie en Tache 01 dans le systeme de design technique (Tail
 
 ## Livrables
 - `tailwind.config.ts` et `src/theme/tokens.css` alignes avec la charte.
-- `docs/branding/components-cheatsheet.md` contenant exemples et capture Figma (lien).
+- `docs/branding/components-cheatsheet.md` contenant exemples commentes et, si possible, captures placees dans `docs/branding/assets/`.
 
 ## Verifications
 - Tests manuels sur les pages existantes (Dashboard, Storefront) pour confirmer que les couleurs se mettent bien a jour.
 - Rapport de commande `npm run lint` joint dans le rapport de tache si des avertissements apparaissent.
-

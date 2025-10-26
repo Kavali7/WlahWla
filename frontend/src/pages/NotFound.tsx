@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <div className="container flex min-h-[40vh] flex-col items-center justify-center gap-6 py-24 text-center">
       <div className="card max-w-lg px-10 py-12">
-        <p className="text-sm font-semibold uppercase tracking-wide text-brand-500">Erreur 404</p>
+        <p className="text-sm font-semibold uppercase tracking-wide text-primary-500">Erreur 404</p>
         <h1 className="mt-4 text-3xl font-semibold text-slate-900">Page introuvable</h1>
         <p className="mt-3 text-sm text-slate-500">
           La ressource que vous cherchez a peut-etre ete deplacee ou n'existe plus. Verifiez l'URL ou

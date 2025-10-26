@@ -357,7 +357,7 @@ const AdminPanel: React.FC = () => {
       )}
 
       {showGuardMessage && (
-        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-700 shadow-soft">
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-6 text-sm text-amber-700 shadow-floating">
           Vous n avez pas les permissions necessaires pour gerer les collaborateurs. Contactez un
           administrateur.
         </div>
@@ -396,20 +396,20 @@ const AdminPanel: React.FC = () => {
         >
           <div className="grid gap-3 md:grid-cols-[2fr_1.2fr_1fr]">
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               placeholder="Email"
               value={inviteForm.email}
               onChange={handleInviteFieldChange('email')}
               type="email"
             />
             <input
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               placeholder="Nom (facultatif)"
               value={inviteForm.name}
               onChange={handleInviteFieldChange('name')}
             />
             <select
-              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
               value={inviteForm.role}
               onChange={handleInviteFieldChange('role')}
             >
@@ -435,7 +435,7 @@ const AdminPanel: React.FC = () => {
                 Message a envoyer
               </span>
               <textarea
-                className="min-h-[160px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                className="min-h-[160px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 readOnly
                 value={invitePreview}
               />
@@ -482,7 +482,7 @@ const AdminPanel: React.FC = () => {
                         </td>
                         <td className="px-4 py-3">
                           <select
-                            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            className="h-10 rounded-xl border border-slate-200 px-3 text-sm focus:border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-100"
                             value={membership.role}
                             onChange={(event) =>
                               handleRoleChange(membership, event.target.value as MembershipRole)
@@ -539,13 +539,13 @@ const AdminPanel: React.FC = () => {
       )}
 
       {feedback && (
-        <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-sm text-emerald-700 shadow-soft">
+        <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-sm text-emerald-700 shadow-floating">
           {feedback}
         </div>
       )}
 
       {actionError && (
-        <div className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-6 text-sm text-rose-700 shadow-soft">
+        <div className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-6 text-sm text-rose-700 shadow-floating">
           {actionError}
         </div>
       )}

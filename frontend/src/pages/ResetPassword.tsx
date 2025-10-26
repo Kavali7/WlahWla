@@ -54,7 +54,7 @@ export default function ResetPassword() {
       <div className="container flex min-h-screen items-center justify-center py-12">
         <div className="card w-full max-w-md px-8 py-10">
           <div className="mb-8 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 font-display text-xl text-white shadow-soft">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-500 font-display text-xl text-white shadow-floating">
               WL
             </div>
             <h1 className="mt-4 text-2xl font-semibold text-slate-900">Reinitialiser le mot de passe</h1>
@@ -76,7 +76,7 @@ export default function ResetPassword() {
             <label className="grid gap-1 text-sm font-medium text-slate-700">
               Code de reinitialisation
               <input
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
                 type="text"
                 value={token}
                 onChange={(event) => setToken(event.target.value)}
@@ -86,7 +86,7 @@ export default function ResetPassword() {
             <label className="grid gap-1 text-sm font-medium text-slate-700">
               Nouveau mot de passe
               <input
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
                 type="password"
                 autoComplete="new-password"
                 value={password}
@@ -97,7 +97,7 @@ export default function ResetPassword() {
             <label className="grid gap-1 text-sm font-medium text-slate-700">
               Confirmation
               <input
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-200"
                 type="password"
                 autoComplete="new-password"
                 value={confirmation}
@@ -110,7 +110,7 @@ export default function ResetPassword() {
             </Button>
           </form>
           <div className="mt-6 text-center text-sm">
-            <Link to="/login" className="text-brand-600 transition-colors hover:text-brand-700">
+            <Link to="/login" className="text-primary-600 transition-colors hover:text-primary-700">
               Retour a la connexion
             </Link>
           </div>
