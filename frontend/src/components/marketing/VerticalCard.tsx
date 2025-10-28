@@ -74,8 +74,8 @@ export type VerticalCardProps = VerticalPreview & {
 export const VerticalCard: React.FC<VerticalCardProps> = ({ icon, title, summary, bullets, cta, className }) => (
   <article
     className={combine(
-      'group flex h-full flex-col gap-5 rounded-3xl border border-surface-outline bg-surface-subtle/70 p-8 shadow-service transition-all duration-300',
-      'hover:-translate-y-2 hover:border-primary/40 hover:shadow-elevated motion-reduce:transform-none motion-reduce:shadow-service',
+      'group flex h-full flex-col gap-5 rounded-3xl border border-[#E3E7EF] bg-[#F8F9FA] p-8 shadow-service transition-all duration-300',
+      'hover:-translate-y-2 hover:border-primary/50 hover:shadow-[0_22px_50px_-24px_rgba(67,97,238,0.55)] motion-reduce:transform-none motion-reduce:shadow-service',
       className,
     )}
   >

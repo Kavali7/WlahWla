@@ -148,7 +148,7 @@ export const VerticalGrid = () => (
   </div>
 )
 ```
-- Fond clair `bg-surface-subtle`, halo primaire et hover `shadow-elevated`.
+- Fond clair `bg-[#F8F9FA]` avec bord `#E3E7EF`, hover halo `shadow-[0_22px_50px_-24px_rgba(67,97,238,0.55)]`.
 - Icone circulaire derivee de la verticale (`retail`, `accounting`, `services`, `agencies`).
 - Puces orientees resultat (3 maximum) et CTA vers `/verticals/:slug`.
 

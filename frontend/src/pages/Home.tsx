@@ -140,7 +140,7 @@ const Home: React.FC = () => {
         ref={verticalsSection.ref}
         aria-labelledby="verticales-heading"
         className={cx(
-          'space-y-10 rounded-3xl border border-surface-outline bg-white px-8 py-12 shadow-service md:px-12',
+          'space-y-10 rounded-3xl border border-[#E3E7EF] bg-[#F5F7FD] px-8 py-12 shadow-service md:px-12',
           'transition-all duration-700 ease-out motion-reduce:duration-0 motion-reduce:transform-none motion-reduce:opacity-100',
           verticalsSection.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
         )}

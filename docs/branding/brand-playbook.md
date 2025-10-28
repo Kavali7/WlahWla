@@ -69,6 +69,43 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
   - Prestataires: portails clients, contrats numeriques, suivi satisfaction.
   - Groupes: controle filiales, permissions role base, monitoring multi pays.
 
+## Contenus verticales valides marketing (2025-10-30)
+### Retail omnicanal
+- **Titre hero**: Unifiez encaissement boutique et ventes digitales.
+- **Description**: Reliez boutiques physiques, WhatsApp et e-commerce depuis une console unique conforme UEMOA.
+- **Benefices**:
+  1. Catalogue omnicanal diffuse sur caisse, WhatsApp et web sans double saisie.
+  2. Caisse connectee avec paiements mobile money et cartes, rapprochement automatique.
+  3. Pilotage magasins avec dashboards par site, alertes rupture et click and collect inclus.
+- **Chiffres clefs**: Activation terrain 3 semaines; Conversion panier +23 %; Temps inventaire -35 %.
+
+### PME comptables
+- **Titre hero**: Automatisez factures, retenues et relances.
+- **Description**: Industrialisez les dossiers clients avec numerotation legale, signature numerique et exports comptables.
+- **Benefices**:
+  1. Workflow devis > facture > recouvrement pilote depuis un hub unique.
+  2. Portail client pour validations, commentaires et signatures sans papier.
+  3. Relances intelligentes combinant email, WhatsApp et appels selon scenarios valides.
+- **Chiffres clefs**: Delai emission facture -45 %; Recouvrement 30 jours +28 %; Pieces conformes 100 %.
+
+### Prestations de services
+- **Titre hero**: Orchestrez vos missions et signatures sans friction.
+- **Description**: Standardisez vos prestations juridiques, consulting ou logistique avec jalons, portail client et facturation automatique.
+- **Benefices**:
+  1. Workflow mission personnalise par phase et SLA surveilles.
+  2. Portail client pour depot de documents et suivi temps reel.
+  3. Reporting marge et satisfaction pour vos comites de pilotage.
+- **Chiffres clefs**: Temps confirmation mission -50 %; Satisfaction client +21 pts; Documents signes 100 % numerique.
+
+### Agences marketing
+- **Titre hero**: Synchronisez campagnes et preuves de performance.
+- **Description**: Packagez vos offres waohdigital media avec reporting live et coordination commerciale.
+- **Benefices**:
+  1. Brief centralise pour budgets, assets et validations clients.
+  2. Activation OOH et digital avec planification geolocalisee et automation WhatsApp.
+  3. Reporting live exportable marque agence et partage client immediat.
+- **Chiffres clefs**: Temps mise en ligne campagne -60 %; ROI moyen observe +18 %; Briefs centralises 100 %.
+
 ## Implementation produit
 - Mettre a jour `frontend/src/pages` avec cette hierarchie typographique et colorimetrie.
 - Centraliser les tokens dans `frontend/src/lib/theme.ts` (a creer si absent) avec degrade, palette, typographies.
@@ -90,5 +127,7 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
 - Bandeau logos: `waohdigital media`, `Orange Money Pro`, `UBA Connect`, `ANSIE Lab`, `Sunu Assurance` + focus reveal.
 
 ## Verifications 2025-10-28
-- Focus clavier: hero et carrousel testes via Playwright (dev token local). Ordre confirme pour CTA `Essayer gratuitement`, `Voir la demo`, `WhatsApp` puis pagination (`‹`, `›`, puces `Aller vers ...`).
+- Focus clavier: hero et carrousel testes via Playwright (dev token local). Ordre confirme pour CTA `Essayer gratuitement`, `Voir la demo`, `WhatsApp` puis pagination (`???`, `???`, puces `Aller vers ...`).
 - Lighthouse desktop (stub API interne): Performance `98`, Accessibilite `91`. Commande: `node .tmp-run-lighthouse.cjs` (serveur static + `npx lighthouse`).
+- Navigation verticales: verification headless via Puppeteer (desktop 1280x720 et mobile 390x844) sur `/verticals/retail`, `/verticals/accounting`, `/verticals/services`, `/verticals/agencies` (urls finales `?org=dev`).
+- Lighthouse verticale retail (desktop, VITE_BYPASS_AUTH=1): Performance `98`, Accessibilite `96`, Best Practices `81`, SEO `82`. Commande: `npx lighthouse http://127.0.0.1:4180/verticals/retail --quiet --chrome-flags='--headless --no-sandbox' --preset=desktop`.

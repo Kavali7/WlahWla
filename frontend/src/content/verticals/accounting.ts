@@ -5,7 +5,7 @@ export const accountingVertical: VerticalContent = {
   icon: 'accounting',
   title: 'PME comptables',
   eyebrow: 'Finance et conformite',
-  summary: 'Accelez la production de pieces, rapprochements et declaratifs pour vos clients UEMOA.',
+  summary: 'Accelerez la production de pieces, rapprochements et declaratifs pour vos clients UEMOA.',
   hero: {
     heading: 'Automatisez factures, retenues et relances',
     description:
@@ -26,8 +26,8 @@ export const accountingVertical: VerticalContent = {
   ],
   promise: [
     {
-      title: 'Numerotation UEMOA',
-      description: 'Configurez vos masques par pays, incluez retenues, TVA, acomptes et exportez vers vos ERP existants.',
+      title: 'Workflow bout en bout',
+      description: 'Pilotez devis, factures, retenues et recouvrement dans un hub unique avec numerotation legale UEMOA.',
     },
     {
       title: 'Portail client',

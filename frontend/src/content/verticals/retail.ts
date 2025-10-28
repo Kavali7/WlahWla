@@ -5,7 +5,7 @@ export const retailVertical: VerticalContent = {
   icon: 'retail',
   title: 'Retail omnicanal',
   eyebrow: 'Commerce connecte',
-  summary: 'Reliez vos boutiques physiques, WhatsApp et e-commerce sous une seule plateforme UEMOA.',
+  summary: 'Reliez boutiques physiques, WhatsApp et e-commerce depuis une console unique conforme UEMOA.',
   hero: {
     heading: 'Unifiez encaissement boutique et ventes digitales',
     description:

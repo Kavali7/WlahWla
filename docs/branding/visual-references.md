@@ -9,6 +9,10 @@ Ce document recense les elements observes sur waohdigital et d autres sources pe
 | WLAHWLA - hero 2025 | Hero Carousel degrade 135deg #4361EE->#3F37C9, metrics badges, CTA triple | Capturer animations fade/slide, badges confiance et bandeau logos partenaires | TODO: capture hero landing (desktop + mobile) |
 | WLAHWLA - services prioritaires | Cartes ServiceCard 3 colonnes, icone cercle, hover translate | Documenter rendu commerce, facturation, campagnes, support + CTA global modules | TODO: captures services desktop/tablette/mobile |
 | WLAHWLA - verticales industries | Cartes VerticalCard 4 colonnes, fond clair, hover accent | Capturer la section verticales + navigation vers pages detaillees | TODO: captures verticales desktop/tablette/mobile |
+| WLAHWLA - verticale retail | Hero badge + metrics, cartes promesse, use cases retail | Montrer unification encaissement + WhatsApp, CTA demo retail | TODO: capture /verticals/retail (desktop + mobile) |
+| WLAHWLA - verticale comptable | Hero finance, metrics compliance, workflow devis > facture | Illustrer portail client, exports comptables et temoignage cabinet | TODO: capture /verticals/accounting (desktop + mobile) |
+| WLAHWLA - verticale services | Hero missions + jalons, portal client, SLA en cartes | Zoom sur use cases juridique et logistique | TODO: capture /verticals/services (desktop + mobile) |
+| WLAHWLA - verticale agences | Hero media + ROI, blocs activation, temoignage agence | Montrer combinaison OOH + WhatsApp et rapports marque agence | TODO: capture /verticals/agencies (desktop + mobile) |
 | waohdigital - navigation | Barre sticky minimaliste, boutons outline et WhatsApp | Ajouter CTA Essai gratuit, Quick Actions pour portails et c panel | TODO: capture navigation |
 | waohdigital - section industries | Cartes alignement 3 colonnes, icone lineaire, puces | Decliner verticales WLAHWLA avec icones locales (legal, retail, compta) | TODO: captures industries |
 | waohdigital - temoignages | Carrousels avec portraits, citations sur fond clair | Cranter design en bandeau, integrer donnees chifrees | TODO: capture temoignages |

@@ -5,7 +5,7 @@ export const servicesVertical: VerticalContent = {
   icon: 'services',
   title: 'Prestations de services',
   eyebrow: 'Operations client',
-  summary: 'Standardisez vos missions juridiques, logistiques ou consulting avec un portail client actif.',
+  summary: 'Standardisez vos prestations juridiques, consulting ou logistique avec jalons et portail client.',
   hero: {
     heading: 'Orchestrez vos missions et signatures sans friction',
     description:
@@ -26,12 +26,12 @@ export const servicesVertical: VerticalContent = {
   ],
   promise: [
     {
-      title: 'Workflow mission',
-      description: 'Configurez et segmentez vos prestations par phase avec jalons, dependances et notifications.',
+      title: 'Workflow mission personnalise',
+      description: 'Configurez vos prestations par phase avec jalons, dependances et notifications ciblees.',
     },
     {
       title: 'Portail client dedie',
-      description: 'Vos clients deposent documents, signent en ligne et consultent la facturation en temps reel.',
+      description: 'Clients deposent documents, signent en ligne et consultent la facturation en temps reel.',
     },
     {
       title: 'Reporting SLA',
