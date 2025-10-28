@@ -1,26 +1,25 @@
-# Tache 16 - Gestion des prestations et planning
+# Tache 16 - Planning prestations & missions
 
 ## Objectif
-Fournir une interface pour planifier les prestations de services (interventions, consulting) avec calendrier et suivi des equipes.
+Mettre en place une experience de planification pour les services (consulting, interventions, onboarding client) avec calendrier, suivi d avancement et documents partageables.
 
 ## Contexte
-Il manque une vue planning. WLAHWLA doit permettre d assigner des employes, suivre l avancement et gerer des documents (feuilles de route).
+Le rapport met en avant des parcours services; WLAHWLA doit offrir un module calendrier rappelant les bonnes pratiques (cartes lisses, badges statut) et lier les missions au pipeline ventes/facturation.
 
 ## Pre-requis
-- Tache 15 pour differencier services.
+- Taches 01 a 15.
 
 ## Actions detaillees
-1. Creer `src/pages/services/Scheduler.tsx` avec un calendrier (utiliser `react-big-calendar` ou `FullCalendar`).
-2. Ajouter un composant `ServiceAssignmentModal` pour assigner ressources et documents.
-3. Connecter la vue a une API mock `src/mocks/services.ts` en attendant les taches backend (28).
-4. Implementer des badges de statut (Planifie, En cours, Termine, A facturer) et lier aux notifications (Tache 20).
-5. Ajouter un export PDF ou ICS (manuel via bouton) documente dans `docs/ops/service-scheduling.md`.
+1. Concevoir les statuts et workflows (Planifie, En preparation, En cours, A facturer, Cloture) et consigner dans `docs/domain/services.md` avec roles autorises.
+2. Developper `Scheduler` dans `frontend/src/pages/services/Scheduler.tsx` avec `react-big-calendar` ou `FullCalendar`, theme personalise (palette WLAHWLA) et vue semaine/mois.
+3. Ajouter les composants `ServiceAssignmentModal`, `MissionDrawer` pour assigner ressources, joindre documents (liens) et planifier rappels (lien Tache 30 notifications).
+4. Brancher sur API mock `frontend/src/mocks/services.ts`, puis sur endpoints backend (Tache 28) incluant creation/edition, assignation, changement statut; gerer offline fallback.
+5. Documenter l usage (export ICS/PDF, workflow) dans `docs/ops/service-scheduling.md` et noter les assets/captures a produire.
 
 ## Livrables
-- Page Scheduler fonctionnelle.
-- Documentation d utilisation.
+- Page Scheduler fonctionnelle + composants modaux/drawer.
+- Documentation `docs/domain/services.md` et `docs/ops/service-scheduling.md`.
 
 ## Verifications
-- Manual: verifier l ajout, modification, suppression d evenements.
-- Contraster les couleurs de statut pour accessibilite (outil contraste).
-
+- Tests manuels creation/modification/suppression mission + changement statut (desktop + mobile).
+- Verifier contrastes badges (outil WebAIM) et accessibilite clavier du calendrier; consigner resultats.

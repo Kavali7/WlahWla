@@ -11,11 +11,47 @@ npm install
 npm run dev
 
 
+"RGB(16, 22, 48) ou #101630"
+
+
+Backend (depuis la racine du projet, nouvelle fenêtre PowerShell) :
+
+powershell
+cd "E:\Mes traveaux\AA-SAAS\WLAHWLA\backend"
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+→ API accessible sur http://127.0.0.1:8000/
+Frontend (deuxième fenêtre PowerShell) :
+
+powershell
+cd "E:\Mes traveaux\AA-SAAS\WLAHWLA\frontend"
+npm install
+npm run dev
+→ Interface sur http://127.0.0.1:3000/ (ou adresse indiquée par Vite)
 
 
 
-Passe à l'exécution de la tache 13.N'oublie pas de faires les tests pour t'assurer de l'abasense de problèmes de compilation,d'avertissement et autres.
-Déplace cette tâche une fois terminée dans le sous dossier done et cré un commite en lui donnant le nom "Tache 13".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Passe à l'exécution de la tache 1.N'oublie pas de faires les tests pour t'assurer de l'abasense de problèmes de compilation,d'avertissement et autres.
+Déplace cette tâche une fois terminée dans le sous dossier done (il faut créer ce sous dossier dans le dossier plan. Ce sous dossier contiendra les tâches exécutés) et cré un commite en lui donnant le nom "Tache 1".Informe moi de ce tout ce que je dois nécessairement faire manuellement après avoir exécuter la tâche avec détail claire
 
 
 https://github.com/Kavali7/WlahWla.git
@@ -51,3 +87,30 @@ print("Token API:", token.key)
 
 
 Token API: 0101b27f88db56c2e93e1d52439cf0f9e0747ece
+
+
+
+
+
+
+
+Tu es Codex dans le CLI et tu dois exécuter entièrement la Tâche 01 détaillée dans plan: relis les instructions système/développeur/utilisateur, vérifie les prérequis s'il y en as du plan et signale tout manquant avant d’avancer, puis implémente chaque action dans l’ordre (création/modification de fichiers, scripts, assets, configurations) en corrigeant immédiatement toute erreur de compilation, d’avertissement ou de rendu ; exécute les commandes de vérification indiquées (lint, tests, builds, migrations…) ou justifie clairement leur absence, capture les points clés des sorties, et refuse de laisser des avertissements non résolus ; à la fin, fournis un résumé précis des modifications (fichiers/chemins, logique), liste exhaustive des actions manuelles restantes avec liens/outils/checklists pour que je puisse les exécuter sans ambiguïté.Déplacer ce fichier qui vient d'être exécuté dans plan/done et créer le commit "Tache ..."", et mentionne chaque commande de vérification réellement exécutée ; n’omet aucun détail indispensable pour que je puisse terminer la tâche manuellement si besoin.
+
+
+
+Tu es Codex dans le CLI et tu dois exécuter intégralement la Tâche 01 (plan/01-vision-marque-uemoa.md) : relis toutes les instructions système/développeur/utilisateur, vérifie les prérequis, dresse la cartographie des publics cibles et des offres, définis piliers de marque, ton éditorial, palette (dégradé bleu-violet + accents chauds), duo typographique, style iconographique et guidelines pour héros/cartes en t’inspirant de waohdigital, rédige docs/branding/brand-playbook.md avec ces sections plus un rappel d’actions manuelles (moodboard textuel, auto-revue marketing, contrôle contraste WebAIM), crée docs/branding/visual-references.md pour documenter les inspirations, assure-toi que tout est en ASCII (sans erreurs ni avertissements), précise qu’aucun test/lint n’est nécessaire, et en fin de tâche fournis un résumé des modifications, la liste exhaustive des actions manuelles restantes avec liens/outils, puis crée le dossier plan/done s’il n’existe pas, déplace plan/01-vision-marque-uemoa.md dedans, exécute git add sur les fichiers modifiés, et fais un commit nommé Tache 1, en mentionnant toutes les commandes de vérification réellement exécutées.
+
+Ces trois points sont des actions complémentaires à effectuer après la Tâche 4 :
+
+Tester le HeroCarousel et les AdvertisingCards + audit Lighthouse
+
+Lance le site (npm run dev), affiche la page d’accueil et vérifie que le carrousel/les cartes publicitaires fonctionnent bien sur desktop et mobile.
+Ouvre ensuite les DevTools Chrome (onglet Lighthouse) pour générer un audit (focus sur Performance/Accessibility) et note les scores.
+Prends des captures d’écran (desktop et mobile) et enregistre-les dans docs/branding/assets/ pour illustrer les composants.
+Remplacer les placeholders SVG
+
+Si la Tâche 4 a utilisé des visuels provisoires (SVG ou PNG temporaires), trouve ou crée des visuels HD.
+Stocke-les dans docs/branding/source-assets/ pour garder l’original, puis exécute npm run optimize:images afin de produire des versions optimisées pour public/assets/brand/.
+Met à jour les pages si tu changes les images.
+Documenter la revue marketing
+

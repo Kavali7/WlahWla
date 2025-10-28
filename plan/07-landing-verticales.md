@@ -1,26 +1,25 @@
-# Tache 07 - Landing verticales et cas d usage
+# Tache 07 - Cas d usage verticaux type Waoh Digital
 
 ## Objectif
-Introduire une section dediee aux verticales (comptabilite, commerce detail, prestations terrain, franchises) avec des contenus adaptes par secteur et des boutons vers des pages profondes.
+Segmenter la landing page par industries (Retail omni canal, PME comptables, Prestations de services, Agences marketing) afin de reprendre l approche « cartes verticales » de waohdigital.com et renvoyer vers des pages detaillees.
 
 ## Contexte
-Pour se differencier, WLAHWLA doit parler a plusieurs industries. Cette section doit reprendre la logique waohdigital (bloc par vertical, icone, puces, CTA).
+Waoh Digital rassure via une section « Nos solutions » multi cartes. Pour WLAHWLA, le rapport recommande d ajouter une section verticale avec icone circulaire, liste a puces et CTA. Chaque vertical doit pointer vers une sous page dediee qui detaille workflows, integrations et preuves sociales.
 
 ## Pre-requis
-- Tache 06 validee.
+- Taches 01 a 06.
 
 ## Actions detaillees
-1. Identifier quatre verticales prioritaires et rediger les benefices propres (manuel, en coordination marketing).
-2. Creer `src/pages/verticals/` avec un composant generique `VerticalPage.tsx` parameterisable.
-3. Ajouter dans `src/content/home/verticals.ts` la liste des verticales pour la section d accueil.
-4. Configurer le routage (`/verticals/:slug`) et assurer le pre-render via react-router.
-5. Ajouter un bandeau `Demandez une demo` en bas de chaque page verticale.
+1. Selectionner quatre verticales prioritaires et produire le contenu (titre, description, 3 benefices, chiffres clefs) en coordination marketing; archiver les textes dans `docs/branding/brand-playbook.md`.
+2. Creer `frontend/src/content/home/verticals.ts` et `frontend/src/content/verticals/<slug>.ts` pour stocker les contenus structurés (icones, hero, sections).
+3. Ajouter la section `Verticales` dans `Home.tsx` avec un composant `VerticalCard` reprenant l esthetique waohdigital (fond clair `#F8F9FA`, icone cercle, hover accent).
+4. Mettre en place le routage `frontend/src/pages/verticals/*.tsx` avec un composant generique `VerticalLayout` integrant hero, use cases, CTA demo et carrousel de temoignages contextuels.
+5. Documenter les pages creees dans `docs/branding/components-cheatsheet.md` + noter les captures a prendre pour chaque vertical dans `docs/branding/visual-references.md`.
 
 ## Livrables
-- Section verticales sur la home et pages associees (`/verticals/*`).
-- Contenu markdown ou JSON pour chaque vertical dans `content/verticals`.
+- Section verticales sur la home et pages associees (`/verticals/:slug`).
+- Contenus JSON/TS par vertical dans `frontend/src/content/verticals`.
 
 ## Verifications
-- Navigation testee manuellement pour chaque slug.
-- Mesurer le temps de chargement des pages verticales (Lighthouse) et documenter dans le rapport.
-
+- Navigation testee manuellement sur desktop et mobile (CTA, retours accueil).
+- Audit Lighthouse « Navigation page verticale » pour controler la performance; enregistrer les scores dans `docs/branding/brand-playbook.md`.

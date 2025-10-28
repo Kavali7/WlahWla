@@ -1,26 +1,25 @@
-# Tache 31 - Reporting et analytics
+# Tache 31 - Reporting & analytics
 
 ## Objectif
-Mettre en place un module reporting (tableaux de bord, exports) reliant les donnees ventes, services, performance, campagnes.
+Fournir un module reporting performant reliant ventes, facturation, campagnes, services et performances équipes, avec exports programmables.
 
 ## Contexte
-Le front (Taches 13 et 18) requiert des APIs de reporting robustes.
+Les dashboards (Taches 13, 18) ont besoin d APIs analytiques structurées. Nous devons consolider les données, optimiser les requêtes et fournir des exports.
 
 ## Pre-requis
-- Tache 25.
+- Taches 01 a 30.
 
 ## Actions detaillees
-1. Definir les metriques calculables et les regrouper dans `docs/metrics/reporting-spec.md`.
-2. Creer des vues materialisees ou requetes optimisees pour generer les KPIs (Django ORM + window functions si necessaire).
-3. Exposer des endpoints `/api/reporting/*` avec filtres (periode, filiale, type produit).
-4. Ajouter un export CSV/Excel et un job planifie pour envoyer des rapports hebdomadaires.
-5. Mettre en place des tests de performance (django-silk ou custom) et documenter.
+1. Définir les KPIs (revenu, marge, conversions, SLA services, campagnes) et consigner dans `backend/docs/metrics/reporting-spec.md`.
+2. Construire une couche `reporting` (ORM + SQL raw/vues matérialisées) pour calculer ces métriques efficacement; planifier les agrégations (journalière, hebdomadaire).
+3. Exposer endpoints `/api/reporting/overview`, `/api/reporting/performance`, `/api/reporting/campaigns` avec filtres (période, organisation, filiale, vertical).
+4. Ajouter exports CSV/Excel, scheduler Celery pour rapports planifiés (email) et logs d exécution.
+5. Mettre en place tests de performance et documentation (utilisation, limites) dans `docs/ops/reporting.md`.
 
 ## Livrables
-- Module reporting complet.
-- Documentation spec.
+- API reporting complète + exports.
+- Documentation `reporting-spec.md` & `ops/reporting.md`.
 
 ## Verifications
-- Manual: executer un export sur trois periodes et verifier les chiffres.
-- S assurer que le temps de reponse reste < 1.5s pour les requetes principales.
-
+- Tests automatisés (unitaires, intégration) + benchmarks (<1.5s sur requêtes clés).
+- Tests manuels : générer rapport multi périodes et comparaison données cross modules.

@@ -1,26 +1,24 @@
-# Tache 26 - Authentification, roles et politiques
+# Tache 26 - Authentification & RBAC avancé
 
 ## Objectif
-Mettre a jour le systeme d authentification pour gerer les roles (ADMIN, MANAGER, EMPLOYEE, CLIENT) et les permissions associees (multi filiales, c-panel).
+Mettre à jour le système d authentification/autorisation pour supporter les rôles WLAHWLA (OWNER, GROUP_ADMIN, BRANCH_MANAGER, OPERATOR, CLIENT) et la gestion multi filiales.
 
 ## Contexte
-Les roles actuels sont limites. Les nouvelles vues necessitent des autorisations fines.
+Avec les nouvelles interfaces (admin, pipeline, portail client), nous avons besoin d un RBAC fin, de jetons enrichis et d endpoints adaptés.
 
 ## Pre-requis
-- Tache 25.
+- Taches 01 a 25.
 
 ## Actions detaillees
-1. Definir la matrice des droits dans `docs/security/rbac-matrix.md`.
-2. Mettre a jour les models `Membership`/`Role` et les decorators/permissions DRF.
-3. Ajouter des endpoints pour recuperer les roles et permissions par utilisateur.
-4. Mettre a jour la generation de tokens (ou JWT) pour inclure les roles et filiale active.
-5. Adapter les middlewares frontend pour consommer ces infos.
+1. Définir/valider la matrice de permissions (accès modules, actions CRUD) dans `backend/docs/security/rbac-matrix.md`.
+2. Ajuster les modèles `Membership`, `Role`, `Permission` (ou équivalent) pour inclure hiérarchie multi organisation et champs `branch`.
+3. Mettre à jour les permissions DRF (classes custom) et créer des endpoints exposant les droits et contexte (organisation active, filiale active).
+4. Adapter la génération de tokens (JWT ou session) pour embarquer le rôle et la filiale; gérer bascule organisation (endpoint `POST /auth/switch-organization/`).
+5. Ajouter tests unitaires/fonctionnels et documentation intégration (front) dans `backend/docs/security/auth.md`.
 
 ## Livrables
-- Code backend RBAC mis a jour.
-- Documentation de la matrice de droits.
+- RBAC revisité, endpoints nouveaux, documentation.
 
 ## Verifications
-- Tests unitaires pour les permissions (`tests/test_permissions.py`).
-- Manual: appeler une route protegee avec un role insuffisant et verifier la reponse 403.
-
+- Tests backend (`pytest`/`manage.py test`) sur permissions.
+- Vérification manuelle (via Postman) des réponses 403/200 selon rôle + bascule d organisation.

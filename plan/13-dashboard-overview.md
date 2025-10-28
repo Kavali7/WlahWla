@@ -1,26 +1,25 @@
-# Tache 13 - Dashboard overview experience
+# Tache 13 - Tableau de bord overview inspire Waoh Digital
 
 ## Objectif
-Refondre le tableau de bord principal pour refleter les besoins commerciaux (ventes, commandes, performances) avec un design inspire de waohdigital mais oriente multi-offres.
+Refondre la page `Dashboard` pour offrir une vue 360° (ventes, factures, campagnes, satisfaction) avec le style UI WLAHWLA (cartes arrondies, ombres douces, gradient accent) et se baser sur les comportements observees sur waohdigital.com.
 
 ## Contexte
-`src/pages/Dashboard.tsx` contient des widgets generiques. Il faut integrer graphiques, progression d objectifs, flux d activite.
+Le rapport met en avant les KPIs et CTA. Le dashboard actuel est generique; nous devons introduire des composants re-utilisables, des filtres multi filiales, un flux d activite et des quick actions.
 
 ## Pre-requis
-- Taches 02 et 05 terminees.
+- Taches 01 a 12.
 
 ## Actions detaillees
-1. Redefinir la structure des widgets (Ventes du mois, Commandes en cours, Paiements en attente, Satisfaction clients) et documenter dans `docs/ux/dashboard.md`.
-2. Implementer des composants `KpiCard`, `TrendChart`, `ActivitiesTimeline` dans `src/components/dashboard/`.
-3. Connecter les widgets aux endpoints existants ou mocker via `src/mocks/dashboard.ts` en attendant l integration backend (Taches 25-31).
-4. Ajouter un systeme de filtres (periode, branche) dans la barre superieure du dashboard.
-5. Tester la responsivite (grid deux colonnes sur desktop, stack mobile) et ajuster.
+1. Definir la liste des indicateurs et sections (Revenu, Factures en attente, Campagnes actives, Satisfaction clients, Taches recentes) et consigner dans `docs/metrics/dashboard-overview.md` avec sources de donnees backend.
+2. Developper des composants UI `KpiCard`, `SparklineCard`, `ActivityTimeline`, `QuickActionCard` dans `frontend/src/components/dashboard/` avec tokens (radius 24px, ombre `shadow-elevated`, accent `#5864FF`).
+3. Mettre a jour `frontend/src/pages/Dashboard.tsx` pour integrer ces composants + un bandeau CTA `Voir la demo` type Waoh (degrade + CTA duo).
+4. Brancher le dashboard sur des endpoints REST/GraphQL (mock via `frontend/src/mocks/dashboard.ts` puis connectez a l API une fois Taches 25-31 completes); prevoir un hook `useDashboardData`.
+5. Ajouter filtres (periode, organisation, vertical) dans la barre superieure, stocker l etat dans URL (`searchParams`) et tester la persistance.
 
 ## Livrables
-- `Dashboard.tsx` refonte complete.
-- Documentation des KPIs dans `docs/metrics/kpis.md`.
+- Nouveaux composants dashboard + `Dashboard.tsx` refonte.
+- Documentation `docs/metrics/dashboard-overview.md`.
 
 ## Verifications
-- Manual: verifier que chaque carte affiche un fallback si les donnees sont absentes.
-- Capturer une video Loom (manuel) pour partager la nouvelle experience a l equipe.
-
+- Tests unitaires/Storybook ou snapshot sur `KpiCard` et `ActivityTimeline`; lancer `npm run test` si ecris.
+- Tests manuels (desktop/tablette/mobile) pour valider responsivite et fallback (loading/empty/error) + capture ecran a conserver dans `docs/branding/visual-references.md`.

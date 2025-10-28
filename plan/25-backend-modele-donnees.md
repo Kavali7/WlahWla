@@ -1,26 +1,25 @@
-# Tache 25 - Modele de donnees commercial unifie
+# Tache 25 - Modèle de données unifié
 
 ## Objectif
-Adapter les modeles backend pour couvrir produits, services, campagnes publicitaires, filiales et performances employes.
+Refondre le schéma Django pour supporter l’ensemble des modules WLAHWLA (commerce, facturation, campagnes, services, multi filiales, performance).
 
 ## Contexte
-Les models actuels sont orientes gestion locative. Il faut les refactorer pour le domaine commercial multi-offres.
+Les modèles actuels héritent du starter locatif. Nous devons aligner le backend sur la vision produit décrite dans les tâches frontend et le rapport waohdigital.
 
 ## Pre-requis
-- Documentation fonctionnelle issue des taches frontend (15-22).
+- Taches 01 a 24 (spécifications fonctionnelles).
 
 ## Actions detaillees
-1. Cartographier les entites existantes (`Product`, `Service`, `Order`, `Organization`, etc.) et identifier les gaps.
-2. Ajouter/adapter les models (par ex. `ServicePackage`, `CampaignSlot`, `Branch`, `EmployeePerformance`).
-3. Mettre a jour les migrations et ecrire des migrations de donnees si necessaire.
-4. Documenter le schema mis a jour dans `backend/docs/schema.md` et generer un diagramme ER (outil manuel).
-5. Executer `python manage.py makemigrations` puis `python manage.py migrate` en local.
+1. Cartographier le schéma existant et les besoins (entités: Product, Service, Campaign, Branch, Lead, Notification, Performance) et consigner dans `backend/docs/schema-review.md`.
+2. Concevoir le modèle cible (diagramme ER) couvrant : organisations + branches, produits/services, pipeline ventes, commandes, campagnes publicitaires, documents, notifications, métriques.
+3. Implémenter/adapter les modèles Django (nouvelles apps si besoin) avec migrations, signaux nécessaires et validations.
+4. Mettre à jour l admin Django, serializers, factories/tests; prévoir fixtures de démo cohérentes avec la landing.
+5. Documenter le schéma final dans `backend/docs/schema.md` (diagramme, champs clés) et s assurer de la rétrocompatibilité des données.
 
 ## Livrables
-- Models et migrations ajoutes.
-- Documentation schema a jour.
+- Modèles/migrations à jour + doc schéma.
+- Admin/fixtures alignés.
 
 ## Verifications
-- Manual: lancer les tests backend (`pytest` ou `python manage.py test`).
-- Verifier qu un superuser voit les nouvelles entites dans l admin Django.
-
+- Tests backend (`python manage.py test`), y compris nouveaux tests sur les relations.
+- Vérifier via Django admin et scripts (`python manage.py shell`) que les entités s instancient correctement.

@@ -1,26 +1,24 @@
-# Tache 34 - Configuration infrastructure et securite
+# Tache 34 - Infrastructure & sécurité
 
 ## Objectif
-Preparer l infrastructure (environnements, secrets, observabilite) pour supporter le deploiement UEMOA avec exigences de securite.
+Préparer l infrastructure (environnements, secrets, observabilité, sécurité) pour un déploiement UEMOA fiable.
 
 ## Contexte
-Actuellement, la configuration docker est basique. Il faut preparer les environnements staging/prod, la gestion des secrets et la surveillance.
+La config docker est basique. Nous devons définir les environnements, gérer les secrets et mettre en place la surveillance et sécurité.
 
 ## Pre-requis
-- Taches 25 a 33 completes.
+- Taches 01 a 33.
 
 ## Actions detaillees
-1. Definir la matrice environnements (local, staging, production) et documenter dans `docs/devops/environments.md`.
-2. Mettre a jour `docker-compose.yml` et scripts pour separer les services (frontend, backend, db, redis, worker).
-3. Configurer la gestion des secrets (Doppler, Vault, ou fichiers `.env` chiffrees) et documenter les procedures.
-4. Mettre en place la journalisation centralisee (ELK ou alternative legere) et les alertes (moniteur uptime).
-5. Ajouter des controles de securite (headers HTTP, rate limiting) et documenter les tests (OWASP ZAP manuel).
+1. Définir la matrice environnements (local, staging, production) dans `docs/devops/environments.md` (services, URL, secrets).
+2. Mettre à jour `docker-compose.yml` et scripts pour services séparés (frontend, backend, db, redis, worker, queue) et préparer `Dockerfile` prod.
+3. Configurer secrets (vault, env chiffrés) et documenter procédures; ajouter validations CI.
+4. Mettre en place observabilité (logs centralisés, metrics, uptime) via stack légère (ELK, Loki, Grafana, Healthchecks).
+5. Ajouter contrôle sécurité (headers, rate limiting, scans OWASP) et consigner résultats dans `docs/devops/security-audit.md`.
 
 ## Livrables
-- Fichiers docker et docs mis a jour.
-- Rapport securite initial.
+- Config Docker/infra mise à jour, doc environnements, rapport sécurité.
 
 ## Verifications
-- Manual: lancer `docker-compose up` et verifier la sante des services.
-- Executer un scan basique OWASP ZAP et noter les resultats.
-
+- Test `docker compose up` et santé des services.
+- Scan OWASP ZAP et journal des résultats/patchs.

@@ -1,26 +1,24 @@
-# Tache 35 - CI/CD et qualite continue
+# Tache 35 - CI/CD & qualité continue
 
 ## Objectif
-Mettre en place une pipeline CI/CD robuste avec tests, lint, build, scans et deploiement automatise.
+Mettre en place une pipeline CI/CD fiable (tests, lint, build, scans, déploiement) pour garantir la qualité du projet jusqu à la production.
 
 ## Contexte
-Le depot manque de pipeline complet. Besoin de workflows GitHub Actions ou GitLab.
+Aucune pipeline complète n est encore configurée. Nous devons automatiser les validations front/back et préparer la livraison continue.
 
 ## Pre-requis
-- Tache 34.
+- Taches 01 a 34.
 
 ## Actions detaillees
-1. Creer des workflows CI (frontend, backend) avec lint, tests, build.
-2. Ajouter un job d analyse statique (SonarCloud ou CodeQL) et un audit npm/yarn.
-3. Configurer un pipeline CD vers staging (Docker registry + VPS ou plateforme PaaS) et documenter les secrets necessaires.
-4. Ajouter des badges de statut dans le README.
-5. Mettre en place des regles de protection de branche (manuel via plateforme) et consigner les etapes.
+1. Créer des workflows GitHub Actions (ou GitLab CI) pour le frontend et le backend : lint, tests, build, coverage.
+2. Ajouter analyse statique (CodeQL/SonarCloud) et audits dépendances (npm audit, pip-audit).
+3. Configurer pipeline CD vers staging (build Docker, push registry, déploiement) et documenter secrets/review apps.
+4. Ajouter badges de statut dans README et doc sur stratégie branches/protections.
+5. Documenter pipeline dans `docs/devops/ci-cd.md` et définir checklists release.
 
 ## Livrables
-- Workflows CI/CD dans `.github/workflows/`.
-- Documentation `docs/devops/ci-cd.md`.
+- Workflows CI/CD, documentation, badges.
 
 ## Verifications
-- Manual: declencher une pipeline sur branche de test et capturer le resultat.
-- Verifier que les tests se lancent automatiquement sur chaque PR.
-
+- Lancer pipeline sur branche test et analyser résultats.
+- Vérifier exécution automatique sur PR + blocking status checks.

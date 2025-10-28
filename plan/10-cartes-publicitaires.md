@@ -1,26 +1,26 @@
-# Tache 10 - Cartes publicitaires et espaces partenaires
+# Tache 10 - Blocs publicitaires et modules cross-sell
 
 ## Objectif
-Introduire des emplacements declinables pour des campagnes partenaires (panneaux publicitaires, cross-sell) afin d imiter les sections visuelles waohdigital.
+Decliner les « panneaux publicitaires » a la maniere de waohdigital.com pour presenter des offres partenaire ou campagnes WLAHWLA (AdvertisingCard, bannieres hero, sliders).
 
 ## Contexte
-WLAHWLA souhaite pouvoir mettre en avant des offres speciales ou des partenaires. Il faut creer des blocs modulaires reutilisables sur plusieurs pages.
+Le rapport recommande de valoriser les campagnes via cartes lumineuses, gradient et CTA (ex: Marketing digital, ImmoManager, Store). Nous avons deja `AdvertisingCard`; il faut creuser le systeme de slots (landing, pages modules) et documenter leurs usages.
 
 ## Pre-requis
-- Tache 04 pour les composants visuels.
+- Taches 01 a 09.
 
 ## Actions detaillees
-1. Definir les types de cartes (promo interne, partenaire, success story) et les documenter dans `docs/marketing/ad-slots.md`.
-2. Developper un composant `PromoBillboard` avec image pleine largeur, overlay degrade, CTA.
-3. Ajouter un gestionnaire de configuration `src/content/home/promo-slots.ts` pour injecter ces cartes sur la home et le Storefront.
-4. Integrer un slider d images defilantes pour afficher des panneaux successifs; utiliser `HeroCarousel` si compatible sinon creer `RotatingBanner`.
-5. Ajouter un test visuel manuel: verifier que chaque slot respecte les contrastes et qu un fallback textuel existe.
+1. Categ oriser les slots (Promo interne, Partenaire, Offre combo) et consigner les regles (formats, CTA, couleurs) dans `docs/branding/components-cheatsheet.md` + creer `docs/marketing/ad-slots.md`.
+2. Enrichir `AdvertisingCard` (support badges multiples, overlays, version sombre/claire) et developper un composant `PromoBillboard` plein ecran dans `frontend/src/components/marketing/PromoBillboard.tsx`.
+3. Alimenter `frontend/src/content/home/promo-slots.ts` et `frontend/src/content/modules/promo-slots.ts` pour injecter les cartes sur la landing et les pages modules; inclure les assets definitifs (SVG/PNG WebP).
+4. Ajouter un slider (peut reutiliser `HeroCarousel` en mode banners) pour afficher plusieurs panels dans `Home.tsx` et une section dediee sur la page `Campaigns`.
+5. Prevoir un fallback texte accessible (balises `aria-label`, contenu degrade >4.5:1) et noter les captures a prendre dans `docs/branding/visual-references.md`.
 
 ## Livrables
-- Composant `PromoBillboard` et configuration associee.
+- Composants `AdvertisingCard` evolue et `PromoBillboard`.
+- Contenus `promo-slots.ts` (landing + modules).
 - Documentation `docs/marketing/ad-slots.md`.
 
 ## Verifications
-- Sur mobile, s assurer que la carte n empiete pas sur le contenu principal (test manuel).
-- Preparer un screenshot a remettre aux partenaires pour validation (manuel).
-
+- Tests manuels desktop/mobile (hover, swipe, fallback).
+- Audit Lighthouse pour la section banners (lazy-load images, CLS) et consigner les mesures dans `docs/branding/brand-playbook.md`.

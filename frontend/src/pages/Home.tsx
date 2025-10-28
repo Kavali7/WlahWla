@@ -4,9 +4,11 @@ import { Button } from '../components/Button'
 import { HeroCarousel } from '../components/media/HeroCarousel'
 import { AdvertisingCard } from '../components/marketing/AdvertisingCard'
 import { ServiceCard } from '../components/marketing/ServiceCard'
+import { VerticalCard } from '../components/marketing/VerticalCard'
 import { heroSlides } from '../content/hero-slides'
 import { advertisingSpots } from '../content/advertising-spots'
 import { services } from '../content/home/services'
+import { verticalPreviews } from '../content/home/verticals'
 
 type RevealOptions = {
   threshold?: number
@@ -62,6 +64,7 @@ const Home: React.FC = () => {
   const partnerBand = useRevealOnScroll({ threshold: 0.3 })
   const panoramaCard = useRevealOnScroll({ threshold: 0.25 })
   const servicesSection = useRevealOnScroll({ threshold: 0.25 })
+  const verticalsSection = useRevealOnScroll({ threshold: 0.25 })
 
   return (
     <div className="space-y-16 pb-20">
@@ -128,6 +131,42 @@ const Home: React.FC = () => {
           </p>
           <Button as={Link} to="/modules" size="md">
             Explorer toutes les solutions
+          </Button>
+        </div>
+      </section>
+
+      <section
+        id="verticales"
+        ref={verticalsSection.ref}
+        aria-labelledby="verticales-heading"
+        className={cx(
+          'space-y-10 rounded-3xl border border-surface-outline bg-white px-8 py-12 shadow-service md:px-12',
+          'transition-all duration-700 ease-out motion-reduce:duration-0 motion-reduce:transform-none motion-reduce:opacity-100',
+          verticalsSection.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+        )}
+      >
+        <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3 lg:max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-600/80">Verticales prioritaires</p>
+            <h2 id="verticales-heading" className="text-3xl font-semibold text-secondary-800 md:text-4xl">
+              Des parcours valides avec marketing pour chaque industrie cible
+            </h2>
+            <p className="text-sm text-neutral-600 md:text-base">
+              Choisissez la verticale qui correspond a votre equipe. Chaque fiche resume les workflows, KPIs et ressources a activer.
+            </p>
+          </div>
+        </header>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {verticalPreviews.map((vertical) => (
+            <VerticalCard key={vertical.id} {...vertical} />
+          ))}
+        </div>
+        <div className="flex flex-col items-start gap-4 border-t border-surface-outline pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-neutral-600">
+            Accedez aux details par industrie: hero dedie, cas d usage, ressources et temoignages.
+          </p>
+          <Button as={Link} to="/verticals/retail" size="md">
+            Voir les verticales
           </Button>
         </div>
       </section>

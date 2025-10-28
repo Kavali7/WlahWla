@@ -27,6 +27,7 @@ const Support = React.lazy(() => import('./pages/Support'))
 const About = React.lazy(() => import('./pages/About'))
 const Trial = React.lazy(() => import('./pages/Trial'))
 const Modules = React.lazy(() => import('./pages/Modules'))
+const VerticalPage = React.lazy(() => import('./pages/verticals/VerticalPage'))
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
   <Suspense fallback={<LoadingScreen />}>
@@ -79,9 +80,10 @@ const primaryNavigation: NavigationItem[] = [
         title: 'Segments prioritaires',
         description: 'Parcours preconfigures par metier.',
         links: [
-          { label: 'Commerce de detail', path: '/home#retail', description: 'Bundles encaissement + logistique.' },
-          { label: 'Services B2B', path: '/home#services', description: 'Pipeline devis > contrats > factures.' },
-          { label: 'Distributeurs multi sites', path: '/home#distribution', description: 'Reporting par filiale UEMOA.' },
+          { label: 'Retail omnicanal', path: '/verticals/retail', description: 'Bundles encaissement + logistique.' },
+          { label: 'PME comptables', path: '/verticals/accounting', description: 'Workflows devis > facture conformes.' },
+          { label: 'Prestations de services', path: '/verticals/services', description: 'Portail client et SLA.' },
+          { label: 'Agences marketing', path: '/verticals/agencies', description: 'Campagnes waohdigital et reporting.' },
         ],
       },
       {
@@ -290,6 +292,17 @@ export const router = createBrowserRouter(
                   title: 'Panorama modules',
                   description:
                     'Cartographie des modules commerce, finance, campagnes publicitaires et support analytics.',
+                },
+              },
+            },
+            {
+              path: 'verticals/:slug',
+              element: withSuspense(VerticalPage),
+              handle: {
+                layout: {
+                  title: 'Verticale WLAHWLA',
+                  description:
+                    'Parcours dedies par industrie: retail, finance, prestations et campagnes marketing.',
                 },
               },
             },

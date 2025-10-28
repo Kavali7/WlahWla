@@ -1,26 +1,25 @@
-# Tache 27 - Catalogue et moteur de tarification
+# Tache 27 - Catalogue & moteur de tarification
 
 ## Objectif
-Fournir un moteur de tarification flexible capable de gerer produits, services, packs et remises selon la filiale ou le segment.
+Mettre en place un moteur de tarification flexible pour produits, services et offres combinées (packs publicitaires + commerce), avec gestion par filiale et segment.
 
 ## Contexte
-Le backend doit supporter le front (Tache 15). Cela implique des tables supplementaires et des regles de calcul.
+Le frontend (Taches 15, 14) nécessite des API pour simuler prix/taxes/remises. Le backend doit gérer listes de prix, promotions, bundles et règles spécifiques UEMOA.
 
 ## Pre-requis
-- Tache 25.
+- Taches 01 a 26.
 
 ## Actions detaillees
-1. Ajouter des models `PriceList`, `DiscountRule`, `BundledOffer`.
-2. Creer des services/metiers pour calculer le prix final selon les conditions (quantite, filiale, canal).
-3. Exposer des endpoints REST (`/api/catalog/pricing-preview`) pour que le front affiche les totaux en temps reel.
-4. Ajouter des tests unitaires et d integration.
-5. Documenter les scenarios dans `docs/catalog/pricing-engine.md`.
+1. Concevoir les modèles `PriceList`, `PriceItem`, `DiscountRule`, `Bundle`, `CampaignTariff`; documenter structure dans `docs/catalog/pricing-engine.md`.
+2. Implémenter le service métier (utilitaire Python) calculant prix final selon organisation, filiale, canal, quantité, période et promo active; gérer TVA locale.
+3. Exposer endpoints REST/GraphQL : `GET /catalog/pricing-preview`, `POST /orders/quote`, `GET /bundles/` avec pagination et filtres.
+4. Ajouter tests unitaires (services) et tests d intégration sur les endpoints; fournir fixtures de prix d exemple.
+5. Mettre à jour l admin Django pour gérer listes de prix, bundles, remises et consigner la procédure marketing dans `docs/ops/pricing-management.md`.
 
 ## Livrables
-- Moteur de tarification operationnel.
-- Documentation technique.
+- Moteur de tarification opérationnel + endpoints.
+- Documentation technique + admin prêt.
 
 ## Verifications
-- Manual: tester l endpoint via `httpie` ou `curl` avec plusieurs scenarios.
-- Verifier la coherence des montants avec les besoins marketing.
-
+- Tests automatisés (`manage.py test catalog`) et revues manuelles via `python manage.py shell`/`httpie`.
+- Valider cas d usage marketing (promo filiale, pack cross-sell) et consigner résultats.

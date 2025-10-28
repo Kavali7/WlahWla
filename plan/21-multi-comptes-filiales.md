@@ -1,26 +1,25 @@
-# Tache 21 - Gestion multi comptes et filiales
+# Tache 21 - Multi comptes & filiales
 
 ## Objectif
-Permettre aux organisations de gerer plusieurs comptes ou filiales avec bascule rapide, parametres dedies et consolidation des donnees.
+Étendre la gestion multi organisation pour permettre aux groupes UEMOA d administrer filiales, basculer rapidement et consolider les données (KPIs, rapports).
 
 ## Contexte
-Le projet a deja un picker d organisation mais incomplet. Nous devons l etendre pour supporter des filiales UEMOA et des roles.
+Le sélecteur d organisation est partiel. Le rapport insiste sur l importance d une vision groupe. Nous devons fournir une UX claire pour les holdings (navigation hiérarchique, permissions).
 
 ## Pre-requis
-- Tache 19 (c-panel) et Tache 20 (timeline).
+- Taches 01 a 20.
 
 ## Actions detaillees
-1. Etendre le composant `OrganizationOnboarding` pour supporter la creation de filiales avec metadonnees (pays, fuseau horaire, devise).
-2. Mettre a jour `OrganizationPicker` pour afficher un menu hierarchique (societe mere > filiales).
-3. Adapter le store Auth pour stocker la filiale active et recalculer les KPIs en consequence.
-4. Ajouter un bandeau dans le layout indiquant la filiale selectionnee avec un lien vers la configuration.
-5. Documenter les scenarios multi-compte dans `docs/admin/multi-org.md`.
+1. Définir les scenarios multi-org (groupe > filiales > points de vente) et les rôles associés (OWNER, GROUP_ADMIN, BRANCH_MANAGER); documenter dans `docs/admin/multi-org.md`.
+2. Étendre `OrganizationOnboarding` pour créer filiales avec métadonnées (pays, fuseau, devise, langue) et un workflow d’approbation (backend tache 26).
+3. Refonte `OrganizationPicker` : menu hiérarchique, recherche, épinglage des favoris; afficher l info filiale active dans l AppLayout (bandeau).
+4. Adapter Auth store / context pour gérer l état `activeOrganizationId`, `activeBranchId` et recalculer les KPIs en conséquence (hooks `useOrganization`, `useBranch`).
+5. Ajuster dashboards/rapports pour respecter ce contexte (filtres auto) et consigner les tests dans `docs/ops/multi-org-checklist.md`.
 
 ## Livrables
-- Picker multi-niveau operationnel.
-- Documentation multi-comptes.
+- Picker multi-niveau, onboarding filiales, documentation.
+- Context/auth mis à jour + dashboards compatibles.
 
 ## Verifications
-- Manual: tester la bascule entre au moins deux filiales et verifier la mise a jour du dashboard.
-- S assurer que les URL de redirection respectent la filiale (tests navigation).
-
+- Tests manuels : création filiale, bascule, vérification métriques actualisées.
+- Tests unitaires sur hooks/context (front) et endpoints multi organisation (backend).

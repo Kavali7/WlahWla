@@ -1,26 +1,25 @@
-# Tache 20 - Centre notifications et timeline
+# Tache 20 - Centre de notifications & timeline
 
 ## Objectif
-Introduire un centre de notifications multi-canal (app, email, WhatsApp) avec timeline d activite pour suivre les evenements majeurs.
+Créer un centre de notifications moderne (in-app, email, WhatsApp) avec timeline d activité, paramètres par canal et intégration aux modules WLAHWLA.
 
 ## Contexte
-Actuellement, les notifications sont rudimentaires. Nous voulons un panneau a la waohdigital (cloche + timeline) avec filtres par type.
+L analyse waohdigital souligne l importance des CTA rapels (WhatsApp). Nous devons proposer un panneau cloche + timeline cohérent avec notre UI, et préparer l intégration backend (webhooks, Celery).
 
 ## Pre-requis
-- Tache 13 et Tache 19 pour disposer des structures UI.
+- Taches 01 a 19.
 
 ## Actions detaillees
-1. Creer `src/components/notifications/NotificationCenter.tsx` avec onglets (Tous, Commandes, Paiements, Support).
-2. Ajouter une timeline `ActivityTimeline` pour afficher les derniers evenements (modifications c-panel, nouvelles commandes).
-3. Connecter a un mock store `src/mocks/notifications.ts` en attendant l integration backend (Tache 30).
-4. Mettre en place un systeme de toasts pour les notifications instantanees.
-5. Ajouter des controles pour marquer comme lu, filtrer par canal, configurer les preferences.
+1. Documenter les types de notifications/events (pipelines, factures, campagnes, support) et les niveaux (info, alerte) dans `docs/domain/notifications.md`; définir les templates de messages.
+2. Développer `NotificationCenter` dans `frontend/src/components/notifications/NotificationCenter.tsx` avec onglets filtrants, recherche, timeline verticale et actions (marquer lu, rappeler via WhatsApp).
+3. Mettre en place toasts contextuels (`useToast`) et préférences utilisateur dans `frontend/src/pages/settings/Notifications.tsx` (toggles par canal, plages horaires).
+4. Alimenter via mock store `frontend/src/mocks/notifications.ts` puis connecter aux endpoints backend (Tache 30) incluant websocket/polling; gérer persistence (API + localStorage fallback).
+5. Ajouter instrumentation (tracking event) et documenter la procédure tests dans `docs/ux/notifications.md` + consigner captures.
 
 ## Livrables
-- Centre de notifications operationnel.
-- Documentation `docs/ux/notifications.md`.
+- Composants `NotificationCenter`, page préférences, documentation.
+- Store/mocks + intégration future backend.
 
 ## Verifications
-- Manual: simuler diverses notifications et verifier la timeline.
-- Tester la persistence des preferences (localStorage) et noter le resultat.
-
+- Tests unitaires sur reducer/affichage notifications.
+- Tests manuels : simulation flux (commande créée, facture due) + vérification accessibilité (focus trap, ARIA) et persistance des préférences.

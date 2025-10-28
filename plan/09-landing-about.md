@@ -1,26 +1,26 @@
-# Tache 09 - Landing a propos et ADN Groxpeak
+# Tache 09 - Section « A propos » et page equipe
 
 ## Objectif
-Construire une section `A propos` mettant en avant Groxpeak Agence, l equipe, la couverture UEMOA, les valeurs et l historique, tout en restant coherent avec la charte.
+Raconter l ADN WLAHWLA (mission, equipe, empreinte UEMOA) avec une section landing et une page dediee, en s inspirant du ton direct et rassurant de waohdigital.com (« Votre partenaire digital en Afrique »).
 
 ## Contexte
-La page A propos doit rappeler l accueil de waohdigital tout en integrant nos specificites (multi-pays, innovation, support). Elle servira aussi a rediriger vers des postes vacants.
+Le rapport souligne l importance d un bloc expertise (+5 ans, support local, approche innovante). Nous devons transposer cette narration sur le site WLAHWLA avec chiffres clefs, timeline et liens recrutement.
 
 ## Pre-requis
-- Tache 01 pour le storytelling.
+- Taches 01 a 08.
 
 ## Actions detaillees
-1. Rediger le contenu narratif (vision, mission, valeurs) et valider avec la direction (manuel).
-2. Creer `src/pages/About.tsx` avec sections: introduction, chronologie, equipe (cards), implantations UEMOA (carte ou liste).
-3. Ajouter un composant `ExperienceBadge` (annees d expertise) similaire a waohdigital.
-4. Lier le bouton `Rejoindre l equipe` vers un formulaire Typeform ou Notion (lien a confirmer).
-5. Mettre a jour la navigation pour pointer vers `/about` et integrer un breadcrumb dans le layout secondaire.
+1. Produire le contenu (mission, promesse, chiffres operations, couverture pays, valeurs) et recueillir validation direction/marketing (manuel).
+2. Ajouter une section `A propos` dans `Home.tsx` reprenant la structure waohdigital : fond clair `#F8F9FA`, badge expertise (`+X ans`), 3 colonnes d arguments, double CTA (`Nous contacter`, `Nos services`).
+3. Creer la page `/about` (`frontend/src/pages/About.tsx`) avec hero, timeline (dates clefs), portraits equipe, blocs pays (cartes ou listes) et un CTA `Rejoindre WLAHWLA`.
+4. Alimenter `frontend/src/content/about/*` pour isoler textes/stats; stocker les visuels dans `frontend/public/assets/brand/about/`.
+5. Ajouter la route `/about` au router, mettre a jour la navigation (header + footer) et documenter les captures a prevoir dans `docs/branding/visual-references.md`.
 
 ## Livrables
-- Page About fonctionnelle.
-- Contenus places dans `src/content/about/` (texte, stats, timeline).
+- Section `A propos` sur la landing.
+- Page `About` complete avec contenus et assets.
+- Contenus structure dans `frontend/src/content/about/`.
 
 ## Verifications
-- Test manuel: verifier l affichage sur mobile et la coherence des dates.
-- S assurer que tous les liens externes s ouvrent dans un nouvel onglet avec `rel="noopener"`.
-
+- Test responsive (desktop/tablette/mobile) + acces clavier sur CTA.
+- Controle des liens externes (ouvrent dans nouvel onglet avec `rel="noopener"`); consigner dans le compte rendu.

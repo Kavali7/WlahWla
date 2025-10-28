@@ -1,26 +1,25 @@
-# Tache 15 - Catalogue produits et stocks
+# Tache 15 - Catalogue produits & inventaire
 
 ## Objectif
-Adapter l interface d inventaire pour couvrir produits comptables, non comptables et services, avec fiches detaillees et options d upsell.
+Refondre les pages produits/inventaire pour gerer les offres WLAHWLA (biens physiques, services, campagnes) avec un design cohérent aux cartes Waoh Digital et des fonctions d upsell/cross sell.
 
 ## Contexte
-`Inventory.tsx` et `Products.tsx` gerent des produits generiques. Besoin d intitules, de tags par vertical, de differenciation produits/services.
+Le rapport montre des cartes offres claires. Nous devons revisiter `Products.tsx` et `Inventory.tsx` pour distinguer produits physiques, services recurrents, packs publicitaires et lier au centre promo (Tache 10).
 
 ## Pre-requis
-- Taches 06 et 07 pour la classification.
+- Taches 01 a 14.
 
 ## Actions detaillees
-1. Etendre les modeles front (`Product`, `Service`) pour inclure categorie, segment, compatibilite UEMOA.
-2. Revoir `Products.tsx` pour ajouter des filtres (type, statut, stock, employe responsable) et un layout cartes + table.
-3. Integrer un panel lateral detaille avec carrousel images, documents indispensables, bouton `Ajouter au pack`.
-4. Adapter `Inventory.tsx` pour suivre le stock physique vs stock service (capacite).
-5. Ajouter une integration vers le centre publicitaire (Tache 10) pour mettre en avant certains items.
+1. Enrichir les types `Product`, `Service`, `CampaignPackage` (`frontend/src/types/catalog.ts`) avec categorie, vertical, price plans, compatibilite UEMOA, assets; documenter dans `docs/domain/catalog.md`.
+2. Refonte de `Products.tsx` avec double vue (cards waoh style + tableau) + filtres (type, statut, stock, vertical, responsable); stocker l etat des filtres dans l URL.
+3. Ajouter un panneau detail (drawer) avec carrousel images, documents telechargeables, bouton `Ajouter au pack` reliant au pipeline ventes.
+4. Adapter `Inventory.tsx` pour afficher stock physique vs capacite service, alertes (low stock), stats (rotation) + quick action `Planifier une campagne`.
+5. Connecter le centre publicitaire (Tache 10) pour suggerer des upsells depuis le detail produit; consigner les guidelines visuelles dans `docs/branding/components-cheatsheet.md`.
 
 ## Livrables
-- Pages produits/inventaire mises a jour.
-- Definitions types dans `src/types/catalog.ts`.
+- Pages `Products.tsx` et `Inventory.tsx` mises a jour.
+- Types catalogue et documentation `docs/domain/catalog.md`.
 
 ## Verifications
-- Manual: tester la creation/edition d un produit differencie (avec validations).
-- Verifier que les filtres se conservent via URL query (test navigation).
-
+- Tests unitaires sur filtres/sorting (`npm run test catalog`).
+- Tests manuels creation/edition produit, verification responsive + persistance des filtres via URL; capture ecran du nouveau layout.

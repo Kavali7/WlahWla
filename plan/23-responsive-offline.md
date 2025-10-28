@@ -1,26 +1,25 @@
-# Tache 23 - Responsive, mobile et offline
+# Tache 23 - Responsive & expérience offline
 
 ## Objectif
-Garantir une experience fluide sur mobile/tablette et preparer le mode offline (PWA) pour les deplacements sur le terrain.
+Assurer une excellente expérience mobile/tablette et préparer le mode offline (PWA) pour les équipes terrain.
 
 ## Contexte
-Certaines pages ne sont pas optimisees. Il faut revisiter le responsive et activer les features PWA.
+Le site doit rester fluide et disponible même avec une connectivité limitée. Nous devons auditer toutes les pages, ajuster les grilles, et mettre en place la PWA (manifest, service worker, caches).
 
 ## Pre-requis
-- Taches 05 a 22 completes.
+- Taches 01 a 22.
 
 ## Actions detaillees
-1. Auditer le responsive (Chrome DevTools) et consigner les anomalies dans `docs/qa/responsive-audit.md` (manuel).
-2. Ajuster les grids et breakpoints pour Home, Dashboard, Portal, Admin.
-3. Ajouter `manifest.json` et `service-worker.ts` (utiliser Workbox) pour la PWA.
-4. Mettre en cache les assets critiques et prevoir un fallback offline pour les pages cle.
-5. Executer `npm run build` puis `npm run preview` pour tester le PWA sur mobile (manuellement via QR code ou tunnel).
+1. Réaliser un audit complet responsive (Chrome DevTools, iOS/Android) et consigner les points dans `docs/qa/responsive-audit.md` (captures + checkliste).
+2. Ajuster les layouts (Home, Dashboard, Portal, Admin, Documents) en utilisant Tailwind breakpoints et un design mobile-first (cartes stackées, menus accordéon, CTA visibles).
+3. Implémenter `manifest.json`, `service-worker.ts` (Workbox) et config Vite pour activer PWA; gérer icônes/app name.
+4. Mettre en cache assets critiques, fallback offline pour pages clés (Home, Dashboard, Pipeline) et messages d’erreur adaptés.
+5. Documenter la stratégie offline (sync différée, limites) dans `docs/ops/offline-mode.md` et consigner veille/maintenance PWA.
 
 ## Livrables
-- Manifest et service worker en place.
-- Rapport responsive documente.
+- Manifest + service worker opérationnels.
+- Rapport responsive + doc offline.
 
 ## Verifications
-- Audit Lighthouse categorie PWA >= 80.
-- Test manuel: activer mode avion et verifier la page offline.
-
+- Audit Lighthouse PWA >= 80 et Accessibilité > 90; consigner scores.
+- Tests manuels : mode avion sur mobile (app installée) + validation dégradée (affichage message offline).

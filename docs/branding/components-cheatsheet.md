@@ -135,6 +135,35 @@ export const ServicesGrid = () => (
 - CTA texte `Link` interne avec fleche `->`, bullets formats `flex` pour alignement.
 - Utilise `services.ts` pour centraliser titres, resumes, puces et CTA valides marketing.
 
+## VerticalCard
+```tsx
+import { VerticalCard } from '@/components/marketing/VerticalCard'
+import { verticalPreviews } from '@/content/home/verticals'
+
+export const VerticalGrid = () => (
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    {verticalPreviews.map((vertical) => (
+      <VerticalCard key={vertical.id} {...vertical} />
+    ))}
+  </div>
+)
+```
+- Fond clair `bg-surface-subtle`, halo primaire et hover `shadow-elevated`.
+- Icone circulaire derivee de la verticale (`retail`, `accounting`, `services`, `agencies`).
+- Puces orientees resultat (3 maximum) et CTA vers `/verticals/:slug`.
+
+## VerticalLayout
+```tsx
+import { VerticalLayout } from '@/pages/verticals/VerticalLayout'
+import { verticalsBySlug } from '@/content/verticals'
+
+export const RetailVertical = () => <VerticalLayout vertical={verticalsBySlug.retail} />
+```
+- Hero combine badge, metrics et double CTA primaire/secondaire.
+- Blocs promesse en grille 3 colonnes, parcours types en cartes blanches, temoignages en bandeau clair.
+- Section ressources conclut la page avec rappel CTA principal et liens internes (ressources, support).
+- Les contenus sont fournis depuis `src/content/verticals/*.ts` et agreges via `verticalsBySlug`.
+
 ## Captures
 - Ajouter captures ou exports Figma dans `docs/branding/assets/` une fois les maquettes stabilisees.
 - Executer `npm run optimize:images` apres ajout d images pour minifier les ressources web.

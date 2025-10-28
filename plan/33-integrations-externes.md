@@ -1,26 +1,23 @@
-# Tache 33 - Integrations externes (paiement, CRM, analytics)
+# Tache 33 - Intégrations externes
 
 ## Objectif
-Connecter WLAHWLA a des services tiers necessaires (paiements UEMOA, CRM, analytics marketing) en priorisant les options gratuites ou freemium.
+Connecter WLAHWLA à des services tiers (paiements UEMOA, CRM, analytics) pour enrichir l expérience utilisateur.
 
 ## Contexte
-Pour apporter plus que waohdigital, il faut proposer des connecteurs (Orange Money, Wave, HubSpot, Matomo).
+Pour dépasser la référence waohdigital, nous devons proposer des connecteurs clés : paiements mobiles, CRM marketing, outils analytics, automation.
 
 ## Pre-requis
-- Taches 27, 29 et 31.
+- Taches 01 a 32.
 
 ## Actions detaillees
-1. Lister les integrations prioritaires et valider avec business (manuel) dans `docs/integrations/integration-roadmap.md`.
-2. Implementer une passerelle paiement modulable (ex: API Paydunya, CinetPay) en commencant par sandbox gratuite.
-3. Ajouter un connecteur CRM (webhooks vers HubSpot/Zoho) configurable par compte.
-4. Mettre en place Matomo ou Plausible self-hosted pour analytics marketing.
-5. Documenter chaque configuration pas a pas avec captures ecran et URLs de creation de compte.
+1. Prioriser les intégrations (Orange Money, Wave, MTN, PayDunya, HubSpot/Zoho, Matomo/Plausible, WhatsApp Cloud) et documenter roadmap dans `docs/integrations/integration-roadmap.md`.
+2. Implémenter la passerelle paiement modulable (service Python + webhooks) avec sandbox, gestion des callbacks et réconciliation dans la base.
+3. Ajouter connecteurs CRM (webhooks, API) pour pousser leads et campagnes; prévoir configuration par organisation.
+4. Mettre en place analytics marketing (Matomo/Plausible) via middlewares/SDK et exposer dashboard dans admin.
+5. Documenter chaque configuration (étapes, captures) et vérifier conformité (RGPD/localisation données).
 
 ## Livrables
-- Code d integration dans `backend/integrations/`.
-- Documentation detaillee.
+- Code d intégration (`backend/integrations/`), doc détaillée.
 
 ## Verifications
-- Manual: realiser un paiement sandbox et verifier la remontee dans le dashboard.
-- Tester l envoi d un lead vers le CRM externe.
-
+- Tests sandbox: paiement, lead CRM, analytics; consigner résultats.

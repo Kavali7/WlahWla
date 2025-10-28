@@ -1,26 +1,25 @@
-# Tache 17 - Portail client et demandes self-service
+# Tache 17 - Portail client self-service
 
 ## Objectif
-Offrir aux clients un espace dedie pour suivre leurs commandes, telecharger documents, chatter et lancer de nouvelles demandes.
+Créer un espace client authentifié permettant de suivre commandes, factures, campagnes, tickets et ressources, avec un UI cohérent (cartes arrondies, CTA clairs) et une expérience multi-module.
 
 ## Contexte
-`Storefront.tsx` fait office de vitrine. Il faut un veritable portail (login client) avec onglets: Commandes, Factures, Tickets, Collaboration.
+Le rapport montre l importance d offrir un accès direct. WLAHWLA doit distinguer l’administration interne et l’interface client (role CLIENT) avec un layout adapté.
 
 ## Pre-requis
-- Tache 03 (layout) et Tache 15 (catalogue).
+- Taches 01 a 16 (navigation, catalogue, pipeline).
 
 ## Actions detaillees
-1. Ajouter un chemin `/portal` protege pour les clients (utiliser `ProtectedRoute` adapte au role CLIENT).
-2. Developper des composants `ClientOrders`, `ClientInvoices`, `ClientRequests`, `ClientTeamChat` dans `src/pages/portal/`.
-3. Prevoir un systeme de messages (placeholder) en attendant Tache 29 pour l API.
-4. Offrir un bouton `Lancer une commande` redirigeant vers le panier avec pre-remplissage.
-5. Ajouter un guide onboarding (checklist) pour les nouveaux clients.
+1. Concevoir l’information architecture du portail (Tableau de bord client, Commandes, Factures, Campagnes, Support) et documenter dans `docs/ux/client-portal.md`.
+2. Mettre en place la route protégée `/portal` avec `ClientLayout` (header minimal, menu lateral, CTA WhatsApp) en utilisant `react-router` et `useAuth`.
+3. Developper les pages `ClientOrders`, `ClientInvoices`, `ClientCampaigns`, `ClientSupport` dans `frontend/src/pages/portal/` (cards, tables, timeline) et partager les composants existants (`KpiCard`, `AdvertisingCard`).
+4. Intégrer un module de demandes (`NewRequestModal`) avec pièces jointes, assignation interne, et un fil de discussion (stub) en attendant API (Tache 29/30).
+5. Ajouter une checklist onboarding (progression) et un bloc CTA `Découvrir une nouvelle fonctionnalité` alimenté par `frontend/src/content/portal/tips.ts`; consigner les retours clients dans `docs/ops/client-success.md`.
 
 ## Livrables
-- Portail client accessible via login.
-- Documentation `docs/ux/client-portal.md`.
+- Portail client (`/portal`) avec navigation et pages principales.
+- Documentation `docs/ux/client-portal.md` et `docs/ops/client-success.md`.
 
 ## Verifications
-- Manual: tester la connexion avec un compte client fictif.
-- Confirmer que les roles non autorises recoivent un message de restriction clair.
-
+- Test manual : connexion via compte role CLIENT, vérification restrictions pour rôles non autorisés.
+- Tests automatisés pour les protections de route et l’affichage des données (unitaires + e2e si possible), et audit accessibilité sur les principales pages du portail.

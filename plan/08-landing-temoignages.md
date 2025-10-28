@@ -1,26 +1,26 @@
-# Tache 08 - Landing temoignages et preuves sociales
+# Tache 08 - Preuves sociales et carrousel temoignages
 
 ## Objectif
-Afficher des temoignages multi-profils (entreprises UEMOA) avec photo, citation, indicateurs de resultat afin d inspirer confiance, a l image de waohdigital.
+Mettre en place une section temoignages dynamique (slider type Waoh Digital) qui met en avant des clients UEMOA par secteur avec citation, photo, KPI et logos partenaires.
 
 ## Contexte
-Il n existe pas de section temoignage structuree. Nous devons introduire un carrousel de citations, un bloc chiffres cle et eventuellement des logos.
+Le rapport souligne la presence de temoignages (portraits + citations) sur waohdigital.com. Nous devons decliner ce pattern pour WLAHWLA (carrousel swipeable, metrics + badge secteur) afin de renforcer la confiance et preparer les pages verticales.
 
 ## Pre-requis
-- Tache 04 pour le carrousel generique.
+- Taches 01 a 07.
 
 ## Actions detaillees
-1. Collecter ou rediger trois temoignages types (client boutique, cabinet comptable, prestataire) et obtenir validation legale (manuel).
-2. Ajouter `src/content/home/testimonials.ts` avec photos, roles, citations, metrics.
-3. Creer le composant `TestimonialCarousel` (si `HeroCarousel` n est pas reutilisable) supportant auto-play et navigation clavier.
-4. Ajouter un bloc `Resultats chiffrables` (gain de temps, evolution CA) avec une representation graphique (mini chart).
-5. Greffer la section sur `Home.tsx` apres Services.
+1. Rediger au moins quatre temoignages (Retail Dakar, Agence marketing Abidjan, Cabinet comptable Lomé, Groupe multi filiales) avec KPI et obtenir validation juridique/marketing (manuel).
+2. Ajouter `frontend/src/content/home/testimonials.ts` (data) et `frontend/src/content/testimonials/*.ts` pour les pages dediees; integrer chemins vers photos (ou placeholders temp) dans `frontend/public/assets/brand/`.
+3. Creer `TestimonialCarousel` dans `frontend/src/components/marketing/TestimonialCarousel.tsx` avec auto-play optionnelle, commandes clavier, dots (ARIA) et animations type translate/opacity.
+4. Greffer la section dans `Home.tsx` sous les services + ajouter un bloc `Resultats chiffrables` sous forme de 3 stats (gain temps, ROI, satisfaction) stylise via tokens `shadow-elevated`.
+5. Documenter le composant et les besoins capture (shots, video scroll) dans `docs/branding/components-cheatsheet.md` et `docs/branding/brand-playbook.md`.
 
 ## Livrables
-- Donnees `testimonials.ts`.
-- Section `TestimonialCarousel` finalisee.
+- Donnees `testimonials.ts` et medias associes.
+- Composant `TestimonialCarousel` et section home integree.
+- Documentation mise a jour (cheatsheet + playbook).
 
 ## Verifications
-- Test manuel respect RGPD: s assurer que les donnees fictives ou publiques sont utilisees.
-- Verifier que le carrousel est stoppable via clavier et accessible ARIA.
-
+- Tests clavier/lecteur ecran (tab, shift+tab, roles ARIA) pour naviguer dans le carrousel et arreter l auto-play.
+- Audit Lighthouse accessibilite > 90 et capture des scores dans `docs/branding/brand-playbook.md`.

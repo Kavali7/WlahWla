@@ -1,26 +1,25 @@
-# Tache 14 - Pipeline ventes et commandes
+# Tache 14 - Pipeline ventes & commandes
 
 ## Objectif
-Fournir une vue pipeline pour suivre les opportunites et commandes (prospects, devis, commandes en preparation, livraisons) avec un UX moderne.
+Construire une vue pipeline/kanban pour suivre prospects, devis, commandes et livraisons avec un design inspire des cartes waohdigital (hover, stats) et une experience drag & drop fluide.
 
 ## Contexte
-La page `QuoteBuilder.tsx` gere une partie devis. Nous devons creer une vue Kanban/pipeline dediee pour les commerciaux.
+Le rapport met en avant la simplicite des CTA et des cartes. Nous devons offrir aux equipes commerciales une interface claire reliant opportunites, devis, paiements et campagnes.
 
 ## Pre-requis
-- Tache 13, car le pipeline doit se connecter aux memes filtres.
+- Taches 01 a 13.
 
 ## Actions detaillees
-1. Concevoir un composant `SalesPipelineBoard` (colonnes dynamiques) dans `src/components/sales/`.
-2. Reutiliser les donnees existantes (quotes, invoices) et definir un mapping etat -> colonne.
-3. Ajouter des actions rapides (convertir en commande, contacter client, generer facture) via menus contextuels.
-4. Permettre le drag-and-drop (utiliser `react-beautiful-dnd`) et enregistrer le mouvement via API (stub).
-5. Ajouter une vue liste alternative pour les ecrans mobiles.
+1. Definir les colonnes pipeline (Prospection, Devis emis, Facturation, Livraison, Suivi) + champs affiches sur les cartes; documenter le mapping API dans `docs/ux/sales-pipeline.md`.
+2. Developper `SalesPipelineBoard` dans `frontend/src/components/sales/` (cartes arrondies, metrics, boutons rapides) avec `react-beautiful-dnd` ou alternative et fallback accessible.
+3. Creer la page `frontend/src/pages/sales/Pipeline.tsx` integrant filtres (vertical, assignation, periode) relies au header dashboard (Tache 13) via context/global state.
+4. Implementer les APIs backend (Taches 27-28) : endpoints CRUD pipeline, actions `convert_to_invoice`, `assign_member`; en attendant, fournir un mock `frontend/src/mocks/pipeline.ts`.
+5. Ajouter une vue liste compacte pour mobile (toggle board/list) et consigner les interactions (keyboard drag) dans `docs/ops/accessibilite.md`.
 
 ## Livrables
-- Nouvelle page `src/pages/sales/Pipeline.tsx` linkee depuis la nav.
-- Support des interactions drag-drop (avec fallback).
+- Composant `SalesPipelineBoard` + page `Pipeline.tsx`.
+- Documentation `docs/ux/sales-pipeline.md`.
 
 ## Verifications
-- Manual: tester le drag-and-drop avec la souris et au clavier si possible.
-- Ajouter des tests unitaires pour le mapping etats dans `src/components/sales/__tests__/pipeline.test.tsx`.
-
+- Tests unitaires sur le mapping etats -> colonnes et sur les actions rapides (`npm run test sales-pipeline`).
+- Tests manuels : drag & drop souris, reordre clavier (si dispo), fallback list sur mobile; capture ecran/video pour `docs/branding/visual-references.md`.

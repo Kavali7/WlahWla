@@ -1,26 +1,25 @@
-# Tache 32 - Automatisation documents et generation PDF
+# Tache 32 - Automatisation documents & génération PDF
 
 ## Objectif
-Automatiser la generation de documents (devis, factures, contrats) avec templating, insertion de logos clients et integration signature.
+Créer le service backend de génération de documents (devis, factures, contrats) avec templating dynamique, logos clients et intégration signature.
 
 ## Contexte
-Les templates front existent (Tache 22). Il faut un service backend pour produire PDF et suivre les generations.
+Le front (Tache 22) fournit l UI. Nous devons produire les PDF côté backend, gérer l historique et l intégration avec la signature numérique.
 
 ## Pre-requis
-- Taches 22 et 25.
+- Taches 01 a 31.
 
 ## Actions detaillees
-1. Ajouter un service (ex: `DocumentGenerator`) utilisant `weasyprint` ou `ReportLab` pour generer des PDF.
-2. Connecter aux templates stockes (base de donnees ou filesystem) et permettre l injection de logos/variables.
-3. Mettre en place des webhooks pour envoyer les documents au centre de notifications (Tache 30).
-4. Stocker l historique des generations et fournir un endpoint pour telecharger.
-5. Documenter le process dans `docs/legal/document-automation.md` y compris les limites legales.
+1. Concevoir un service `DocumentGenerator` (WeasyPrint/ReportLab) pour transformer templates HTML + données en PDF, en gérant logos personnalisés et ressources.
+2. Intégrer la persistance des templates (BDD ou stockage) avec versioning, variables moustaches et fallback.
+3. Ajouter endpoints pour déclencher génération, récupérer l historique, télécharger, re-signer; enregistrer liens vers signature provider.
+4. Mettre en place webhooks/tâches Celery pour générer en asynchrone, notifier (Tache 30) et stocker dans `DocumentArchive`.
+5. Documenter la solution (limites légales, stockage) dans `docs/legal/document-automation.md` et `docs/ops/documents.md`.
 
 ## Livrables
-- Service de generation PDF.
-- Documentation juridique et technique.
+- Service de génération PDF + endpoints/historique.
+- Documentation juridique/technique.
 
 ## Verifications
-- Manual: generer un devis test et verifier rendu.
-- S assurer que les logos customises s affichent correctement.
-
+- Tests backend (unitaires + intégration) sur la génération (ex: snapshot PDF, diff hash).
+- Tests manuels: générer un devis, vérifier rendu, logos personnalisés, lien signature.

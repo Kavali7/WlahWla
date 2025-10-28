@@ -1,26 +1,25 @@
-# Tache 29 - API portail client et chat
+# Tache 29 - API portail client & support
 
 ## Objectif
-Fournir les endpoints necessaires au portail client (commandes, factures, tickets, messages) et un micro-service de chat interne.
+Fournir les API nécessaires au portail client (commandes, factures, campagnes, tickets, messages) avec une communication temps réel basique.
 
 ## Contexte
-Le portail front (Tache 17) attend des APIs structurees. Un chat simple (long polling ou WebSocket) est requis.
+Le portail client (Tache 17) attend des endpoints structurés et un canal de conversation. Nous devons offrir un backend documentaire et sécurisé.
 
 ## Pre-requis
-- Taches 26 et 28.
+- Taches 01 a 28.
 
 ## Actions detaillees
-1. Creer des vues REST/GraphQL pour lister commandes, factures, documents d un client.
-2. Ajouter un modele `ClientTicket` et un endpoint pour creer/suivre des tickets.
-3. Mettre en place un canal WebSocket (Django Channels) ou fallback long polling pour le chat.
-4. Documenter les contrats d API dans `docs/api/client-portal.md` et fournir des exemples.
-5. Mettre a jour la documentation d authentification pour inclure tokens specifiques clients.
+1. Créer endpoints REST/GraphQL pour `ClientDashboard` (liste commandes, factures, campagnes, documents) filtrés par client/organisation.
+2. Implémenter la gestion des tickets support : modèle `ClientTicket`, API CRUD, pièces jointes, timeline.
+3. Mettre en place un canal communication (Django Channels ou long polling) pour le chat client <-> équipe et exposer WebSocket `/ws/support/`.
+4. Ajouter endpoints pour checklist onboarding, ressources, notifications client; respecter permissions RBAC.
+5. Documenter tous les contrats d API dans `backend/docs/api/client-portal.md` avec exemples curl/Postman et tests automatisés (pytest).
 
 ## Livrables
-- Endpoints portail client operationnels.
-- Documentation API.
+- API portail client complète (REST/WS).
+- Documentation `client-portal.md`.
 
 ## Verifications
-- Manual: tester via Postman l authentification et la recuperation des donnees.
-- Verifier la connexion WebSocket ou fallback et noter les limites.
-
+- Tests automatisés sur endpoints + WebSocket (Channels tests).
+- Tests manuels Postman/HTTPie: authentification client, ticket création, réception message temps réel.

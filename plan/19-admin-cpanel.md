@@ -1,26 +1,25 @@
-# Tache 19 - Admin panel et c-panel personnalise
+# Tache 19 - Console admin & gouvernance
 
 ## Objectif
-Adapter l espace administrateur afin qu il offre un controle avance sur les comptes clients, les filiales et les parametres contractuels.
+Repenser le centre d administration pour offrir une gouvernance avancée (comptes clients, filiales, branding, paramètres contractuels) avec une ergonomie premium inspirée de waohdigital.com.
 
 ## Contexte
-`AdminPanel.tsx` couvre deja certaines fonctions. Il faut reorganiser l UI pour fournir la meme fluidite que waohdigital et les fonctionnalites specifiques WLAHWLA.
+L espace admin doit centraliser la gestion des organisations, des paramètres de marque et de la gouvernance. Les utilisateurs attendent un layout clair (menu vertical, cartes, onglets) et un audit log.
 
 ## Pre-requis
-- Tache 03 (layout) et Tache 18 (performance).
+- Taches 01 a 18.
 
 ## Actions detaillees
-1. Redessiner (Figma manuel) la structure du c-panel: navigation verticale, sections Compte, Paiements, Historique, Automations.
-2. Mettre a jour `AdminPanel.tsx` pour adopter cette structure, en reutilisant `Tabs` et `Card`.
-3. Ajouter un module de gestion des filiales/agences (creation, edition, activation, assignation d employes).
-4. Integrer des parametres de marque (logo, couleurs) pour que chaque compte puisse personnaliser son experience.
-5. Ajouter un audit log basique affichant les dernieres actions.
+1. Formaliser l architecture cible dans `docs/admin/cpanel-wireframe.md` (sections : Synthèse, Comptes & Filiales, Branding, Facturation, Automations, Audit log) et valider avec produit.
+2. Refondre `AdminPanel.tsx` (ou créer `frontend/src/pages/admin/Console.tsx`) avec navigation latérale, onglets et composants cartes alignés aux tokens WLAHWLA.
+3. Implémenter modules : gestion des filiales (CRUD + activations), paramètres branding (logo, couleurs, domaine), réglages contractuels (plans, limites), et quick actions (inviter un admin, exporter données).
+4. Ajouter un audit log (timeline) s appuyant sur backend (Tache 30) ou mocks temporaires; afficher filtres (type, utilisateur, date) et export CSV.
+5. Documenter permissions (ADMIN, MANAGER) et flux approbation dans `docs/admin/cpanel.md`; noter les captures à produire pour la playbook.
 
 ## Livrables
-- C-panel restructure.
-- Documentation `docs/admin/cpanel.md`.
+- Console admin modernisée (pages + composants).
+- Documentation `docs/admin/cpanel-wireframe.md` et `docs/admin/cpanel.md`.
 
 ## Verifications
-- Manual: verifier que les permissions (ADMIN vs MANAGER) respectent l acces aux onglets.
-- Tester la modification d une filiale et confirmer la propagation dans la nav principale.
-
+- Tests manuels : vérifier accès par rôle, création/édition filiale, mise à jour branding.
+- Tests automatisés sur permissions (front) et endpoints utilisés (backend) + audit accessibilité sur la page principale.
