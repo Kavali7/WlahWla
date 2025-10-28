@@ -155,6 +155,7 @@ const config: Config = {
         floating: '0 18px 48px -18px rgba(16, 22, 48, 0.35)',
         badge: '0 10px 30px -18px rgba(61, 113, 255, 0.45)',
         focus: '0 0 0 4px rgba(94, 99, 255, 0.2)',
+        service: '0 22px 44px -22px rgba(88, 100, 255, 0.42)',
       },
       borderRadius: {
         xl: '1rem',

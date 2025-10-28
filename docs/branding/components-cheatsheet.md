@@ -5,7 +5,7 @@ Ce guide resume l usage des design tokens introduits pour harmoniser les composa
 ## Tokens Tailwind
 - `bg-primary`, `text-primary-foreground` : bouton principal, liens hero.
 - `bg-surface-card`, `border-surface-outline` : cartes, panneaux dashboards.
-- `shadow-elevated`, `shadow-floating` : niveau d elevation (cards, overlays).
+- `shadow-elevated`, `shadow-floating`, `shadow-service` : niveau d elevation (cards marketing et overlays).
 - `rounded-hero`, `rounded-3xl`, `rounded-pill` : pour heros, cards, tabs.
 - `bg-gradient-hero`, `bg-gradient-overlay` : fonds hero et overlays media.
 - Spaces semantiques : `space-y-13`, `py-section`, `px-gutter` pour rythmer les sections.
@@ -116,6 +116,24 @@ export const CampaignGrid = () => (
 - Propose une mise en page 2 colonnes avec image responsive (lazy) + stats.
 - Le badge et les stats sont optionnels; conserver au moins `badge`, `title`, `description`, `image`.
 - Ideal pour pages marketing, modules cross sell et landing ads.
+
+## ServiceCard
+```tsx
+import { ServiceCard } from '@/components/marketing/ServiceCard'
+import { services } from '@/content/home/services'
+
+export const ServicesGrid = () => (
+  <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+    {services.map((service) => (
+      <ServiceCard key={service.id} {...service} />
+    ))}
+  </div>
+)
+```
+- Icone circulaire avec halo accent `#5864FF`, hover translate `-translate-y-2`.
+- Fond `bg-white`, bord `border-surface-outline`, ombre `shadow-service` -> `shadow-elevated` sur hover.
+- CTA texte `Link` interne avec fleche `->`, bullets formats `flex` pour alignement.
+- Utilise `services.ts` pour centraliser titres, resumes, puces et CTA valides marketing.
 
 ## Captures
 - Ajouter captures ou exports Figma dans `docs/branding/assets/` une fois les maquettes stabilisees.

@@ -26,6 +26,7 @@ const Resources = React.lazy(() => import('./pages/Resources'))
 const Support = React.lazy(() => import('./pages/Support'))
 const About = React.lazy(() => import('./pages/About'))
 const Trial = React.lazy(() => import('./pages/Trial'))
+const Modules = React.lazy(() => import('./pages/Modules'))
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
   <Suspense fallback={<LoadingScreen />}>
@@ -43,6 +44,7 @@ const primaryNavigation: NavigationItem[] = [
         title: 'Pilotage temps reel',
         description: 'Visualisez vos indicateurs et monitorez vos equipes.',
         links: [
+          { label: 'Panorama modules', path: '/modules', description: 'Vue d ensemble des offres commerce, finance et support.' },
           { label: 'Tableau de bord', path: '/dashboard', description: 'Vue synthese des ventes et de la tresorerie.' },
           { label: 'Boutique omnicanal', path: '/storefront', description: 'Animez votre vitrine WhatsApp et Web.', badge: 'Beta' },
           { label: 'Administration equipe', path: '/admin', description: 'Controle des droits et workflows par profil.' },
@@ -277,6 +279,17 @@ export const router = createBrowserRouter(
                   title: 'Panorama WLAHWLA',
                   description:
                     'Explorez les offres marketing, les industries cibles et les retours clients directement depuis la plateforme.',
+                },
+              },
+            },
+            {
+              path: 'modules',
+              element: withSuspense(Modules),
+              handle: {
+                layout: {
+                  title: 'Panorama modules',
+                  description:
+                    'Cartographie des modules commerce, finance, campagnes publicitaires et support analytics.',
                 },
               },
             },

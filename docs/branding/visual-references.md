@@ -7,6 +7,7 @@ Ce document recense les elements observes sur waohdigital et d autres sources pe
 |-----------|----------------------|--------------------|---------------------------|
 | waohdigital - hero principal | Degrade bleu violet, photo equipe, CTA contrastes | Reprendre degrade plus profond, integrer illustration commerce UEMOA et badge preuve sociale | `frontend/public/assets/brand/hero-commerce-1600x900.svg` |
 | WLAHWLA - hero 2025 | Hero Carousel degrade 135deg #4361EE->#3F37C9, metrics badges, CTA triple | Capturer animations fade/slide, badges confiance et bandeau logos partenaires | TODO: capture hero landing (desktop + mobile) |
+| WLAHWLA - services prioritaires | Cartes ServiceCard 3 colonnes, icone cercle, hover translate | Documenter rendu commerce, facturation, campagnes, support + CTA global modules | TODO: captures services desktop/tablette/mobile |
 | waohdigital - navigation | Barre sticky minimaliste, boutons outline et WhatsApp | Ajouter CTA Essai gratuit, Quick Actions pour portails et c panel | TODO: capture navigation |
 | waohdigital - section industries | Cartes alignement 3 colonnes, icone lineaire, puces | Decliner verticales WLAHWLA avec icones locales (legal, retail, compta) | TODO: captures industries |
 | waohdigital - temoignages | Carrousels avec portraits, citations sur fond clair | Cranter design en bandeau, integrer donnees chifrees | TODO: capture temoignages |
@@ -27,3 +28,4 @@ Ce document recense les elements observes sur waohdigital et d autres sources pe
 - Documenter commentaires recues lors de la revue marketing interne.
 - Verifier coherence avec `docs/branding/brand-playbook.md` apres chaque mise a jour.
 - Executer `npm run optimize:images` apres import de nouveaux visuels.
+- Obtenir validation marketing finale sur les textes services (commerce, facturation, campagnes, support).

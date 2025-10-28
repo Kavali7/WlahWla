@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { HeroCarousel } from '../components/media/HeroCarousel'
 import { AdvertisingCard } from '../components/marketing/AdvertisingCard'
+import { ServiceCard } from '../components/marketing/ServiceCard'
 import { heroSlides } from '../content/hero-slides'
 import { advertisingSpots } from '../content/advertising-spots'
+import { services } from '../content/home/services'
 
 type RevealOptions = {
   threshold?: number
@@ -59,6 +61,7 @@ const partnerLogos = [
 const Home: React.FC = () => {
   const partnerBand = useRevealOnScroll({ threshold: 0.3 })
   const panoramaCard = useRevealOnScroll({ threshold: 0.25 })
+  const servicesSection = useRevealOnScroll({ threshold: 0.25 })
 
   return (
     <div className="space-y-16 pb-20">
@@ -90,6 +93,42 @@ const Home: React.FC = () => {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section
+        id="services"
+        ref={servicesSection.ref}
+        aria-labelledby="services-heading"
+        className={cx(
+          'space-y-10 rounded-3xl border border-surface-outline bg-white px-8 py-12 shadow-service md:px-12',
+          'transition-all duration-700 ease-out motion-reduce:duration-0 motion-reduce:transform-none motion-reduce:opacity-100',
+          servicesSection.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+        )}
+      >
+        <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3 lg:max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-600/80">Nos offres prioritaires</p>
+            <h2 id="services-heading" className="text-3xl font-semibold text-secondary-800 md:text-4xl">
+              Les modules WLAHWLA pour orchestrer ventes, finance et marketing
+            </h2>
+            <p className="text-sm text-neutral-600 md:text-base">
+              Chaque carte resume les workflows essentiels valides avec marketing. Activez vos equipes en sequence commerce, facturation, campagnes et support.
+            </p>
+          </div>
+        </header>
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {services.map((service) => (
+            <ServiceCard key={service.id} {...service} />
+          ))}
+        </div>
+        <div className="flex flex-col items-start gap-4 border-t border-surface-outline pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-neutral-600">
+            Accedez a la cartographie complete des modules commerce, finance, campagnes et support.
+          </p>
+          <Button as={Link} to="/modules" size="md">
+            Explorer toutes les solutions
+          </Button>
         </div>
       </section>
 
@@ -159,7 +198,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section id="services" className="space-y-4">
+      <section id="services-parcours" className="space-y-4">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <h3 className="text-xl font-semibold text-secondary-800 md:text-2xl">Parcours services</h3>
           <Link className="text-sm font-semibold text-primary-600 hover:text-primary-500" to="/ressources#onboarding">
@@ -259,4 +298,3 @@ const Home: React.FC = () => {
 }
 
 export default Home
-
