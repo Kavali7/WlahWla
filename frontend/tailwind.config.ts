@@ -171,9 +171,9 @@ const config: Config = {
         gutter: '2.5rem',
       },
       backgroundImage: {
-        'gradient-hero': 'linear-gradient(115deg, #2e38ff 0%, #7b2bff 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #4361EE 0%, #3F37C9 100%)',
         'gradient-overlay': 'linear-gradient(180deg, rgba(10, 17, 40, 0) 0%, rgba(10, 17, 40, 0.85) 100%)',
-        'gradient-card-glow': 'linear-gradient(135deg, rgba(44, 56, 255, 0.35), rgba(123, 43, 255, 0.35))',
+        'gradient-card-glow': 'linear-gradient(135deg, rgba(67, 97, 238, 0.35), rgba(63, 55, 201, 0.35))',
       },
       maxWidth: {
         content: '72rem',

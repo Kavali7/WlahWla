@@ -30,7 +30,7 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
 
 ## Palette chromatique
 ### Degrade primaire
-- `Linear 115deg` de `#2E38FF` (bleu electrique) vers `#7B2BFF` (violet profond). Utiliser sur heros, boutons CTA principal, fonds de sections principales.
+- `Linear 135deg` de `#4361EE` (bleu royal) vers `#3F37C9` (violet profond). Utiliser sur heros, boutons CTA principal, fonds de sections principales.
 ### Couleurs secondaires et accents
 - `#0A1128` (bleu marine) pour textes titres et fonds sombres.
 - `#101630` (bleu graphite) pour fonds neutres et cartes.
@@ -54,7 +54,7 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
 - Ratio visuel: 60% visuel, 40% contenu texte pour cartes; 70% visuel, 30% texte pour heros.
 
 ## Guidelines hero et cartes
-- **Hero principal**: bloc gauche texte (titre H1 56 px, sous titre 20 px), bloc droit illustration. CTA primaire degrade, CTA secondaire outline `#FCA311`. Ajouter badge top line (texte 12 px) pour preuve sociale.
+- **Hero principal**: degrade `linear-gradient(135deg, #4361EE, #3F37C9)`, bloc gauche texte (H1 56 px, sous titre 20 px), bloc droit illustration HeroCarousel. Integrer badge top line 12 px, metrics (Activation 72 h, Conversion retail +23 %, Temps de caisse -35 %), triple CTA (`Essayer gratuitement`, `Voir la demo`, `WhatsApp`) et deux badges confiance (`Certifie e-facturation UEMOA`, `Reconciliations banques quotidiennes`). Micro interactions fade-in + slide sur hero et bandeau logos partenaires.
 - **Cartes produits/offres**: dimension 320x380 px desktop, fond `#101630`, overlay degrade coin superieur droit. Inclure icone 56 px, titre 20 px, 3 puces, CTA micro `En savoir plus`.
 - **Cartes testimoniaux**: fond clair `#F5F7FD`, photo ronde 64 px, etoiles degrade, citation 18 px en italique.
 - **Sections multi colonnes**: conserver gouttiere 32 px, utiliser icones lineaires orange pour guider le regard.
@@ -80,3 +80,15 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
 2. Auto revue marketing: presenter cette vision au responsable produit, collecter feedback, marquer les resolutions dans le fichier de livrable.
 3. Controle contraste AA: utiliser WebAIM Contrast Checker (`https://webaim.org/resources/contrastchecker/`) pour chaque combinaison critique (texte blanc sur degrade, texte marine sur fond clair) et reporter les resultats dans ce fichier.
 
+## Hero landing 2025
+- Badge hero: `Suite commerce UEMOA`.
+- Titre: `Unifiez ventes, stock et factures en temps reel`.
+- Sous titre: `Pilotez boutiques, WhatsApp et deliveries depuis un cockpit unique aligne sur les normes fiscales et bancaires locales.` (150 % line height).
+- Metrics hero: Activation `72 h`, Conversion retail `+23 %`, Temps de caisse `-35 %`.
+- Trust badges: `Certifie e-facturation UEMOA`, `Reconciliations banques quotidiennes`.
+- CTA primaires: `Essayer gratuitement` (primary), `Voir la demo` (secondary), `WhatsApp` (outline externe).
+- Bandeau logos: `waohdigital media`, `Orange Money Pro`, `UBA Connect`, `ANSIE Lab`, `Sunu Assurance` + focus reveal.
+
+## Verifications 2025-10-28
+- Focus clavier: hero et carrousel testes via Playwright (dev token local). Ordre confirme pour CTA `Essayer gratuitement`, `Voir la demo`, `WhatsApp` puis pagination (`‹`, `›`, puces `Aller vers ...`).
+- Lighthouse desktop (stub API interne): Performance `98`, Accessibilite `91`. Commande: `node .tmp-run-lighthouse.cjs` (serveur static + `npx lighthouse`).

@@ -1,7 +1,7 @@
 :root {
-  --wl-gradient-hero: linear-gradient(115deg, #2e38ff 0%, #7b2bff 100%);
-  --wl-gradient-hero-soft: linear-gradient(135deg, rgba(46, 56, 255, 0.85), rgba(123, 43, 255, 0.75));
-  --wl-gradient-card-glow: linear-gradient(135deg, rgba(46, 56, 255, 0.25), rgba(123, 43, 255, 0.22));
+  --wl-gradient-hero: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+  --wl-gradient-hero-soft: linear-gradient(135deg, rgba(67, 97, 238, 0.85), rgba(63, 55, 201, 0.75));
+  --wl-gradient-card-glow: linear-gradient(135deg, rgba(67, 97, 238, 0.25), rgba(63, 55, 201, 0.22));
   --wl-overlay-strong: linear-gradient(180deg, rgba(10, 17, 40, 0) 0%, rgba(10, 17, 40, 0.88) 100%);
   --wl-overlay-soft: linear-gradient(180deg, rgba(16, 22, 48, 0) 0%, rgba(16, 22, 48, 0.55) 100%);
   --wl-surface-card: #101630;

@@ -21,7 +21,7 @@ const Login = React.lazy(() => import('./pages/Login'))
 const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
-const MarketingHome = React.lazy(() => import('./pages/MarketingHome'))
+const Home = React.lazy(() => import('./pages/Home'))
 const Resources = React.lazy(() => import('./pages/Resources'))
 const Support = React.lazy(() => import('./pages/Support'))
 const About = React.lazy(() => import('./pages/About'))
@@ -271,7 +271,7 @@ export const router = createBrowserRouter(
             { index: true, element: <Navigate to="dashboard" replace /> },
             {
               path: 'home',
-              element: withSuspense(MarketingHome),
+              element: withSuspense(Home),
               handle: {
                 layout: {
                   title: 'Panorama WLAHWLA',
