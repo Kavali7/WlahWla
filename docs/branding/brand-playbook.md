@@ -126,8 +126,21 @@ WLAHWLA veut harmoniser son expression de marque pour les marches UEMOA en s ins
 - CTA primaires: `Essayer gratuitement` (primary), `Voir la demo` (secondary), `WhatsApp` (outline externe).
 - Bandeau logos: `waohdigital media`, `Orange Money Pro`, `UBA Connect`, `ANSIE Lab`, `Sunu Assurance` + focus reveal.
 
+## Preuves sociales et temoignages
+- Carousel landing: 4 slides (Retail Dakar, Agence marketing Abidjan, Cabinet comptable Lome, Groupe multi filiales) illustres en SVG placeholders depuis `frontend/public/assets/brand/testimonial-*.svg`.
+- KPIs obligatoires: 3 par slide (croissance, delai, satisfaction) issus des fiches `src/content/testimonials/*.ts` et exposes dans `home/testimonials.ts`.
+- Badge secteur: style pill `border-primary-200 bg-primary-50`, mention legale `valide marketing et juridique` en intro de chaque fiche detaillee.
+- Captures a livrer: hero slider desktop 1440 px, viewport mobile 390 px, focus state sur dots. Stockage dans `docs/branding/assets/` et reference via cheatsheet.
+- Video scroll: sequence 12 s montrant auto-play puis pause clavier (Space) et reprise; version master en 1080p + derive 720p pour social.
+- Cas detaille: chaque route `/temoignages/:slug` doit inclure section `Gouvernance et conformite` + medias, plus CTA vers verticale associee.
+
 ## Verifications 2025-10-28
 - Focus clavier: hero et carrousel testes via Playwright (dev token local). Ordre confirme pour CTA `Essayer gratuitement`, `Voir la demo`, `WhatsApp` puis pagination (`???`, `???`, puces `Aller vers ...`).
 - Lighthouse desktop (stub API interne): Performance `98`, Accessibilite `91`. Commande: `node .tmp-run-lighthouse.cjs` (serveur static + `npx lighthouse`).
 - Navigation verticales: verification headless via Puppeteer (desktop 1280x720 et mobile 390x844) sur `/verticals/retail`, `/verticals/accounting`, `/verticals/services`, `/verticals/agencies` (urls finales `?org=dev`).
 - Lighthouse verticale retail (desktop, VITE_BYPASS_AUTH=1): Performance `98`, Accessibilite `96`, Best Practices `81`, SEO `82`. Commande: `npx lighthouse http://127.0.0.1:4180/verticals/retail --quiet --chrome-flags='--headless --no-sandbox' --preset=desktop`.
+
+## Verifications 2025-10-29
+- Carousel temoignages: test clavier `Tab`, `Shift+Tab`, `ArrowLeft`, `ArrowRight`, `Space` (pause) + `Enter` (reprise) via Vitest + Testing Library OK. Focus boucle sur boutons, auto-play gele a la prise de focus.
+- Lecteur ecran: inspection `page.accessibility.snapshot()` (Playwright) confirme roles `carousel`, `group`, `button` et libelles exposes pour lecture NVDA/VoiceOver.
+- Lighthouse temoignage Retail (desktop, VITE_BYPASS_AUTH=1): Accessibilite `96`. Commande: `npx lighthouse http://127.0.0.1:4173/temoignages/retail-dakar --only-categories=accessibility --preset=desktop --chrome-flags='--headless --no-sandbox' --output=json`.

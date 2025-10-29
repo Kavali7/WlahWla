@@ -4,10 +4,12 @@ import { Button } from '../components/Button'
 import { HeroCarousel } from '../components/media/HeroCarousel'
 import { AdvertisingCard } from '../components/marketing/AdvertisingCard'
 import { ServiceCard } from '../components/marketing/ServiceCard'
+import { TestimonialCarousel } from '../components/marketing/TestimonialCarousel'
 import { VerticalCard } from '../components/marketing/VerticalCard'
 import { heroSlides } from '../content/hero-slides'
 import { advertisingSpots } from '../content/advertising-spots'
 import { services } from '../content/home/services'
+import { homeTestimonials } from '../content/home/testimonials'
 import { verticalPreviews } from '../content/home/verticals'
 
 type RevealOptions = {
@@ -60,10 +62,30 @@ const partnerLogos = [
   { id: 'sunu', name: 'Sunu Assurance' },
 ] as const
 
+const resultsHighlights = [
+  {
+    label: 'Temps traitement factures',
+    value: '-58 %',
+    description: 'Cycle moyen observe sur les clients pilotes finance',
+  },
+  {
+    label: 'ROI campagnes retail',
+    value: '+23 %',
+    description: 'Mesure waohdigital moyenne sur 14 campagnes 2025',
+  },
+  {
+    label: 'Satisfaction equipes',
+    value: '92 %',
+    description: 'Score CSAT post formation multi filiales',
+  },
+] as const
+
 const Home: React.FC = () => {
   const partnerBand = useRevealOnScroll({ threshold: 0.3 })
   const panoramaCard = useRevealOnScroll({ threshold: 0.25 })
   const servicesSection = useRevealOnScroll({ threshold: 0.25 })
+  const testimonialsSection = useRevealOnScroll({ threshold: 0.25 })
+  const resultsSection = useRevealOnScroll({ threshold: 0.25 })
   const verticalsSection = useRevealOnScroll({ threshold: 0.25 })
 
   return (
@@ -281,32 +303,67 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section id="temoignages" className="space-y-4">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <h3 className="text-xl font-semibold text-secondary-800 md:text-2xl">Temoignages clients</h3>
-          <Link className="text-sm font-semibold text-primary-600 hover:text-primary-500" to="/ressources#webinaires">
-            Replays webinaires {'->'}
+      <section
+        id="temoignages"
+        ref={testimonialsSection.ref}
+        aria-labelledby="temoignages-heading"
+        className={cx(
+          'space-y-6',
+          'transition-all duration-700 ease-out motion-reduce:duration-0 motion-reduce:transform-none motion-reduce:opacity-100',
+          testimonialsSection.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+        )}
+      >
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-600/80">Preuves sociales</p>
+            <h3 id="temoignages-heading" className="text-3xl font-semibold text-secondary-800 md:text-4xl">
+              Temoignages valides marketing et juridique
+            </h3>
+          </div>
+          <Link
+            className="text-sm font-semibold text-primary-600 hover:text-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+            to="/temoignages/retail-dakar"
+          >
+            Voir le cas retail {'->'}
           </Link>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating">
-            <header className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-secondary-700">Sana Boutique - Dakar</p>
-              <span className="text-xs font-semibold uppercase text-success-600">+42 % CA</span>
-            </header>
-            <p className="mt-3 text-sm text-neutral-600">
-              Passage en boutique phygitale: configuration en 3 semaines avec integrateurs waohdigital.
-            </p>
-          </article>
-          <article className="rounded-2xl border border-surface-outline bg-white p-6 shadow-floating">
-            <header className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-secondary-700">Joli Service - Abidjan</p>
-              <span className="text-xs font-semibold uppercase text-success-600">Temps devis divise par 2</span>
-            </header>
-            <p className="mt-3 text-sm text-neutral-600">
-              Orchestration du flux devis {'>'} facture avec notifications WhatsApp signees.
-            </p>
-          </article>
+        <TestimonialCarousel testimonials={homeTestimonials} />
+      </section>
+
+      <section
+        ref={resultsSection.ref}
+        aria-labelledby="results-heading"
+        className={cx(
+          'rounded-3xl border border-surface-outline bg-gradient-to-br from-white via-white to-primary-50/30 px-8 py-10 shadow-elevated md:px-12',
+          'transition-all duration-700 ease-out motion-reduce:duration-0 motion-reduce:transform-none motion-reduce:opacity-100',
+          resultsSection.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+        )}
+      >
+        <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-600/80">Resultats chiffrables</p>
+            <h3 id="results-heading" className="text-2xl font-semibold text-secondary-800 md:text-3xl">
+              Les equipes clientes constatent des gains immediats
+            </h3>
+          </div>
+          <Link
+            to="/ressources#webinaires"
+            className="text-sm font-semibold text-primary-600 hover:text-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+          >
+            Consulter les replays {'->'}
+          </Link>
+        </header>
+        <div className="mt-6 grid gap-6 md:grid-cols-3">
+          {resultsHighlights.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-2xl border border-surface-outline bg-white px-6 py-6 text-left shadow-elevated"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600/80">{item.label}</p>
+              <p className="mt-3 text-3xl font-semibold text-secondary-900">{item.value}</p>
+              <p className="mt-2 text-sm text-neutral-600">{item.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 

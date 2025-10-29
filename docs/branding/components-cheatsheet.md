@@ -164,6 +164,21 @@ export const RetailVertical = () => <VerticalLayout vertical={verticalsBySlug.re
 - Section ressources conclut la page avec rappel CTA principal et liens internes (ressources, support).
 - Les contenus sont fournis depuis `src/content/verticals/*.ts` et agreges via `verticalsBySlug`.
 
+## TestimonialCarousel
+```tsx
+import { TestimonialCarousel } from '@/components/marketing/TestimonialCarousel'
+import { homeTestimonials } from '@/content/home/testimonials'
+
+export const SocialProof = () => <TestimonialCarousel testimonials={homeTestimonials} autoPlayInterval={7000} />
+```
+- Carrousel swipeable avec auto-play optionnelle, pause clavier (`Space`) et boutons prev/next.
+- Chaque slide combine badge secteur, citation, KPIs (cartes `shadow-elevated`), portrait et lien `Link` vers `/temoignages/:slug`.
+- Les donnees proviennent de `src/content/home/testimonials.ts` (vue landing) et des fiches detaillees `src/content/testimonials/*.ts`.
+- Respecter roles ARIA (`aria-roledescription="carousel"`, `aria-live`) et figer l auto-play au focus pour accessibilite.
+- Shots a produire: capture desktop 1440 px du slide Retail, mobile 390 px sur le slide Groupe, et focus state sur les dots. Ranger les exports dans `docs/branding/assets/`.
+- Video scroll: enregistrer un scroll 12 s du carrousel avec pause clavier (Space) puis reprise, livrer en MP4 1080p.
+- Checklists A11Y: confirmer navigation `Tab`/`Shift+Tab`, lecture screen reader (NVDA) et pause auto-play; noter le statut dans le playbook.
+
 ## Captures
 - Ajouter captures ou exports Figma dans `docs/branding/assets/` une fois les maquettes stabilisees.
 - Executer `npm run optimize:images` apres ajout d images pour minifier les ressources web.

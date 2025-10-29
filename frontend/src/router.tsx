@@ -28,6 +28,7 @@ const About = React.lazy(() => import('./pages/About'))
 const Trial = React.lazy(() => import('./pages/Trial'))
 const Modules = React.lazy(() => import('./pages/Modules'))
 const VerticalPage = React.lazy(() => import('./pages/verticals/VerticalPage'))
+const TestimonialPage = React.lazy(() => import('./pages/testimonials/TestimonialPage'))
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
   <Suspense fallback={<LoadingScreen />}>
@@ -303,6 +304,17 @@ export const router = createBrowserRouter(
                   title: 'Verticale WLAHWLA',
                   description:
                     'Parcours dedies par industrie: retail, finance, prestations et campagnes marketing.',
+                },
+              },
+            },
+            {
+              path: 'temoignages/:slug',
+              element: withSuspense(TestimonialPage),
+              handle: {
+                layout: {
+                  title: 'Cas client WLAHWLA',
+                  description:
+                    'Retrouvez les preuves sociales par secteur avec citations, KPIs et jalons de gouvernance.',
                 },
               },
             },
